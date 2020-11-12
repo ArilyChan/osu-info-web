@@ -1,7 +1,7 @@
 const moment = require('moment')
 const axios = require('axios')
 class MotherShip {
-  getUserHistory ({ id }, start = new Date(), limit = 0) {
+  getUserHistory ({ id }, start = new Date(), limit = 0, timeout = 1000 * 5) {
     const dateStr = moment(start).format('YYYYMMDD')
     if (!limit) { limit = Math.ceil((new Date() - start) / (1000 * 3600 * 24)) - 1 }
     if (!limit) { limit = 1 }
@@ -9,7 +9,8 @@ class MotherShip {
       params: {
         start: dateStr,
         limit
-      }
+      },
+      timeout
     }).then(res => res.data).then(res => res.data).then(res => res.filter(r => r !== null))
   }
 }

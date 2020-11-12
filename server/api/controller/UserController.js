@@ -14,7 +14,7 @@ class User {
     oneYearBefore.setFullYear(oneYearBefore.getFullYear() - 1)
     try {
       const user = await bancho.getUser(handle, mode).catch(() => { throw new Error(1) })
-      const statisticsHistory = await mothership.getUserHistory(user, oneYearBefore).catch(() => { throw new Error(2) })
+      const statisticsHistory = await mothership.getUserHistory(user, oneYearBefore).catch(() => [])
       return {
         user,
         statisticsHistory

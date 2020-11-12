@@ -57,7 +57,7 @@
                   aka
                 </h3>
                 <p class="mb-0 text-large">
-                  {{ user.previous_usernames.join(',') }}
+                  {{ user.previous_usernames.join(', ') }}
                 </p>
               </div>
               <h4>注册于 {{ new Date(user.join_date).toLocaleDateString() }} {{ new Date(user.join_date).toLocaleTimeString() }}</h4>
@@ -82,14 +82,16 @@
                   <i class="ni ni-briefcase-24 pr-1" />{{ user.occupation }}
                 </b-col>
                 <b-col v-if="user.twitter" col lg="auto" class="text-nowrap">
-                  <i class="fab fa-twitter" />{{ user.twitter }}
+                  <i class="fab fa-twitter" />@{{ user.twitter }}
                 </b-col>
-                <b-col v-if="user.playstyle.length" col lg="auto" class="text-nowrap">
-                  <i class="ni ni-tag pr-1" />
+                <b-col v-if="user.playstyle && user.playstyle.length" col lg="auto" class="text-nowrap">
+                  <i class="ni ni-tag" />
                   用 {{ user.playstyle.join(', ') }} 打图
                 </b-col>
                 <b-col v-if="user.discord" col lg="auto">
-                  <img src="~/assets/images/Discord-Logo-Color.png" height="20px"> {{ user.discord }}
+                  <!-- <img src="~/assets/images/Discord-Logo-Color.png" height="20px"> -->
+                  <i class="fa-fw fab fa-discord" />
+                  {{ user.discord }}
                 </b-col>
               </b-row>
             </b-container>
@@ -100,19 +102,20 @@
         <waterfall
           :options="{
             gutter: 0,
-            itemSelector: '.Waterfall-item'
+            itemSelector: '.Waterfall-item',
+            columnWidth: '.grid-sizer'
           }"
           style="width: calc(100% + 0.8rem); left: -0.4rem; padding-top: 0.4rem"
         >
           <!-- each component is wrapped by a waterfall slot -->
           <waterfall-item style="width:calc(33.33%)">
-            <card shadow no-body class="glut">
+            <card shadow no-body>
               <apexchart style="width: 100%" type="radialBar" :options="levelRender" :series="[user.statistics.level.progress]" />
             </card>
           </waterfall-item>
           <waterfall-item v-if="statisticsHistory.length" style="width:calc(66.66%)">
-            <b-card no-body class="shadow glut">
-              <b-card-header class="d-inline-flex justify-content-end align-items-baseline">
+            <b-card no-body class="shadow">
+              <b-card-header class="d-inline-flex justify-content-end align-items-baseline py-2">
                 <h5 class="pr-1">
                   今天你
                 </h5>
@@ -126,15 +129,15 @@
                   , 你比上周少了 {{ Math.round((user.statistics.pp - ppHistory[ppHistory.length - 8]+ Number.EPSILON ) * 100) / 100 }}pp, 你是不是倒刷了？
                 </div>
               </b-card-header>
-              <apexchart type="line" :options="historyChart.chart" :series="createSeries()" />
+              <apexchart :height="historyChart.chart.height" type="line" :options="historyChart.chart" :series="createSeries()" />
               <b-card-footer class="text-right py-1 small">
                 历史数据由白菜提供
               </b-card-footer>
             </b-card>
           </waterfall-item>
-          <waterfall-item v-else style="width:calc(66.66%)">
-            <b-card no-body class="shadow glut">
-              <b-card-header class="d-inline-flex justify-content-end align-items-baseline">
+          <waterfall-item v-else style="width:calc(100% / 3 * 2)">
+            <b-card no-body class="shadow">
+              <b-card-header class="d-inline-flex justify-content-end align-items-baseline py-2">
                 <h5 class="pr-1">
                   今天你
                 </h5>
@@ -144,6 +147,7 @@
               </b-card-header>
               <apexchart
                 type="line"
+                :height="recentHistory.chart.height"
                 :options="recentHistory.chart"
                 :series="[{
                   name: 'Rank',
@@ -152,8 +156,8 @@
               />
             </b-card>
           </waterfall-item>
-          <waterfall-item style="width:calc(33.33%)">
-            <card shadow no-body class="border-0 glut">
+          <waterfall-item style="width:calc(100% / 3)">
+            <card shadow no-body class="border-0">
               <apexchart type="radialBar" :options="ranks" :series="rankGradeCounts()" />
               <!-- <b-card-text v-for="(count, rank) of user.statistics.grade_counts" :key="`grade-count-${rank}`">
                   {{ rank }}: {{ count }}
@@ -186,7 +190,7 @@
               </b-table-simple>
             </card>
           </waterfall-item>
-          <waterfall-item style="width:calc(33.33%)">
+          <waterfall-item style="width:calc(100% / 3)">
             <card shadow no-body>
               <b-table-simple
                 hover
@@ -210,6 +214,12 @@
               </b-table-simple>
             </card>
           </waterfall-item>
+          <waterfall-item v-for="badge of user.badges" :key="badge.description" class="grid-sizer">
+            <card shadow no-body class="border-0">
+              <b-card-img :src="badge.image_url" />
+            </card>
+          </waterfall-item>
+          <waterfall-item v-show="false" class="grid-sizer" />
         </waterfall>
       </no-ssr>
     </div>
@@ -245,11 +255,9 @@ export default {
     }
     const path = `/api/users/${params.handle}${params.mode ? `/${params.mode}` : ''}`
     if (process.server) {
-      console.log('server')
       result = await $axios.get(`http://localhost:${process.env.PORT || 3000}${path}`).then(res => res.data)
     }
     if (process.client) {
-      console.log('client')
       result = await $axios.get(`/api/users${path}`).then(res => res.data)
     }
     return {
@@ -260,7 +268,12 @@ export default {
   },
   data () {
     return {
-      historyChart: {},
+      historyChart: {
+        chart: {
+          height: 200,
+          type: 'line'
+        }
+      },
       levelRender: {
         chart: {
           type: 'radialBar'
@@ -331,16 +344,26 @@ export default {
       },
       recentHistory: {
         chart: {
-          height: 350,
+          height: 200,
           type: 'line',
-          stacked: false,
           stroke: {
             curve: 'smooth'
           },
           xaxis: {
             // type: 'datetime',
             formatter: date => `${date} days ago`,
-            tickAmount: 6
+            labels: {
+              show: false
+            },
+            axisBorder: {
+              show: false
+            },
+            axisTicks: {
+              show: false
+            },
+            crosshairs: {
+              show: false
+            }
           },
           chart: {
             toolbar: {
@@ -412,9 +435,8 @@ export default {
     const pp = this.ppHistory
     this.historyChart = {
       chart: {
-        height: 350,
+        height: 300,
         type: 'line',
-        stacked: false,
         stroke: {
           curve: 'smooth'
         },
@@ -426,7 +448,18 @@ export default {
         xaxis: {
           type: 'datetime',
           formatter: date => date.toLocaleDateString('en-US'),
-          tickAmount: 6
+          labels: {
+            show: false
+          },
+          axisBorder: {
+            show: false
+          },
+          axisTicks: {
+            show: false
+          },
+          crosshairs: {
+            show: false
+          }
         },
         dataLabels: {
           enabled: false
@@ -435,6 +468,7 @@ export default {
           min (min) { return Math.min(...pp) },
           max (max) { return Math.max(...pp) },
           forceNiceScale: true,
+          decimalsInFloat: 0,
           axisTicks: {
             show: true
           },
@@ -457,6 +491,7 @@ export default {
         {
           reversed: true,
           opposite: true,
+          decimalsInFloat: 0,
           axisTicks: {
             show: true
           },
@@ -535,10 +570,10 @@ export default {
     },
     kvStats () {
       return {
-        'Ranked Score': this.user.statistics.ranked_score.toLocaleString(),
-        'Play Count': this.user.statistics.play_count.toLocaleString(),
-        'Play Time': humanizeDuration(this.user.statistics.play_time * 1000, { units: ['h', 'm', 's'], language: 'zh_CN' }),
-        'Total Hits': this.user.statistics.total_hits.toLocaleString()
+        排名总分: this.user.statistics.ranked_score.toLocaleString(),
+        游玩次数: this.user.statistics.play_count.toLocaleString(),
+        游玩总时长: humanizeDuration(this.user.statistics.play_time * 1000, { units: ['h', 'm', 's'], language: 'zh_CN' }),
+        tth: this.user.statistics.total_hits.toLocaleString()
       }
     }
   }
@@ -560,5 +595,8 @@ export default {
 }
 .text-little-larger * {
   font-size: clear;
+}
+.grid-sizer {
+  width: calc(100% / 6);
 }
 </style>
