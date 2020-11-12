@@ -81,6 +81,9 @@
                 <b-col v-if="user.occupation" col lg="auto" class="text-nowrap">
                   <i class="ni ni-briefcase-24 pr-1" />{{ user.occupation }}
                 </b-col>
+                <b-col v-if="user.twitter" col lg="auto" class="text-nowrap">
+                  <i class="fab fa-twitter" />{{ user.twitter }}
+                </b-col>
                 <b-col v-if="user.playstyle.length" col lg="auto" class="text-nowrap">
                   <i class="ni ni-tag pr-1" />
                   用 {{ user.playstyle.join(', ') }} 打图
@@ -129,6 +132,26 @@
               </b-card-footer>
             </b-card>
           </waterfall-item>
+          <waterfall-item v-else style="width:calc(66.66%)">
+            <b-card no-body class="shadow glut">
+              <b-card-header class="d-inline-flex justify-content-end align-items-baseline">
+                <h5 class="pr-1">
+                  今天你
+                </h5>
+                <h3>
+                  <b>{{ user.statistics.pp }}</b><small>pp</small>
+                </h3>
+              </b-card-header>
+              <apexchart
+                type="line"
+                :options="recentHistory.chart"
+                :series="[{
+                  name: 'Rank',
+                  data: user.rankHistory.data.map((data,index) => ({x: index, y: data}))
+                }]"
+              />
+            </b-card>
+          </waterfall-item>
           <waterfall-item style="width:calc(33.33%)">
             <card shadow no-body class="border-0 glut">
               <apexchart type="radialBar" :options="ranks" :series="rankGradeCounts()" />
@@ -163,6 +186,30 @@
               </b-table-simple>
             </card>
           </waterfall-item>
+          <waterfall-item style="width:calc(33.33%)">
+            <card shadow no-body>
+              <b-table-simple
+                hover
+                small
+                responsive
+                striped
+                class="p-0 m-0"
+              >
+                <colgroup><col><col></colgroup>
+                <b-tbody>
+                  <b-tr
+                    v-for="(value, name) of kvStats()"
+                    :key="`grade-count-${name}`"
+                  >
+                    <b-th class="text-right text-uppercase">
+                      {{ name }}
+                    </b-th>
+                    <b-td>{{ value }}</b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+            </card>
+          </waterfall-item>
         </waterfall>
       </no-ssr>
     </div>
@@ -172,6 +219,7 @@
 <script>
 import { Waterfall, WaterfallItem } from 'vue2-waterfall'
 import bbCodeParser from 'js-bbcode-parser'
+const humanizeDuration = require('humanize-duration')
 const defaultCodes = [...bbCodeParser.codes]
 export default {
   layout: 'default',
@@ -280,6 +328,51 @@ export default {
           }
         },
         labels: ['XH', 'XS', 'SS', 'S', 'A']
+      },
+      recentHistory: {
+        chart: {
+          height: 350,
+          type: 'line',
+          stacked: false,
+          stroke: {
+            curve: 'smooth'
+          },
+          xaxis: {
+            // type: 'datetime',
+            formatter: date => `${date} days ago`,
+            tickAmount: 6
+          },
+          chart: {
+            toolbar: {
+              show: false
+            }
+          },
+          dataLabels: {
+            enabled: false
+          },
+          yaxis: [{
+            reversed: true,
+            opposite: true,
+            axisTicks: {
+              show: true
+            },
+            axisBorder: {
+              show: true,
+              color: '#247BA0'
+            },
+            labels: {
+              style: {
+                colors: '#247BA0'
+              }
+            },
+            title: {
+              text: 'Rank',
+              style: {
+                color: '#247BA0'
+              }
+            }
+          }]
+        }
       }
     }
   },
@@ -315,7 +408,6 @@ export default {
   },
   mounted () {
     const numMode = this.numMode(this.mode)
-    console.log(numMode, this.mode)
     this.statisticsHistory = this.statisticsHistory.filter(rec => rec.mode === numMode)
     const pp = this.ppHistory
     this.historyChart = {
@@ -440,6 +532,14 @@ export default {
       if (mode === 'fruits') { return 2 }
       if (mode === 'mania') { return 3 }
       return -1
+    },
+    kvStats () {
+      return {
+        'Ranked Score': this.user.statistics.ranked_score.toLocaleString(),
+        'Play Count': this.user.statistics.play_count.toLocaleString(),
+        'Play Time': humanizeDuration(this.user.statistics.play_time * 1000, { units: ['h', 'm', 's'], language: 'zh_CN' }),
+        'Total Hits': this.user.statistics.total_hits.toLocaleString()
+      }
     }
   }
 }
