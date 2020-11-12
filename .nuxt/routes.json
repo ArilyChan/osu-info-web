@@ -1,0 +1,16 @@
+[
+  {
+    "name": "users-handle-mode",
+    "path": "/users/:handle?/:mode?",
+    "component": "/Users/kousakananako/Documents/GitHub/osu-info-web/pages/users/_handle/_mode.vue",
+    "chunkName": "pages/users/_handle/_mode",
+    "_name": "_32633f87"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "/Users/kousakananako/Documents/GitHub/osu-info-web/pages/index.vue",
+    "chunkName": "pages/index",
+    "_name": "_7c9a73e6"
+  }
+]

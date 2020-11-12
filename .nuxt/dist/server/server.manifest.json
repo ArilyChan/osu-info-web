@@ -1,0 +1,13 @@
+{
+  "entry": "server.js",
+  "files": {
+    "pages/index.js": "pages/index.js",
+    "pages/users/_handle/_mode.js": "pages/users/_handle/_mode.js",
+    "server.js": "server.js"
+  },
+  "maps": {
+    "pages/index.js": "pages/index.js.map",
+    "pages/users/_handle/_mode.js": "pages/users/_handle/_mode.js.map",
+    "server.js": "server.js.map"
+  }
+}
