@@ -12,12 +12,15 @@ class User {
   static async getUserInfo (handle, mode) {
     const oneYearBefore = new Date()
     oneYearBefore.setFullYear(oneYearBefore.getFullYear() - 1)
-    const user = await bancho.getUser(handle, mode)
-    const statisticsHistory = await mothership.getUserHistory(user, oneYearBefore)
-
-    return {
-      user,
-      statisticsHistory
+    try {
+      const user = await bancho.getUser(handle, mode).catch(() => { throw new Error(1) })
+      const statisticsHistory = await mothership.getUserHistory(user, oneYearBefore).catch(() => { throw new Error(2) })
+      return {
+        user,
+        statisticsHistory
+      }
+    } catch (error) {
+      console.log(error.stack)
     }
   }
 }

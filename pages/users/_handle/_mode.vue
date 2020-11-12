@@ -207,7 +207,7 @@ export default {
     return {
       user: result.user,
       statisticsHistory: result.statisticsHistory,
-      mode: params.mode
+      mode: result.user.playmode || params.mode
     }
   },
   data () {
@@ -315,6 +315,7 @@ export default {
   },
   mounted () {
     const numMode = this.numMode(this.mode)
+    console.log(numMode, this.mode)
     this.statisticsHistory = this.statisticsHistory.filter(rec => rec.mode === numMode)
     const pp = this.ppHistory
     this.historyChart = {
@@ -436,9 +437,9 @@ export default {
     numMode (mode) {
       if (mode === 'osu') { return 0 }
       if (mode === 'taiko') { return 1 }
-      if (mode === 'catch') { return 2 }
+      if (mode === 'fruits') { return 2 }
       if (mode === 'mania') { return 3 }
-      return 0
+      return -1
     }
   }
 }
