@@ -57,8 +57,8 @@
                 </div>
               </div>
             </b-card-header>
-            <div class="text-center mt-4">
-              <h1>{{ user.username }}</h1>
+            <div class="text-center mx--4">
+              <h1 class="pt-2">{{ user.username }}</h1>
               <div v-if="user.previous_usernames.length" class="d-flex justify-content-center align-items-baseline">
                 <h3 class="pr-1">
                   aka
@@ -68,7 +68,9 @@
                 </p>
               </div>
               <h5>{{ mode }} 模式</h5>
-              <h4>注册于 {{ new Date(user.join_date).toLocaleDateString() }} {{ new Date(user.join_date).toLocaleTimeString() }}</h4>
+              <h4 class="mb-0 pb-1">
+                注册于 {{ new Date(user.join_date).toLocaleDateString() }} {{ new Date(user.join_date).toLocaleTimeString() }}
+              </h4>
             </div>
             <!-- <div class="mt-5 py-5 border-top text-left">
               <p class="px-5" v-html="convertBBCode(user.page.raw)" />
@@ -621,8 +623,8 @@ export default {
   width: calc(100% / 6);
 }
 .mx--4 {
-  margin-left: (16px * -1.5) !important;
-  margin-right: (16px * -1.5) !important;
+  margin-left: (1rem * -1.5) !important;
+  margin-right: (1rem * -1.5) !important;
 }
 .profile-backdrop {
   background-color: #f6f9fc4f !important;
@@ -631,7 +633,7 @@ export default {
 .bg-cover {
   background-color: rgba(255,255,255,0.8);
 
-  > div {
+  .mx--4 {
     backdrop-filter: brightness(102%) saturate(140%) blur(2px);
   }
 
