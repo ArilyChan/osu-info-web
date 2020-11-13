@@ -57,7 +57,7 @@
                 </div>
               </div>
             </b-card-header>
-            <div class="text-center mx--4">
+            <div class="text-center mx--4 card-body-backdrop-filter-base">
               <h1 class="pt-2">{{ user.username }}</h1>
               <div v-if="user.previous_usernames.length" class="d-flex justify-content-center align-items-baseline">
                 <h3 class="pr-1">
@@ -627,13 +627,13 @@ export default {
   margin-right: (1rem * -1.5) !important;
 }
 .profile-backdrop {
-  background-color: #f6f9fc4f !important;
-  backdrop-filter: brightness(102%) saturate(140%) blur(10px) !important;
+  background-color: #f6f9fc4f;
+  backdrop-filter: brightness(102%) saturate(140%) blur(10px);
 }
 .bg-cover {
   background-color: rgba(255,255,255,0.8);
 
-  .mx--4 {
+  .card-body-backdrop-filter-base {
     backdrop-filter: brightness(102%) saturate(140%) blur(2px);
   }
 
