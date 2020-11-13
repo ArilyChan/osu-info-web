@@ -58,7 +58,9 @@
               </div>
             </b-card-header>
             <div class="text-center mx--4 card-body-backdrop-filter-base">
-              <h1 class="pt-2">{{ user.username }}</h1>
+              <h1 class="pt-2">
+                {{ user.username }}
+              </h1>
               <div v-if="user.previous_usernames.length" class="d-flex justify-content-center align-items-baseline">
                 <h3 class="pr-1">
                   aka
@@ -173,7 +175,7 @@
           </waterfall-item>
           <waterfall-item style="width:calc(100% / 3)">
             <card shadow no-body class="border-0">
-              <apexchart type="radialBar" :options="ranks" :series="rankGradeCounts()" />
+              <apexchart type="radialBar" :options="ranks" :series="rankGradeCounts.percentages" />
               <!-- <b-card-text v-for="(count, rank) of user.statistics.grade_counts" :key="`grade-count-${rank}`">
                   {{ rank }}: {{ count }}
                 </b-card-text> -->
@@ -331,34 +333,7 @@ export default {
         },
         labels: ['Level']
       },
-      ranks: {
-        chart: {
-          type: 'radialBar'
-        },
-        stroke: {
-          lineCap: 'round'
-        },
-        plotOptions: {
-          radialBar: {
-            dataLabels: {
-              total: {
-                show: true,
-                label: 'Rank',
-                fontSize: '21px',
-                formatter: val => ''
-              },
-              value: {
-                show: true,
-                fontSize: '14px',
-                formatter (val) {
-                  return val.toLocaleString('percent')
-                }
-              }
-            }
-          }
-        },
-        labels: ['XH', 'XS', 'SS', 'S', 'A']
-      },
+      ranks: {},
       recentHistory: {
         chart: {
           height: 200,
@@ -434,6 +409,16 @@ export default {
     ppRankHistory () {
       if (!this.statisticsHistory.length) { return [] }
       return this.statisticsHistory.map(rec => rec.ppRank)
+    },
+    rankGradeCounts () {
+      const counts = this.user.statistics.grade_counts
+      const values = Object.values(counts)
+      const max = Math.max(...values)
+      return {
+        labels: Object.keys(counts),
+        values,
+        percentages: values.map(count => count / max * 98)
+      }
     }
   },
   beforeCreate () {
@@ -530,6 +515,37 @@ export default {
         }]
       }
     }
+    this.ranks = {
+      chart: {
+        type: 'radialBar'
+      },
+      stroke: {
+        lineCap: 'round'
+      },
+      plotOptions: {
+        radialBar: {
+          dataLabels: {
+            total: {
+              show: true,
+              label: 'Rank',
+              fontSize: '21px',
+              formatter: val => ''
+            },
+            value: {
+              show: true,
+              fontSize: '14px',
+              formatter: (v, w) => {
+                const datas = this.rankGradeCounts
+                // eslint-disable-next-line eqeqeq
+                const index = datas.percentages.findIndex(t => t == v)
+                return datas.values[index]
+              }
+            }
+          }
+        }
+      },
+      labels: this.rankGradeCounts.labels
+    }
   },
   methods: {
     dateHistory () {
@@ -551,12 +567,6 @@ export default {
           }))
         })
       })
-    },
-    rankGradeCounts () {
-      const counts = this.user.statistics.grade_counts
-      const values = Object.values(counts)
-      const max = Math.max(...values)
-      return values.map(count => count / max * 98)
     },
     convertBBCode (bbcode) {
       bbcode = bbcode.split('\n').join('<br>')
