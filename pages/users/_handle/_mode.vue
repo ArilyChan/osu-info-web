@@ -175,7 +175,7 @@
           </waterfall-item>
           <waterfall-item style="width:calc(100% / 3)">
             <card shadow no-body class="border-0">
-              <apexchart type="radialBar" :options="ranks" :series="rankGradeCounts.percentages" />
+              <apexchart height="300" type="radialBar" :options="ranks" :series="rankGradeCounts.percentages" />
               <b-table-simple
                 hover
                 small
@@ -600,8 +600,8 @@ export default {
         floating: true,
         fontSize: '13px',
         position: 'left',
-        offsetX: 25,
-        offsetY: -12,
+        offsetX: 0,
+        offsetY: 0,
         labels: {
           useSeriesColors: true
         },
