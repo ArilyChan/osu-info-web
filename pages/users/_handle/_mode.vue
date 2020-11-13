@@ -176,10 +176,27 @@
           <waterfall-item style="width:calc(100% / 3)">
             <card shadow no-body class="border-0">
               <apexchart type="radialBar" :options="ranks" :series="rankGradeCounts.percentages" />
-              <!-- <b-card-text v-for="(count, rank) of user.statistics.grade_counts" :key="`grade-count-${rank}`">
-                  {{ rank }}: {{ count }}
-                </b-card-text> -->
               <b-table-simple
+                hover
+                small
+                responsive
+                striped
+                class="p-0 m-0 border-0"
+              >
+                <colgroup><col><col></colgroup>
+                <b-tbody>
+                  <b-tr
+                    v-for="(value, name) of kvStats()"
+                    :key="`grade-count-${name}`"
+                  >
+                    <b-th class="text-right text-uppercase">
+                      {{ name }}
+                    </b-th>
+                    <b-td>{{ value }}</b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+              <!-- <b-table-simple
                 hover
                 small
                 caption-top
@@ -204,10 +221,10 @@
                     <b-td>{{ count }}</b-td>
                   </b-tr>
                 </b-tbody>
-              </b-table-simple>
+              </b-table-simple> -->
             </card>
           </waterfall-item>
-          <waterfall-item style="width:calc(100% / 3)">
+          <!-- <waterfall-item style="width:calc(100% / 3)">
             <card shadow no-body>
               <b-table-simple
                 hover
@@ -230,7 +247,7 @@
                 </b-tbody>
               </b-table-simple>
             </card>
-          </waterfall-item>
+          </waterfall-item> -->
           <waterfall-item v-for="badge of user.badges" :key="badge.description" class="grid-sizer">
             <card shadow no-body class="border-0">
               <b-card-img :src="badge.image_url" />
@@ -417,7 +434,7 @@ export default {
       return {
         labels: Object.keys(counts),
         values,
-        percentages: values.map(count => count / max * 98)
+        percentages: values.map(count => count / max * 100)
       }
     }
   },
@@ -515,8 +532,41 @@ export default {
         }]
       }
     }
+    // this.ranks = {
+    //   chart: {
+    //     type: 'radialBar'
+    //   },
+    //   stroke: {
+    //     lineCap: 'round'
+    //   },
+    //   plotOptions: {
+    //     radialBar: {
+    //       dataLabels: {
+    //         total: {
+    //           show: true,
+    //           label: 'Rank',
+    //           fontSize: '21px',
+    //           formatter: val => ''
+    //         },
+    //         value: {
+    //           show: true,
+    //           fontSize: '14px',
+    //           formatter: (v, w) => {
+    //             const datas = this.rankGradeCounts
+    //             // eslint-disable-next-line eqeqeq
+    //             const index = datas.percentages.findIndex(t => t == v)
+    //             return datas.values[index]
+    //           }
+    //         }
+    //       }
+    //     }
+    //   },
+    //   labels: this.rankGradeCounts.labels
+    // }
     this.ranks = {
+      series: this.rankGradeCounts.percentages,
       chart: {
+        height: 390,
         type: 'radialBar'
       },
       stroke: {
@@ -524,27 +574,55 @@ export default {
       },
       plotOptions: {
         radialBar: {
+          offsetY: 0,
+          startAngle: 0,
+          endAngle: 270,
+          hollow: {
+            margin: 5,
+            size: '30%',
+            background: 'transparent',
+            image: undefined
+          },
           dataLabels: {
-            total: {
-              show: true,
-              label: 'Rank',
-              fontSize: '21px',
-              formatter: val => ''
+            name: {
+              show: false
             },
             value: {
-              show: true,
-              fontSize: '14px',
-              formatter: (v, w) => {
-                const datas = this.rankGradeCounts
-                // eslint-disable-next-line eqeqeq
-                const index = datas.percentages.findIndex(t => t == v)
-                return datas.values[index]
-              }
+              show: false
             }
           }
         }
       },
-      labels: this.rankGradeCounts.labels
+      // colors: ['#1ab7ea', '#0084ff', '#39539E', '#0077B5'],
+      labels: this.rankGradeCounts.labels,
+      legend: {
+        show: true,
+        floating: true,
+        fontSize: '13px',
+        position: 'left',
+        offsetX: 25,
+        offsetY: -12,
+        labels: {
+          useSeriesColors: true
+        },
+        markers: {
+          size: 0
+        },
+        formatter: (seriesName, opts) => {
+          return seriesName.toUpperCase() + ':  ' + this.rankGradeCounts.values[opts.seriesIndex]
+        },
+        itemMargin: {
+          vertical: 0
+        }
+      },
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          legend: {
+            show: false
+          }
+        }
+      }]
     }
   },
   methods: {
