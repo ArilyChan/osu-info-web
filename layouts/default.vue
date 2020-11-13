@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper" class="d-flex flex-column">
     <main class="flex-fill position-relative">
-      <section-layout shaped bg-variant="primary">
+      <section-layout shaped bg-variant="success" :bubble-count="12">
         <nuxt />
       </section-layout>
     </main>

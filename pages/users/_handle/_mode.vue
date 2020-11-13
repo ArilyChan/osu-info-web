@@ -2,9 +2,16 @@
   <div class="col px-0 profile-page">
     <div class="card-profile container" style="margin-top: 5em">
       <div class="b-overlay-wrap position-relative">
-        <card shadow class="card-profile" no-body>
+        <card
+          shadow
+          class="card-profile bg-cover"
+          no-body
+          :style="{
+            '--cover-url': `url('${user.cover.url}')`
+          }"
+        >
           <div class="px-4">
-            <div class="row flex-nowrap justify-content-center">
+            <b-card-header class="row flex-nowrap justify-content-center p-0 mx--4 profile-backdrop">
               <div class="col-lg-3 order-1 order-lg-2">
                 <div class="card-profile-image">
                   <a :href="`https://osu.ppy.sh/users/${user.username}`">
@@ -49,7 +56,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </b-card-header>
             <div class="text-center mt-4">
               <h1>{{ user.username }}</h1>
               <div v-if="user.previous_usernames.length" class="d-flex justify-content-center align-items-baseline">
@@ -60,13 +67,14 @@
                   {{ user.previous_usernames.join(', ') }}
                 </p>
               </div>
+              <h5>{{ mode }} 模式</h5>
               <h4>注册于 {{ new Date(user.join_date).toLocaleDateString() }} {{ new Date(user.join_date).toLocaleTimeString() }}</h4>
             </div>
             <!-- <div class="mt-5 py-5 border-top text-left">
               <p class="px-5" v-html="convertBBCode(user.page.raw)" />
             </div> -->
           </div>
-          <b-card-footer class="py-1">
+          <b-card-footer class="py-1 profile-backdrop">
             <b-container fluid>
               <b-row class="justify-content-md-center flex-wrap">
                 <b-col col lg="auto" class="text-nowrap">
@@ -98,6 +106,11 @@
           </b-card-footer>
         </card>
       </div>
+      <!-- <b-card
+        overlay
+        class="mt-0-8 border-0 shadow"
+        :img-src="user.cover.url"
+      /> -->
       <no-ssr>
         <waterfall
           :options="{
@@ -113,7 +126,7 @@
               <apexchart style="width: 100%" type="radialBar" :options="levelRender" :series="[user.statistics.level.progress]" />
             </card>
           </waterfall-item>
-          <waterfall-item v-if="statisticsHistory.length" style="width:calc(66.66%)">
+          <waterfall-item v-if="numMode(mode) === 0 && statisticsHistory.length" style="width:calc(66.66%)">
             <b-card no-body class="shadow">
               <b-card-header class="d-inline-flex justify-content-end align-items-baseline py-2">
                 <h5 class="pr-1">
@@ -135,7 +148,7 @@
               </b-card-footer>
             </b-card>
           </waterfall-item>
-          <waterfall-item v-else style="width:calc(100% / 3 * 2)">
+          <waterfall-item v-else-if="user.rankHistory && user.rankHistory.data.length" style="width:calc(100% / 3 * 2)">
             <b-card no-body class="shadow">
               <b-card-header class="d-inline-flex justify-content-end align-items-baseline py-2">
                 <h5 class="pr-1">
@@ -197,7 +210,7 @@
                 small
                 responsive
                 striped
-                class="p-0 m-0"
+                class="p-0 m-0 border-0"
               >
                 <colgroup><col><col></colgroup>
                 <b-tbody>
@@ -263,7 +276,7 @@ export default {
     return {
       user: result.user,
       statisticsHistory: result.statisticsHistory,
-      mode: result.user.playmode || params.mode
+      mode: params.mode || result.user.playmode
     }
   },
   data () {
@@ -282,7 +295,6 @@ export default {
         plotOptions: {
           radialBar: {
             hollow: {
-              margin: 15,
               size: '70%'
             },
 
@@ -321,6 +333,9 @@ export default {
         chart: {
           type: 'radialBar'
         },
+        stroke: {
+          lineCap: 'round'
+        },
         plotOptions: {
           radialBar: {
             dataLabels: {
@@ -334,7 +349,7 @@ export default {
                 show: true,
                 fontSize: '14px',
                 formatter (val) {
-                  return val
+                  return val.toLocaleString('percent')
                 }
               }
             }
@@ -429,7 +444,7 @@ export default {
     const newCodes = l2Parser.codes
     bbCodeParser.codes = [...defaultCodes, ...newCodes]
   },
-  mounted () {
+  created () {
     const numMode = this.numMode(this.mode)
     this.statisticsHistory = this.statisticsHistory.filter(rec => rec.mode === numMode)
     const pp = this.ppHistory
@@ -585,7 +600,13 @@ export default {
   white-space: nowrap;
 }
 .Waterfall-item > * {
-  margin: 0.4em !important;
+  margin: 0.4rem !important;
+}
+.pt-0-8 {
+  padding-top: 0.8rem !important;
+}
+.mt-0-8 {
+  margin-top: 0.8rem !important;
 }
 .text-large {
   font-size: 150% !important;
@@ -598,5 +619,32 @@ export default {
 }
 .grid-sizer {
   width: calc(100% / 6);
+}
+.mx--4 {
+  margin-left: (16px * -1.5) !important;
+  margin-right: (16px * -1.5) !important;
+}
+.profile-backdrop {
+  background-color: #f6f9fc4f !important;
+  backdrop-filter: brightness(102%) saturate(140%) blur(10px) !important;
+}
+.bg-cover {
+  background-color: rgba(255,255,255,0.8);
+
+  > div {
+    backdrop-filter: brightness(102%) saturate(140%) blur(2px);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    border-radius: 0.25rem;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    filter: contrast(70%) saturate(110%);
+    background: var(--cover-url);
+    background-size: cover
+  }
 }
 </style>

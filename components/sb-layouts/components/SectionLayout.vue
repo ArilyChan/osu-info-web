@@ -15,7 +15,7 @@
       v-if="shaped !== undefined"
       :class="[
         shapeClass ? shapeClass : 'shape-style-1',
-        useBootstrapColor == undefined
+        useArgonColor == undefined
           ? bgVariant !== undefined ? `bg-gradient-${bgVariant}` : 'bg-gradient-secondary'
           : bgVariant !== undefined ? `shape-${bgVariant}` :'shape-secondary',
         skew !== undefined ? 'shape-skew' : ''
@@ -75,7 +75,7 @@ export default {
       type: String,
       default: undefined
     },
-    useBootstrapColor: {
+    useArgonColor: {
       type: Boolean,
       default: undefined
     }
