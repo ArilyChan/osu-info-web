@@ -226,7 +226,7 @@
           </waterfall-item>
           <waterfall-item v-if="recentActivity.length" style="width:calc(100% / 3 * 2)">
             <b-card class="border-0 shadow" no-body>
-              <light-timeline :items="groupActivity()">
+              <light-timeline :items="groupActivity()" class="m-0 mx-1">
                 <template slot="tag" slot-scope="{ item }">
                   {{ item.date.toDate().toLocaleDateString() }}
                 </template>
@@ -744,5 +744,11 @@ export default {
     background: var(--cover-url);
     background-size: cover
   }
+}
+</style>
+
+<style lang="scss">
+.item-tag {
+  width: 70px !important
 }
 </style>
