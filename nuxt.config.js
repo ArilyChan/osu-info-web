@@ -68,6 +68,7 @@ module.exports = {
     // { src: '~/plugins/vue-worker.js', mode: 'client' },
     '~/plugins/i18n.js',
     '~/plugins/vue-flag.js',
+    '~/plugins/light-timeline.js',
     '~/plugins/moment.js'
   ],
   /*

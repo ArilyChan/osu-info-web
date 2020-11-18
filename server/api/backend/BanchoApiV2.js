@@ -43,6 +43,26 @@ class BanchoApi {
       headers: this.tokenHeader()
     }).then(res => res.data)
   }
+
+  getUserActivity (user, limit = 20, start = 0) {
+    return axios.get(`https://osu.ppy.sh/api/v2/users/${user.id}/recent_activity`, {
+      params: {
+        limit,
+        offset: start
+      },
+      headers: this.tokenHeader()
+    }).then(res => res.data)
+  }
+
+  getUserKudosu (user, limit = 20, start = 0) {
+    return axios.get(`https://osu.ppy.sh/api/v2/users/${user.id}/kudosu`, {
+      params: {
+        limit,
+        offset: start
+      },
+      headers: this.tokenHeader()
+    }).then(res => res.data)
+  }
 }
 
 module.exports = BanchoApi

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const MotherShip = require('../backend/MotherShip')
 const Bancho = require('../backend/BanchoApiV2')
 
@@ -14,12 +15,18 @@ class User {
     oneYearBefore.setFullYear(oneYearBefore.getFullYear() - 1)
     try {
       const user = await bancho.getUser(handle, mode).catch(() => { throw new Error(1) })
-      const statisticsHistory = await mothership.getUserHistory(user, oneYearBefore).catch((err) => {
-        console.error(err.stack)
-        return []
-      })
+      if (!user.id) { return {} }
+      const recentActivity = await bancho.getUserActivity(user, 10, 0)
+      let statisticsHistory
+      if (user.playmode === 'osu') {
+        statisticsHistory = await mothership.getUserHistory(user, oneYearBefore).catch((err) => {
+          console.error(err.stack)
+          return []
+        })
+      }
       return {
         user,
+        recentActivity,
         statisticsHistory
       }
     } catch (error) {

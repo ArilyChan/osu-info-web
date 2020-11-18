@@ -1,6 +1,6 @@
 <template>
   <div class="col px-0 profile-page">
-    <div class="card-profile container" style="margin-top: 5em">
+    <div v-if="user" class="card-profile container" style="margin-top: 5em">
       <div class="b-overlay-wrap position-relative">
         <card
           shadow
@@ -122,15 +122,15 @@
             itemSelector: '.Waterfall-item',
             columnWidth: '.grid-sizer'
           }"
-          style="width: calc(100% + 0.8rem); left: -0.4rem; padding-top: 0.4rem"
+          style="width: calc(100% + 0.8em); left: -0.4em; padding-top: 0.4em"
         >
           <!-- each component is wrapped by a waterfall slot -->
-          <waterfall-item style="width:calc(33.33%)">
+          <waterfall-item style="width:calc(100% / 3">
             <card shadow no-body>
               <apexchart style="width: 100%" type="radialBar" :options="levelRender" :series="[user.statistics.level.progress]" />
             </card>
           </waterfall-item>
-          <waterfall-item v-if="numMode(mode) === 0 && statisticsHistory.length" style="width:calc(66.66%)">
+          <waterfall-item v-if="numMode(mode) === 0 && statisticsHistory.length" style="width:calc(100% / 3 * 2)">
             <b-card no-body class="shadow">
               <b-card-header class="d-inline-flex justify-content-end align-items-baseline py-2">
                 <h5 class="pr-1">
@@ -224,38 +224,73 @@
               </b-table-simple> -->
             </card>
           </waterfall-item>
-          <!-- <waterfall-item style="width:calc(100% / 3)">
-            <card shadow no-body>
-              <b-table-simple
-                hover
-                small
-                responsive
-                striped
-                class="p-0 m-0 border-0"
-              >
-                <colgroup><col><col></colgroup>
-                <b-tbody>
-                  <b-tr
-                    v-for="(value, name) of kvStats()"
-                    :key="`grade-count-${name}`"
-                  >
-                    <b-th class="text-right text-uppercase">
-                      {{ name }}
-                    </b-th>
-                    <b-td>{{ value }}</b-td>
-                  </b-tr>
-                </b-tbody>
-              </b-table-simple>
-            </card>
-          </waterfall-item> -->
+          <waterfall-item v-if="recentActivity.length" style="width:calc(100% / 3 * 2)">
+            <b-card class="border-0 shadow" no-body>
+              <light-timeline :items="groupActivity()">
+                <template slot="tag" slot-scope="{ item }">
+                  {{ item.date.toDate().toLocaleDateString() }}
+                </template>
+                <template slot="content" slot-scope="{ item }">
+                  <div v-for="(activity, index) in item.activity" :key="`${item.date}-${index}`">
+                    <b-card-text v-if="activity.type === 'rank'">
+                      Placed {{ activity.scoreRank }} <b>#{{ activity.rank }}</b> on <a :href="activity.beatmap.url">{{ activity.beatmap.title }}</a>
+                    </b-card-text>
+                    <b-card-text v-else-if="activity.type === 'rankLost'">
+                      Lost first place on <a :href="activity.beatmap.url">{{ activity.beatmap.title }}</a>
+                    </b-card-text>
+                    <b-card-text v-else-if="activity.type === 'beatmapPlaycount'">
+                      Played <a :href="activity.beatmap.url">{{ activity.beatmap.title }}</a> <b>#{{ activity.count }}</b> times
+                    </b-card-text>
+                    <b-card-text v-else-if="activity.type === 'achievement'">
+                      Achieved {{ activity.achievement }}
+                    </b-card-text>
+                    <b-card-text v-else-if="activity.type === 'beatmapsetApprove'">
+                      {{ activity.approval | capitalizeFirstLetter }} map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
+                    </b-card-text>
+                    <b-card-text v-else-if="activity.type === 'beatmapsetDelete'">
+                      Deleted map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
+                    </b-card-text>
+                    <b-card-text v-else-if="activity.type === 'beatmapsetRevive'">
+                      Revived map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
+                    </b-card-text>
+                    <b-card-text v-else-if="activity.type === 'beatmapsetUpdate'">
+                      Updated map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
+                    </b-card-text>
+                    <b-card-text v-else-if="activity.type === 'beatmapsetUpload'">
+                      Uploaded map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
+                    </b-card-text>
+                    <b-card-text v-else-if="activity.type === 'userSupportAgain'">
+                      Supported osu again!
+                    </b-card-text>
+                    <b-card-text v-else-if="activity.type === 'userSupportFirst'">
+                      Supported osu for the first time!
+                    </b-card-text>
+                    <b-card-text v-else-if="activity.type === 'userSupportGift'">
+                      Gifted <a :href="activity.user.url">{{ activity.user.username }}</a> supporter tag!
+                    </b-card-text>
+                    <b-card-text v-else-if="activity.type === 'usernameChange'">
+                      Changed username to {{ user.username }}
+                    </b-card-text>
+                  </div>
+                </template>
+              </light-timeline>
+            </b-card>
+          </waterfall-item>
           <waterfall-item v-for="badge of user.badges" :key="badge.description" class="grid-sizer">
-            <card shadow no-body class="border-0">
+            <b-card no-body class="border-0 shadow">
               <b-card-img :src="badge.image_url" />
-            </card>
+            </b-card>
           </waterfall-item>
           <waterfall-item v-show="false" class="grid-sizer" />
         </waterfall>
       </no-ssr>
+    </div>
+    <div v-else class="card-profile container pt-5">
+      <b-card
+        title="没有这个用户"
+        header="Something went wrong..."
+        class="shadow"
+      />
     </div>
   </div>
 </template>
@@ -268,21 +303,15 @@ const defaultCodes = [...bbCodeParser.codes]
 export default {
   layout: 'default',
   components: {
-    // Waterfall,
-    // WaterfallSlot
     Waterfall,
     WaterfallItem
   },
+  filters: {
+    capitalizeFirstLetter (string) {
+      return string.charAt(0).toUpperCase() + string.slice(1)
+    }
+  },
   async asyncData ({ params, $axios, $config: { baseURL } }) {
-    // const statisticsHistory = await fetch('https://www.mothership.top/api/v1/userinfo/1123053?start=20191112&limit=365')
-    //   .then(res => res.json())
-    //   .then(res => res.data)
-    //   .then(res => res.filter(r => r !== null))
-    // const banchoApiResult = require('~/data/apiv2.json')
-    // return {
-    //   user: banchoApiResult,
-    //   statisticsHistory
-    // }
     let result = {
       user: undefined,
       statisticsHistory: []
@@ -296,8 +325,9 @@ export default {
     }
     return {
       user: result.user,
-      statisticsHistory: result.statisticsHistory,
-      mode: params.mode || result.user.playmode
+      recentActivity: result.recentActivity || [],
+      statisticsHistory: result.statisticsHistory || [],
+      mode: params.mode || (result.user ? result.user.playmode : undefined)
     }
   },
   data () {
@@ -449,6 +479,7 @@ export default {
     bbCodeParser.codes = [...defaultCodes, ...newCodes]
   },
   created () {
+    if (!this.user) { return }
     const numMode = this.numMode(this.mode)
     this.statisticsHistory = this.statisticsHistory.filter(rec => rec.mode === numMode)
     const pp = this.ppHistory
@@ -532,37 +563,6 @@ export default {
         }]
       }
     }
-    // this.ranks = {
-    //   chart: {
-    //     type: 'radialBar'
-    //   },
-    //   stroke: {
-    //     lineCap: 'round'
-    //   },
-    //   plotOptions: {
-    //     radialBar: {
-    //       dataLabels: {
-    //         total: {
-    //           show: true,
-    //           label: 'Rank',
-    //           fontSize: '21px',
-    //           formatter: val => ''
-    //         },
-    //         value: {
-    //           show: true,
-    //           fontSize: '14px',
-    //           formatter: (v, w) => {
-    //             const datas = this.rankGradeCounts
-    //             // eslint-disable-next-line eqeqeq
-    //             const index = datas.percentages.findIndex(t => t == v)
-    //             return datas.values[index]
-    //           }
-    //         }
-    //       }
-    //     }
-    //   },
-    //   labels: this.rankGradeCounts.labels
-    // }
     this.ranks = {
       series: this.rankGradeCounts.percentages,
       chart: {
@@ -680,6 +680,14 @@ export default {
         游玩总时长: humanizeDuration(this.user.statistics.play_time * 1000, { units: ['h', 'm', 's'], language: 'zh_CN' }),
         tth: this.user.statistics.total_hits.toLocaleString()
       }
+    },
+    groupActivity () {
+      return this.recentActivity.reduce((acc, cur, index, recentActivity) => {
+        const date = this.moment(cur.createdAt)
+        const newDate = index === 0 || (index > 1 && this.moment(recentActivity[index - 1].createdAt).diff(date, 'days') > 1)
+        if (!newDate) { acc[acc.length - 1].activity.push(cur) } else { acc.push({ date, activity: [] }) }
+        return acc
+      }, [])
     }
   }
 }
@@ -711,18 +719,18 @@ export default {
   width: calc(100% / 6);
 }
 .mx--4 {
-  margin-left: (1rem * -1.5) !important;
-  margin-right: (1rem * -1.5) !important;
+  margin-left: (1em * -1.5) !important;
+  margin-right: (1em * -1.5) !important;
 }
 .profile-backdrop {
-  background-color: #f6f9fc4f;
+  background-color: #f6f9fc6e;
   backdrop-filter: brightness(102%) saturate(140%) blur(10px);
 }
 .bg-cover {
-  background-color: rgba(255,255,255,0.8);
+  background-color: rgba(255,255,255,0.83);
 
   .card-body-backdrop-filter-base {
-    backdrop-filter: brightness(102%) saturate(140%) blur(2px);
+    backdrop-filter: brightness(102%) saturate(140%) blur(3px);
   }
 
   &::before {
