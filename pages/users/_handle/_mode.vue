@@ -242,7 +242,7 @@
                       Played <a :href="activity.beatmap.url">{{ activity.beatmap.title }}</a> <b>#{{ activity.count }}</b> times
                     </b-card-text>
                     <b-card-text v-else-if="activity.type === 'achievement'">
-                      Achieved {{ activity.achievement }}
+                      Achieved "{{ activity.achievement.name }}" achievement
                     </b-card-text>
                     <b-card-text v-else-if="activity.type === 'beatmapsetApprove'">
                       {{ activity.approval | capitalizeFirstLetter }} map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
