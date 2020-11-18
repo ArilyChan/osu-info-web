@@ -685,7 +685,8 @@ export default {
       return this.recentActivity.reduce((acc, cur, index, recentActivity) => {
         const date = this.moment(cur.createdAt)
         const newDate = index === 0 || (index > 1 && this.moment(recentActivity[index - 1].createdAt).diff(date, 'days') > 1)
-        if (!newDate) { acc[acc.length - 1].activity.push(cur) } else { acc.push({ date, activity: [] }) }
+        if (newDate) { acc.push({ date, activity: [] }) }
+        acc[acc.length - 1].activity.push(cur)
         return acc
       }, [])
     }
