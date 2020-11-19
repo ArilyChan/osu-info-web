@@ -9,7 +9,7 @@ const bancho = new Bancho({
 })
 bancho.init()
 
-class User {
+class UserController {
   static async getUserInfo (handle, mode) {
     const oneYearBefore = new Date()
     oneYearBefore.setFullYear(oneYearBefore.getFullYear() - 1)
@@ -33,6 +33,36 @@ class User {
       console.log(error.stack)
     }
   }
+
+  static async recentPlay (handle, mode) {
+    try {
+      const user = await bancho.getUser(handle)
+      const rp = await bancho.getUserRecentScores(user, { mode }).then(rps => rps[0])
+      if (!rp) { return {} }
+      const countryRank = await bancho.getBeatmapScoresCountry(rp.beatmap, user)
+      countryRank.scores.forEach((score) => {
+        delete score.beatmap
+      })
+      return {
+        score: rp,
+        countryRank
+      }
+    } catch (error) {
+      if (error.message === 'no token') {
+        return {
+          error: 'no token'
+        }
+      }
+    }
+  }
+
+  static setUserToken (user, token, scope) {
+    return bancho.setUserToken(user, token, scope)
+  }
+
+  static OAuthCode (user, code, scope) {
+    return bancho.userOAuthCode(user, code, scope)
+  }
 }
 
-module.exports = User
+module.exports = UserController

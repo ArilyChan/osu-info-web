@@ -1,5 +1,6 @@
 const axios = require('axios')
 const FormData = require('form-data')
+const MongoClient = require('mongodb').MongoClient
 
 class BanchoApi {
   constructor ({ clientId, clientSecret }) {
@@ -7,7 +8,7 @@ class BanchoApi {
     this.clientSecret = clientSecret
   }
 
-  async init () {
+  async initPublicToken () {
     const formData = new FormData()
     Object.entries({
       client_id: this.clientId,
@@ -27,20 +28,61 @@ class BanchoApi {
     this.tokenType = result.token_type
     this.expiresIn = result.expires_in
     this.accessToken = result.access_token
-    this.reTokenTimeout = setTimeout(() => {
-      this.init()
-    }, this.expiresIn * 1000 - 60)
   }
 
-  tokenHeader () {
+  async initUserTokens () {
+    if (!process.env.DB_URI) {
+      console.warn('database uri is not set. data requires user auth will not be available.\nadd DB_URI=<mongodb database connection string>, TOKEN_DATABASE=<database name>, TOKEN_COLLECTION=<collection name> to your .env configure')
+      return
+    }
+    if (!this.userTokenCollection) {
+      const client = await MongoClient.connect(process.env.DB_URI || 'mongodb://localhost:27017', { useUnifiedTopology: true })
+      const db = client.db(process.env.TOKEN_DATABASE || 'osu-info-web')
+      this.userTokenCollection = db.collection(process.env.TOKEN_COLLECTION || 'bancho-tokens')
+    }
+
+    const tokens = await this.userTokenCollection.find({
+      expiresAt: { $gte: new Date() }
+    }).toArray()
+
+    Promise.all(tokens.map((token) => {
+      return new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          resolve(await this.refreshUserToken(token))
+        }, token.expiresAt.getTime() - new Date().getTime() - 1000 * 60)
+      })
+    }))
+  }
+
+  async init () {
+    await this.initPublicToken()
+    await this.initUserTokens()
+    this.reTokenTimeout = setTimeout(() => {
+      this.init()
+    }, (this.expiresIn - 60) * 1000)
+  }
+
+  publicTokenHeader () {
     return {
       Authorization: `${this.tokenType} ${this.accessToken}`
     }
   }
 
+  accessTokenHeader (token) {
+    return {
+      Authorization: `${token.token_type} ${token.access_token}`
+    }
+  }
+
   getUser (handle, mode) {
     return axios.get(`https://osu.ppy.sh/api/v2/users/${handle}${mode ? `/${mode}` : ''}`, {
-      headers: this.tokenHeader()
+      headers: this.publicTokenHeader()
+    }).then(res => res.data)
+  }
+
+  getUserMe (mode, { headers }) {
+    return axios.get(`https://osu.ppy.sh/api/v2/me${mode ? `/${mode}` : ''}`, {
+      headers: headers || this.publicTokenHeader()
     }).then(res => res.data)
   }
 
@@ -50,7 +92,7 @@ class BanchoApi {
         limit,
         offset: start
       },
-      headers: this.tokenHeader()
+      headers: this.publicTokenHeader()
     }).then(res => res.data)
   }
 
@@ -60,7 +102,100 @@ class BanchoApi {
         limit,
         offset: start
       },
-      headers: this.tokenHeader()
+      headers: this.publicTokenHeader()
+    }).then(res => res.data)
+  }
+
+  getUserScores (user, { type = 'best', ...options }) {
+    return axios.get(`https://osu.ppy.sh/api/v2/users/${user.id}/scores/${type}`, {
+      params: options,
+      headers: this.publicTokenHeader()
+    }).then(res => res.data)
+  }
+
+  getUserRecentScores (user, options) {
+    return this.getUserScores(user, {
+      type: 'recent',
+      ...options
+    })
+  }
+
+  getBeatmapScores ({ id: beatmapId }, { params, headers } = {}) {
+    const options = {
+      params,
+      headers: headers || this.publicTokenHeader()
+    }
+    return axios.get(`https://osu.ppy.sh/api/v2/beatmaps/${beatmapId}/scores`, options).then(res => res.data)
+  }
+
+  async getBeatmapScoresCountry (beatmap, user) {
+    const userTokens = await this.getUserValidTokens(user, 'public')
+    if (!userTokens.length) { throw new Error('no token') }
+    return this.getBeatmapScores(beatmap, {
+      params: {
+        type: 'country'
+      },
+      headers: this.accessTokenHeader(userTokens[0])
+    })
+  }
+
+  getUserValidTokens ({ id: userId }, scope = 'public') {
+    return this.userTokenCollection.find({
+      userId,
+      scope,
+      expiresAt: { $gte: new Date() }
+    }).toArray()
+  }
+
+  removeExpiredTokens () {
+    this.userTokenCollection.deleteMany({
+      expiresAt: { $lt: new Date() }
+    })
+  }
+
+  setUserToken ({ id: userId }, token, scope = 'public') {
+    if (!this.userTokenCollection) { throw new Error('user token collection not set') }
+    const record = {
+      ...token,
+      scope,
+      userId,
+      expiresAt: new Date(new Date().getTime() + token.expires_in * 1000)
+    }
+    return this.userTokenCollection.updateOne({
+      userId,
+      scope
+    }, { $set: record }, {
+      upsert: true
+    })
+  }
+
+  async userOAuthCode (code, scope) {
+    const res = await axios.post('https://osu.ppy.sh/oauth/token', {
+      client_id: this.clientId,
+      client_secret: this.clientSecret,
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: process.env.BANCHO_V2_REDIRECT_URL
+    })
+      .then(res => res.data)
+      .catch((error) => {
+        return error.response.data
+      })
+    if (!res.access_token) { return false }
+    const user = await this.getUserMe(undefined, {
+      headers: this.accessTokenHeader(res)
+    })
+    return this.setUserToken(user, res, scope)
+  }
+
+  refreshUserToken (userToken) {
+    return axios.post('https://osu.ppy.sh/oauth/token', {
+      client_id: this.clientId,
+      client_secret: this.clientSecret,
+      grant_type: 'refresh_token',
+      refresh_token: userToken.refresh_token
+    }, {
+      headers: this.publicTokenHeader()
     }).then(res => res.data)
   }
 }
