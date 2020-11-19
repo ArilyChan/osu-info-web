@@ -39,20 +39,30 @@ class UserController {
       const user = await bancho.getUser(handle)
       const rp = await bancho.getUserRecentScores(user, { mode }).then(rps => rps[0])
       if (!rp) { return {} }
-      const countryRank = await bancho.getBeatmapScoresCountry(rp.beatmap, user)
-      countryRank.scores.forEach((score) => {
-        delete score.beatmap
-      })
-      return {
-        score: rp,
-        countryRank
-      }
-    } catch (error) {
-      if (error.message === 'no token') {
+      try {
+        const countryRank = await bancho.getBeatmapScoresCountry(rp.beatmap, user)
+        countryRank.scores.forEach((score) => {
+          delete score.beatmap
+        })
         return {
-          error: 'no token'
+          score: rp,
+          countryRank
+        }
+      } catch (error) {
+        if (error.message === 'no token') {
+          return {
+            score: rp,
+            countryRank: {
+              scores: []
+            },
+            messages: [
+              'connect-to-app-oauth'
+            ]
+          }
         }
       }
+    } catch (error) {
+      return {}
     }
   }
 
