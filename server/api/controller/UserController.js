@@ -35,31 +35,27 @@ class UserController {
   }
 
   static async recentPlay (handle, mode) {
+    const rtn = {
+      messages: []
+    }
     try {
       const user = await bancho.getUser(handle)
-      const rp = await bancho.getUserRecentScores(user, { mode }).then(rps => rps[0])
+      rtn.user = user
+      const rps = await bancho.getUserRecentScores(user, { mode })
+      const rp = rps[0]
       if (!rp) { return {} }
+      rtn.score = rp
       try {
+        if (!user.is_supporter) { rtn.messages.push('may-need-supporter') }
         const countryRank = await bancho.getBeatmapScoresCountry(rp.beatmap, user)
         countryRank.scores.forEach((score) => {
           delete score.beatmap
         })
-        return {
-          score: rp,
-          countryRank
-        }
+        rtn.countryRank = countryRank
+        return rtn
       } catch (error) {
-        if (error.message === 'no token') {
-          return {
-            score: rp,
-            countryRank: {
-              scores: []
-            },
-            messages: [
-              'connect-to-app-oauth'
-            ]
-          }
-        }
+        if (error.message === 'no token') { rtn.messages.push('connect-to-app-oauth') }
+        return rtn
       }
     } catch (error) {
       return {}

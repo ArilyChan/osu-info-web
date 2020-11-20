@@ -142,6 +142,7 @@ export default {
   methods: {
     kvStats () {
       return {
+        总分: this.user.statistics.total_score.toLocaleString(),
         排名总分: this.user.statistics.ranked_score.toLocaleString(),
         游玩次数: this.user.statistics.play_count.toLocaleString(),
         游玩总时长: humanizeDuration(this.user.statistics.play_time * 1000, { units: ['h', 'm', 's'], language: 'zh_CN' }),

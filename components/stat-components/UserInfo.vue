@@ -168,7 +168,8 @@ export default {
     z-index: -1;
     filter: contrast(70%) saturate(110%);
     background: var(--cover-url);
-    background-size: cover
+    background-size: cover;
+    background-position: center;
   }
 }
 </style>
