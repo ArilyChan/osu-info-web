@@ -60,7 +60,7 @@
 </template>
 <script>
 /* eslint-disable vue/require-prop-types */
-import modHelper from '@/helpers/enum.js'
+// import modHelper from '@/helpers/enum.js'
 import LazyImage from './LazyImage.vue'
 export default {
   components: {
@@ -115,7 +115,7 @@ export default {
       return `https://b.ppy.sh/thumb/${this.score.beatmap.beatmapset_id}l.jpg`
     },
     modsStr () {
-      return modHelper.toModList(this.score.mods).join(' ')
+      return this.score.mods.join(' ')
     }
   },
   methods: {
