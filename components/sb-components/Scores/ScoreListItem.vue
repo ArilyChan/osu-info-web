@@ -15,8 +15,7 @@
             >
             <div class="d-inline-block">
               <h5 class="mb-1">
-                <!-- <a :href="banchoBeatmapLink" v-html="score.beatmap.song_name" /> -->
-                <!-- <router-link
+                <router-link
                   :to="{
                     name:'beatmapsets-beatmapSetId-beatmapId',
                     params: {
@@ -24,9 +23,9 @@
                       beatmapId: score.beatmap.id
                     }
                   }"
-                  v-html="score.beatmap.song_name"
-                /> -->
-                {{ score.beatmapset.artist_unicode }} - {{ score.beatmapset.title_unicode }}
+                >
+                  {{ score.beatmapset.artist_unicode }} - {{ score.beatmapset.title_unicode }}
+                </router-link>
               </h5>
               <p class="mb-1">
                 <span v-html="htmlCounts" />
