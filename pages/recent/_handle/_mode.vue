@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import BeatmapInfo from '~/components/sb-components/BeatmapInfo.vue'
+import BeatmapInfo from '~/components/sb-components/Beatmap/BeatmapInfo.vue'
 // import { Waterfall, WaterfallItem } from 'vue2-waterfall'
 import UserInfo from '~/components/stat-components/UserInfo.vue'
 // import RankInfo from '~/components/stat-components/RankInfo.vue'
