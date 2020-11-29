@@ -15,7 +15,7 @@
             >
             <div class="d-inline-block">
               <h5 class="mb-1">
-                <router-link
+                <nuxt-link
                   :to="{
                     name:'beatmapsets-beatmapSetId-beatmapId',
                     params: {
@@ -25,7 +25,7 @@
                   }"
                 >
                   {{ score.beatmapset.artist_unicode }} - {{ score.beatmapset.title_unicode }}
-                </router-link>
+                </nuxt-link>
               </h5>
               <p class="mb-1">
                 <span v-html="htmlCounts" />
