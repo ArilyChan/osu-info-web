@@ -43,7 +43,10 @@ class UserController {
       rtn.user = user
       const rps = await bancho.getUserRecentScores(user, { mode })
       const rp = rps[0]
-      if (!rp) { return {} }
+      if (!rp) {
+        rtn.messages.push('no-recent')
+        return rtn
+      }
       rtn.score = rp
       try {
         if (!user.is_supporter) { rtn.messages.push('may-need-supporter') }
