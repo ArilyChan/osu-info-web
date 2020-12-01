@@ -61,7 +61,8 @@ class UserController {
         return rtn
       }
     } catch (error) {
-      return {}
+      rtn.messages.push('error-occured')
+      return rtn
     }
   }
 
