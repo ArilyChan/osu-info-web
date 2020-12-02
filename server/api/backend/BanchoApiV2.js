@@ -106,11 +106,38 @@ class BanchoApi {
     }).then(res => res.data)
   }
 
-  getUserScores (user, { type = 'best', ...options } = {}) {
-    return axios.get(`https://osu.ppy.sh/api/v2/users/${user.id}/scores/${type}`, {
-      params: options,
-      headers: this.publicTokenHeader()
-    }).then(res => res.data)
+  async getUserScores (user, { type = 'best', limit = 12, ...options } = {}) {
+    let page = 1
+    let current = 0
+    let last = 0
+    const data = []
+    if (limit > 50) {
+      last = limit % 50
+      page = Math.floor(limit / 50)
+      for (;current < page; current += 1) {
+        data.push(axios.get(`https://osu.ppy.sh/api/v2/users/${user.id}/scores/${type}`, {
+          params: {
+            ...options,
+            limit,
+            offset: current * 50 + 1
+          },
+          headers: this.publicTokenHeader()
+        }).then(res => res.data))
+      }
+    } else {
+      last = limit
+    }
+    if (last) {
+      data.push(axios.get(`https://osu.ppy.sh/api/v2/users/${user.id}/scores/${type}`, {
+        params: {
+          ...options,
+          limit: last,
+          offset: current * 50 + 1
+        },
+        headers: this.publicTokenHeader()
+      }).then(res => res.data))
+    }
+    return [].concat(...await Promise.all(data))
   }
 
   getUserRecentScores (user, options) {
