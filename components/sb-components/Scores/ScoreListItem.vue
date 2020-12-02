@@ -44,13 +44,13 @@
           >{{ moment(score.created_at).fromNow() }}</small>
           <br>
           <p
-            v-if="score.pp"
+            v-if="score.mods.length"
             class="float-right text-right mb-0 text-nowrap"
           >
             + {{ modsStr }}
           </p>
         </div>
-        <div class="mt-auto">
+        <div v-if="score.pp" class="mt-auto">
           <h4 class="mb-0 float-right text-right text-nowrap">
             <span v-html="smallerFloatHtml(score.pp.toFixed(2))" /> pp
           </h4>
