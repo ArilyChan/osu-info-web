@@ -106,7 +106,7 @@ class BanchoApi {
     }).then(res => res.data)
   }
 
-  getUserScores (user, { type = 'best', ...options }) {
+  getUserScores (user, { type = 'best', ...options } = {}) {
     return axios.get(`https://osu.ppy.sh/api/v2/users/${user.id}/scores/${type}`, {
       params: options,
       headers: this.publicTokenHeader()
@@ -115,7 +115,13 @@ class BanchoApi {
 
   getUserRecentScores (user, options) {
     return this.getUserScores(user, {
-      type: 'recent',
+      ...options,
+      type: 'recent'
+    })
+  }
+
+  getUserBestScores (user, options) {
+    return this.getUserScores(user, {
       ...options
     })
   }

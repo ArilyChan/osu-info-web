@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+const moment = require('moment')
 const MotherShip = require('../backend/MotherShip')
 const Bancho = require('../backend/BanchoApiV2')
 
@@ -61,6 +62,51 @@ class UserController {
         return rtn
       }
     } catch (error) {
+      rtn.messages.push('error-occured')
+      return rtn
+    }
+  }
+
+  static async bestPlay (handle, mode, { startDate = undefined, endDate, startHoursBefore, endHoursBefore } = {}) {
+    let start
+    let end
+
+    if (startHoursBefore) {
+      startDate = new Date()
+      startDate.setHours(startDate.getHours() - startHoursBefore)
+      start = startDate
+      endDate = new Date()
+      endDate.setHours(endDate.getHours() - endHoursBefore || 0)
+      end = endDate
+    } else {
+      if (!startDate) {
+        startDate = new Date(0)
+        // startDate.setHours(0)
+        // startDate.setMinutes(0)
+        // startDate.setSeconds(0)
+      }
+      start = startDate
+      end = endDate || new Date()
+    }
+
+    const rtn = {
+      messages: []
+    }
+    try {
+      const user = await bancho.getUser(handle)
+      rtn.user = user
+      const rps = await bancho.getUserBestScores(user, { mode, limit: 100 })
+      if (!rps || !rps.length) {
+        rtn.messages.push('no-bp')
+        return rtn
+      }
+      rtn.scores = rps.filter((score) => {
+        const date = moment(score.created_at).toDate()
+        return date >= start && date <= end
+      })
+      return rtn
+    } catch (error) {
+      console.log(error)
       rtn.messages.push('error-occured')
       return rtn
     }

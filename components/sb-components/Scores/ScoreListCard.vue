@@ -13,7 +13,7 @@
       class="shadow"
       no-body
     >
-      <template v-slot:header>
+      <template #header>
         <slot name="header">
           <h4>Score List:</h4>
         </slot>

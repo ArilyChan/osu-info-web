@@ -90,27 +90,17 @@
 
 <script>
 import BeatmapInfo from '~/components/sb-components/Beatmap/BeatmapInfo.vue'
-// import { Waterfall, WaterfallItem } from 'vue2-waterfall'
 import UserInfo from '~/components/stat-components/UserInfo.vue'
-// import RankInfo from '~/components/stat-components/RankInfo.vue'
-// import NumberStatistics from '~/components/stat-components/NumberStatistics.vue'
-// import Activities from '~/components/stat-components/Activities.vue'
-// import Level from '~/components/stat-components/Level.vue'
+
 export default {
   layout: 'default',
   components: {
-    UserInfo, // Waterfall,
-    // WaterfallItem,
-
-    BeatmapInfo // RankInfo,
-    // NumberStatistics,
-    // Activities,
-    // Level
+    UserInfo,
+    BeatmapInfo
   },
   async asyncData ({ params, $axios, $config: { baseURL } }) {
     let result = {
-      user: undefined,
-      statisticsHistory: []
+      user: undefined
     }
     const path = `/api/recent/${params.handle}${params.mode ? `/${params.mode}` : ''}`
     if (process.server) {

@@ -13,44 +13,46 @@
               class="score rank d-inline-block align-top"
               alt="A"
             >
-            <div class="d-inline-block">
-              <h5 class="mb-1">
-                <nuxt-link
-                  :to="{
-                    name:'beatmapsets-beatmapSetId-beatmapId',
-                    params: {
-                      beatmapSetId: score.beatmap.beatmapset_id,
-                      beatmapId: score.beatmap.id
-                    }
-                  }"
-                >
-                  {{ score.beatmapset.artist_unicode }} - {{ score.beatmapset.title_unicode }}
-                </nuxt-link>
-              </h5>
+            <div class="d-block">
+              <div class="d-flex align-items-baseline flex-wrap">
+                <h5 class="mb-0 pr-1">
+                  <nuxt-link
+                    :to="{
+                      name:'beatmapsets-beatmapSetId-beatmapId',
+                      params: {
+                        beatmapSetId: score.beatmap.beatmapset_id,
+                        beatmapId: score.beatmap.id
+                      }
+                    }"
+                  >
+                    {{ score.beatmapset.artist_unicode }} - {{ score.beatmapset.title_unicode }} [{{ score.beatmap.version }}]
+                  </nuxt-link>
+                </h5>
+                <small>by {{ score.beatmapset.creator }}</small>
+              </div>
               <p class="mb-1">
                 <span v-html="htmlCounts" />
               </p>
             </div>
           </div>
-          <small class="ml-2">{{ moment(score.time).format("LLLL") }}</small>
         </div>
       </div>
       <div class="d-flex align-items-end flex-column">
         <div class="align-top">
           <small
             class="float-right text-right text-nowrap"
-          >{{ moment(score.time).fromNow() }}</small>
+          >{{ moment(score.created_at).fromNow() }}</small>
           <br>
           <p
             v-if="score.pp"
             class="float-right text-right mb-0 text-nowrap"
           >
-            <span v-html="smallerFloatHtml(score.pp.toFixed(2))" /> pp
+            + {{ modsStr }}
           </p>
         </div>
         <div class="mt-auto">
           <h4 class="mb-0 float-right text-right text-nowrap">
-            {{ modsStr }}
+            <span v-html="smallerFloatHtml(score.pp.toFixed(2))" /> pp
           </h4>
         </div>
       </div>
@@ -71,9 +73,9 @@ export default {
     htmlCounts () {
       const combo = this.score.perfect
         ? `${this.$t('scoreCard.fullCombo')}`
-        : `${this.score.max_combo}`
+        : `${this.score.max_combo}x`
         // <small>/</small> ${this.score.beatmap.max_combo}<small class="float-number">x</small>
-      const accuracy = this.score.accuracy !== 1 ? this.smallerFloatHtml(`${this.score.accuracy.toLocaleString('en-GB', { style: 'percent' })}`) : ''
+      const accuracy = this.score.accuracy !== 1 ? this.smallerFloatHtml(`${this.score.accuracy.toLocaleString('en-GB', { style: 'percent', minimumFractionDigits: 2 })}`) : ''
       const counts = [
         ...Object.entries(this.score.statistics)
           .filter(
@@ -83,12 +85,12 @@ export default {
           .map(([k, v]) => ({
             count: v,
             append: k === 'count_miss'
-              ? this.$t('scoreCard.miss')
-              : `x ${k.slice(6)}`
+              ? ` ${this.$tc('scoreCard.miss', v)}`
+              : `x${k.slice(6)}`
           }))
       ]
         .filter(({ count }) => count)
-        .map(({ count, append }) => `${count} <small class="float-number">${append}</small>`)
+        .map(({ count, append }) => `${count}<small class="float-number">${append}</small>`)
         .join(' <small>/</small> ')
       return [combo, accuracy, counts].filter(str => str).join(' , ')
     },
@@ -96,9 +98,12 @@ export default {
       const rank = () => {
         switch (this.score.rank) {
           case 'SSH':
+          case 'XH':
             return 'SSHD'
           case 'SH':
             return 'SHD'
+          case 'X':
+            return 'SS'
           default:
             return this.score.rank
         }
@@ -141,13 +146,13 @@ export default {
 .list-group-item p {
     font-weight: 400;
 }
-@media (max-width: 992px) {
+@media (max-width: 991px) {
     .hide-when-too-small {
         visibility: collapse !important;
         display: none !important;
     }
 }
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .list-group-item {
         font-size: 80%;
     }
