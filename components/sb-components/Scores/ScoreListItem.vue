@@ -2,10 +2,10 @@
   <b-list-group-item>
     <div class="d-flex w-100 justify-content-between align-items-stretch">
       <div class="d-flex">
-        <lazy-image
+        <img
           :src="smallPreviewImgSrc"
-          class="align-top mr-2 hide-when-too-small bp-img"
-        />
+          class="align-top mr-2 hide-when-too-small bp-img rounded shadow"
+        >
         <div class="align-top">
           <div class="d-flex">
             <img
@@ -63,10 +63,11 @@
 <script>
 /* eslint-disable vue/require-prop-types */
 // import modHelper from '@/helpers/enum.js'
-import LazyImage from './LazyImage.vue'
+// import LazyImage from './LazyImage.vue'
+// import Image from './LazyImage.vue'
 export default {
   components: {
-    LazyImage
+    // Image
   },
   props: ['score'],
   computed: {
