@@ -13,11 +13,6 @@
       class="shadow"
       no-body
     >
-      <template #header>
-        <slot name="header">
-          <h4>Score List:</h4>
-        </slot>
-      </template>
       <b-list-group flush>
         <score-list-item
           v-for="(score,index) in list"
