@@ -37,7 +37,7 @@ export default {
                 color: '#111',
                 fontSize: '30px',
                 show: true,
-                formatter: () => `${this.user.statistics.level.current}.${this.user.statistics.level.progress}`
+                formatter: () => `${this.user.statistics.level.current + this.user.statistics.level.progress / 100}`
               }
             }
           }

@@ -8,11 +8,11 @@
         >
         <div class="align-top">
           <div class="d-flex">
-            <img
-              :src="rankImgSrc"
+            <osu-assets
+              :asset="`ranking-${score.rank}`"
               class="score rank d-inline-block align-top"
-              alt="A"
-            >
+              :alt="score.rank"
+            />
             <div class="d-block">
               <div class="d-flex align-items-baseline flex-wrap">
                 <h5 class="mb-0 pr-1">

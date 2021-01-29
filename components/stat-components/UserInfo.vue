@@ -4,11 +4,13 @@
     class="card-profile bg-cover"
     no-body
     :style="{
-      '--cover-url': `url('${user.cover.url}')`
+      '--cover-url': `url('${user.cover.url}')`,
     }"
   >
     <div class="px-4">
-      <b-card-header class="row flex-nowrap justify-content-center p-0 mx--4 profile-backdrop">
+      <b-card-header
+        class="row flex-nowrap justify-content-center p-0 mx--4 profile-backdrop"
+      >
         <div class="col-lg-3 order-1 order-lg-2">
           <div class="card-profile-image">
             <a :href="`https://osu.ppy.sh/users/${user.username}`">
@@ -16,35 +18,43 @@
             </a>
           </div>
         </div>
-        <div class="col-lg-4 order-2 order-lg-1 text-lg-right align-self-lg-center px-0">
+        <div
+          class="col-lg-4 order-2 order-lg-1 text-lg-right align-self-lg-center px-0 pl-md-4"
+        >
           <div class="card-profile-stats d-flex justify-content-md-center">
             <div class="mx-1">
-              <span class="heading text-large">{{ user.id }}</span>
-              <span class="description text-little-larger">User ID</span>
+              <span class="heading text-large">{{ mode }}</span>
+              <span class="description text-little-larger">Mode</span>
             </div>
             <div class="mx-1">
               <span class="heading text-large">{{ acc }}</span>
               <span class="description text-little-larger">Accuracy</span>
             </div>
-            <div v-show="false">
-              <span class="heading">0</span>
-              <span class="description">Level</span>
+            <div v-show="!disabled.includes('level')">
+              <span class="heading text-large">{{ user.statistics.level.current + user.statistics.level.progress / 100 }}</span>
+              <span class="description text-little-larger">Lv.</span>
             </div>
           </div>
         </div>
         <div class="col-lg-4 order-2 order-lg-3 px-0">
           <div class="card-profile-stats d-flex justify-content-md-center">
-            <div v-show="false" class="mx-1">
+            <div v-show="!disabled.includes('pp')" class="mr-1">
               <span class="heading text-large">{{ user.statistics.pp }}</span>
               <span class="description text-little-larger">PP</span>
             </div>
             <div class="mx-1">
-              <span class="heading text-large">#{{ user.statistics.rank.global }}</span>
+              <span
+                class="heading text-large"
+              >#{{ user.statistics.rank.global }}</span>
               <span class="description text-little-larger">Global</span>
             </div>
             <div class="mx-1">
-              <span class="heading text-large">#{{ user.statistics.rank.country }}</span>
-              <span class="description text-little-larger"><gb-flag
+              <span
+                class="heading text-large"
+              >#{{ user.statistics.rank.country }}</span>
+              <span
+                class="description text-little-larger"
+              ><gb-flag
                 :code="user.country.code"
                 size="small"
                 icon-path="/assets/flags"
@@ -58,18 +68,22 @@
         <h1 class="pt-2">
           {{ user.username }}
         </h1>
-        <div v-if="user.previous_usernames.length" class="d-flex justify-content-center align-items-baseline">
+        <div
+          v-if="user.previous_usernames.length"
+          class="d-flex justify-content-center align-items-baseline"
+        >
           <h3 class="pr-1">
             aka
           </h3>
           <p class="mb-0 text-large">
-            {{ user.previous_usernames.join(', ') }}
+            {{ user.previous_usernames.join(", ") }}
           </p>
         </div>
-        <h5>{{ mode }} 模式</h5>
-        <h4 class="mb-0 pb-1">
-          注册于 {{ new Date(user.join_date).toLocaleDateString() }} {{ new Date(user.join_date).toLocaleTimeString() }}
-        </h4>
+        <!-- <h5>{{ mode }} 模式</h5> -->
+        <!-- <h4 class="mb-0 pb-1">
+          注册于 {{ new Date(user.join_date).toLocaleDateString() }}
+          {{ new Date(user.join_date).toLocaleTimeString() }}
+        </h4> -->
       </div>
       <!-- <div class="mt-5 py-5 border-top text-left">
               <p class="px-5" v-html="convertBBCode(user.page.raw)" />
@@ -79,28 +93,40 @@
       <b-container fluid>
         <b-row class="justify-content-md-center flex-wrap">
           <b-col col lg="auto" class="text-nowrap">
-            <i class="ni ni-planet pr-1" />{{ user.is_online ? '在线' : '离线' }}
+            <i class="fas fa-globe-americas" />
+            {{ user.is_online ? "在线" : `离线，最近活动在 ${ new Date(user.last_visit).toLocaleDateString() }
+            ${ new Date(user.last_visit).toLocaleTimeString() }` }}
           </b-col>
           <b-col v-if="user.location" col lg="auto" class="text-nowrap">
-            <i class="ni ni-square-pin pr-1" />{{ user.location }}
+            <i class="fas fa-map-marked pr-1" />{{ user.location }}
           </b-col>
           <b-col v-if="user.interests" col lg="auto" class="text-nowrap">
-            <i class="ni ni-favourite-28 pr-1" />{{ user.interests }}
+            <i class="fab fa-gratipay pr-1" />{{ user.interests }}
           </b-col>
           <b-col v-if="user.occupation" col lg="auto" class="text-nowrap">
-            <i class="ni ni-briefcase-24 pr-1" />{{ user.occupation }}
+            <i class="fas fa-briefcase pr-1" />{{ user.occupation }}
           </b-col>
           <b-col v-if="user.twitter" col lg="auto" class="text-nowrap">
             <i class="fab fa-twitter" />@{{ user.twitter }}
           </b-col>
-          <b-col v-if="user.playstyle && user.playstyle.length" col lg="auto" class="text-nowrap">
-            <i class="ni ni-tag" />
-            用 {{ user.playstyle.join(', ') }} 打图
+          <b-col
+            v-if="user.playstyle && user.playstyle.length"
+            col
+            lg="auto"
+            class="text-nowrap"
+          >
+            <i class="fas fa-tags" />
+            用 {{ user.playstyle.join(", ") }} 打图
           </b-col>
           <b-col v-if="user.discord" col lg="auto">
             <!-- <img src="~/assets/images/Discord-Logo-Color.png" height="20px"> -->
             <i class="fa-fw fab fa-discord" />
             {{ user.discord }}
+          </b-col>
+          <b-col col lg="auto">
+            <i class="fas fa-plane-arrival" />
+            注册于 {{ new Date(user.join_date).toLocaleDateString() }}
+            {{ new Date(user.join_date).toLocaleTimeString() }}
           </b-col>
         </b-row>
       </b-container>
@@ -118,6 +144,10 @@ export default {
     mode: {
       type: String,
       default: undefined
+    },
+    disabled: {
+      type: Array,
+      default: () => []
     }
   },
   computed: {
@@ -125,13 +155,19 @@ export default {
       return this.user.avatar_url
     },
     acc () {
-      return (this.user.statistics.hit_accuracy / 100).toLocaleString('en-GB', { style: 'percent', minimumFractionDigits: 2 })
+      return (this.user.statistics.hit_accuracy / 100).toLocaleString('en-GB', {
+        style: 'percent',
+        minimumFractionDigits: 2
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
 .text-large {
   font-size: 150% !important;
 }
@@ -153,14 +189,14 @@ export default {
   backdrop-filter: brightness(102%) saturate(140%) blur(10px);
 }
 .bg-cover {
-  background-color: rgba(255,255,255,0.83);
+  background-color: rgba(255, 255, 255, 0.83);
 
   .card-body-backdrop-filter-base {
     backdrop-filter: brightness(102%) saturate(140%) blur(3px);
   }
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     border-radius: 0.25rem;
     width: 100%;
@@ -170,6 +206,18 @@ export default {
     background: var(--cover-url);
     background-size: cover;
     background-position: center;
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .text-large {
+    font-size: 120% !important;
+  }
+  .text-little-larger {
+    font-size: 110% !important;
+  }
+  .text-little-larger * {
+    font-size: clear;
   }
 }
 </style>

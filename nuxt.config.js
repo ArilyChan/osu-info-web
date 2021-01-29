@@ -67,6 +67,8 @@ module.exports = {
     { src: '~/plugins/apex-chart', mode: 'client' },
     // { src: '~/plugins/vue-worker.js', mode: 'client' },
     '~/plugins/i18n.js',
+    '~/plugins/osu-assets/index.js',
+    '~/plugins/vue-flag.js',
     '~/plugins/vue-flag.js',
     '~/plugins/light-timeline.js',
     '~/plugins/moment.js'

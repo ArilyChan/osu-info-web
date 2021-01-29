@@ -2,7 +2,7 @@
   <div class="col px-0 profile-page">
     <div v-if="user" class="card-profile container" style="margin-top: 5em">
       <div class="b-overlay-wrap position-relative">
-        <user-info :user="user" :mode="mode" />
+        <user-info :user="user" :mode="mode" :disabled="['pp','level']"/>
       </div>
       <no-ssr>
         <waterfall

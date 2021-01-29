@@ -5,7 +5,7 @@
     no-body
     hover
     :style="{
-      '--cover-url': `url('${beatmapset.covers['cover@2x']}')`,
+      '--cover-url': `url('${beatmapset.covers['cover@2x'] || beatmapset.covers['cover']}')`,
     }"
   >
     <div class="card-body-backdrop-filter-base">
@@ -30,7 +30,7 @@ export default {
       return this.beatmapset.id
     },
     songName () {
-      return `${this.beatmapset.artist_unicode} - ${this.beatmapset.title_unicode}`
+      return `${this.beatmapset.artist_unicode || this.beatmapset.artist} - ${this.beatmapset.title_unicode || this.beatmapset.title}`
     }
   }
 }
@@ -52,7 +52,7 @@ export default {
     height: 100%;
     opacity: 1;
     transition: all 0.15s ease;
-    background: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.93);
   }
   &::after {
     content: "";
