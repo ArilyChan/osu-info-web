@@ -6,7 +6,7 @@ export default {
   props: {
     skin: {
       type: String,
-      default: '- Nekoha Shizuku -'
+      default: 'Umaru'
     },
     asset: {
       type: String,

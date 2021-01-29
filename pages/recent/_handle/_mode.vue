@@ -61,7 +61,7 @@
               </b-card-body>
             </b-col>
             <b-col cols="3" class="p-0" />
-            <div class="position-absolute h-100 d-flex align-items-center" style="top: 0; right: 0; max-width:50%; z-index: -1">
+            <div class="position-absolute h-100 d-flex align-items-center pr-1" style="top: 0; right: 0; max-width:50%; z-index: -1">
               <osu-assets :asset="`ranking-${score.rank}`" style="max-width:100%; max-height: 100%" />
             </div>
             <div class="position-absolute d-flex align-items-end pr-3" style="top: 60%; right: 0;">
