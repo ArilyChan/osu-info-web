@@ -13,6 +13,6 @@ app.use('/api', require('./api'))
 listen()
 function listen () {
   // 服务端监听
-  app.listen(port, '0.0.0.0')
+  app.listen(port)
   console.log('Server listening on `localhost:' + port + '`.')
 }

@@ -11,6 +11,6 @@ if (config.dev) {
 
 function listen () {
   // 服务端监听
-  app.listen(port, '0.0.0.0')
-  console.log('Server listening on `localhost:' + port + '`.')
+  app.listen(port)
+  console.log('Server listening on `' + port + '`.')
 }
