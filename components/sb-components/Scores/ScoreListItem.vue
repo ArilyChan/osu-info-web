@@ -41,7 +41,7 @@
         <div class="align-top">
           <small
             class="float-right text-right text-nowrap"
-          >{{ moment(score.created_at).fromNow() }}, bp#{{ k }}</small>
+          >{{ moment(score.created_at).fromNow() }}</small>
           <br>
           <p
             v-if="score.mods.length"
