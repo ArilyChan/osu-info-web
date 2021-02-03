@@ -18,6 +18,7 @@
           v-for="(score,index) in list"
           :key="index"
           :score="score"
+          :k="index"
         />
         <b-list-group-item v-if="more">
           <div class="row justify-content-center text-center">

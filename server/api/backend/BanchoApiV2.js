@@ -118,8 +118,8 @@ class BanchoApi {
         data.push(axios.get(`https://osu.ppy.sh/api/v2/users/${user.id}/scores/${type}`, {
           params: {
             ...options,
-            limit,
-            offset: current * 50 + 1
+            limit: 50,
+            offset: current * 50
           },
           headers: this.publicTokenHeader()
         }).then(res => res.data))
@@ -132,7 +132,7 @@ class BanchoApi {
         params: {
           ...options,
           limit: last,
-          offset: current * 50 + 1
+          offset: current * 50
         },
         headers: this.publicTokenHeader()
       }).then(res => res.data))

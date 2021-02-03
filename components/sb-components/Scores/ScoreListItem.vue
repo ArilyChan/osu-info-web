@@ -41,7 +41,7 @@
         <div class="align-top">
           <small
             class="float-right text-right text-nowrap"
-          >{{ moment(score.created_at).fromNow() }}</small>
+          >{{ moment(score.created_at).fromNow() }}, bp#{{ k }}</small>
           <br>
           <p
             v-if="score.mods.length"
@@ -69,7 +69,7 @@ export default {
   components: {
     // Image
   },
-  props: ['score'],
+  props: ['score', 'k'],
   computed: {
     htmlCounts () {
       const combo = this.score.perfect
