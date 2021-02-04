@@ -42,7 +42,12 @@ export default {
     let result = {
       user: undefined
     }
-    const path = `/api/recent/${params.handle}${params.mode ? `/${params.mode}` : ''}`
+    if (params.id === undefined || params.mode === undefined) {
+      return {
+        paramsCheck: false
+      }
+    }
+    const path = `/api/scores/${params.mode}/${params.id}`
     if (process.server) {
       result = await $axios.get(`http://localhost:${process.env.PORT || 3000}${path}`).then(res => res.data)
     }

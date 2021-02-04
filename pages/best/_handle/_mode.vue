@@ -36,7 +36,7 @@ export default {
       }).then(res => res.data)
     }
     if (process.client) {
-      result = await $axios.get(`/api/users${path}`, {
+      result = await $axios.get(path, {
         params: route.query
       }).then(res => res.data)
     }

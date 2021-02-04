@@ -74,6 +74,14 @@ class BanchoApi {
     }
   }
 
+  getScore ({ scoreId, mode }, { params, headers } = {}) {
+    const options = {
+      params,
+      headers: headers || this.publicTokenHeader()
+    }
+    return axios.get(`https://osu.ppy.sh/api/v2/scores/${mode}/${scoreId}`, options).then(res => res.data)
+  }
+
   getUser (handle, mode) {
     return axios.get(`https://osu.ppy.sh/api/v2/users/${handle}${mode ? `/${mode}` : ''}`, {
       headers: this.publicTokenHeader()
@@ -233,4 +241,11 @@ class BanchoApi {
   }
 }
 
-module.exports = BanchoApi
+// module.exports = BanchoApi
+const bancho = new BanchoApi({
+  clientId: process.env.BANCHO_API_V2_CLIENTID,
+  clientSecret: process.env.BANCHO_API_V2_CLIENTSECRET
+})
+bancho.init()
+
+module.exports = bancho

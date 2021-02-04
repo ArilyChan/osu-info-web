@@ -3,6 +3,7 @@ const moment = require('moment')
 const router = express.Router()
 
 const User = require('./controller/UserController')
+const Public = require('./controller/PublicController')
 
 router.get('/users/:handle/:mode?', async (req, res, next) => {
   return res.json(await User.getUserInfo(req.params.handle, req.params.mode))
@@ -10,6 +11,9 @@ router.get('/users/:handle/:mode?', async (req, res, next) => {
 
 router.get('/recent/:handle/:mode?', async (req, res, next) => {
   return res.json(await User.recentPlay(req.params.handle, req.params.mode))
+})
+router.get('/scores/:mode/:id?', async (req, res, next) => {
+  return res.json(await Public.getScore(req.params.mode, req.params.id))
 })
 
 router.get('/best/:handle/:mode?', async (req, res, next) => {

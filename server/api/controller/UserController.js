@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
 const moment = require('moment')
 const MotherShip = require('../backend/MotherShip')
-const Bancho = require('../backend/BanchoApiV2')
+const bancho = require('../backend/BanchoApiV2')
 
 const mothership = new MotherShip()
-const bancho = new Bancho({
-  clientId: process.env.BANCHO_API_V2_CLIENTID,
-  clientSecret: process.env.BANCHO_API_V2_CLIENTSECRET
-})
-bancho.init()
+// const bancho = new Bancho({
+//   clientId: process.env.BANCHO_API_V2_CLIENTID,
+//   clientSecret: process.env.BANCHO_API_V2_CLIENTSECRET
+// })
+// bancho.init()
 
 class UserController {
   static async getUserInfo (handle, mode) {
@@ -70,7 +70,7 @@ class UserController {
   static async bestPlay (handle, mode, { startDate = undefined, endDate, startHoursBefore, endHoursBefore } = {}) {
     let start
     let end
-
+    console.log({ startHoursBefore })
     if (startHoursBefore) {
       startDate = new Date()
       startDate.setHours(startDate.getHours() - startHoursBefore)
@@ -109,6 +109,15 @@ class UserController {
       console.log(error)
       rtn.messages.push('error-occured')
       return rtn
+    }
+  }
+
+  static async getScore (mode, scoreId) {
+    const score = await bancho.getScore({ mode, id: scoreId })
+    if (!score) { return {} }
+    return {
+      score,
+      user: await bancho.getUser({ id: score.user_id })
     }
   }
 
