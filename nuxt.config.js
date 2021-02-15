@@ -1,4 +1,3 @@
-
 // eslint-disable-next-line nuxt/no-cjs-in-config
 module.exports = {
   /*
@@ -66,7 +65,7 @@ module.exports = {
     // { src: '~/plugins/debounce/index.js', mode: 'client' },
     { src: '~/plugins/apex-chart', mode: 'client' },
     // { src: '~/plugins/vue-worker.js', mode: 'client' },
-    '~/plugins/i18n.js',
+    // '~/plugins/i18n.js',
     '~/plugins/osu-assets/index.js',
     '~/plugins/vue-flag.js',
     '~/plugins/vue-flag.js',
@@ -89,6 +88,13 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
+    ['nuxt-i18n', {
+      detectBrowserLanguage: {
+        useCookie: true,
+        cookieKey: 'i18n_redirected',
+        onlyOnRoot: true // recommended
+      }
+    }],
     // // Doc: https://bootstrap-vue.js.org
     // 'bootstrap-vue/nuxt',
     // // Doc: https://axios.nuxtjs.org/usage
@@ -106,6 +112,24 @@ module.exports = {
     'nuxt-clipboard2'
     // '@nuxtjs/pwa'
   ],
+  i18n: {
+    locales: [
+      { code: 'en', iso: 'en-GB', file: 'en-GB.json', dir: 'ltr' },
+      { code: 'us', iso: 'en-US', file: 'en-US.json', dir: 'ltr' },
+      { code: 'cn', iso: 'zh-CN', file: 'zh-CN.json', dir: 'ltr' }
+    ],
+    defaultLocale: 'en-GB',
+    langDir: 'locales/',
+    lazy: true
+    // vueI18n: {
+    //   fallbackLocale: 'en',
+    //   // messages: {
+    //   //   en: require('./locales/en-GB.json'),
+    //   //   us: require('./locales/en-US.json'),
+    //   //   cn: require('./locales/zh-CN.json')
+    //   // }
+    // }
+  },
   publicRuntimeConfig: {
     baseURL: process.env.BASE_URL || 'https://bot.ri.mk',
     path: process.env.BANCHO_STAT_WEB_PATH || '/stats'

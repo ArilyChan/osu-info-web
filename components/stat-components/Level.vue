@@ -54,7 +54,7 @@ export default {
         stroke: {
           lineCap: 'round'
         },
-        labels: ['Level']
+        labels: [this.$t('level')]
       }
     }
   }

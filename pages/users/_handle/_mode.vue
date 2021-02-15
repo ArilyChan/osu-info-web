@@ -24,7 +24,7 @@
             />
           </waterfall-item>
           <waterfall-item class="double-size">
-            <number-statistics :user="user" />
+            <number-statistics :user="user" :historical-best="historicalBest" />
           </waterfall-item>
           <waterfall-item
             v-if="recentActivity.length"
@@ -93,6 +93,7 @@ export default {
       user: result.user,
       recentActivity: result.recentActivity || [],
       statisticsHistory: result.statisticsHistory || [],
+      historicalBest: result.historicalBest[0],
       mode: params.mode || (result.user ? result.user.playmode : undefined)
     }
   }

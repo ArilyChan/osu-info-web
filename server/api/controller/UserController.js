@@ -2,13 +2,9 @@
 const moment = require('moment')
 const MotherShip = require('../backend/MotherShip')
 const bancho = require('../backend/BanchoApiV2')
+const osuTrack = require('../backend/OsuTrack')
 
 const mothership = new MotherShip()
-// const bancho = new Bancho({
-//   clientId: process.env.BANCHO_API_V2_CLIENTID,
-//   clientSecret: process.env.BANCHO_API_V2_CLIENTSECRET
-// })
-// bancho.init()
 
 class UserController {
   static async getUserInfo (handle, mode) {
@@ -18,6 +14,8 @@ class UserController {
       const user = await bancho.getUser(handle, mode).catch(() => { throw new Error(1) })
       if (!user.id) { return {} }
       const recentActivity = await bancho.getUserActivity(user, 10, 0)
+      const historicalBest = await osuTrack.getUserHistoricalBest(user)
+      osuTrack.updateUser(user)
       let statisticsHistory
       if (user.playmode === 'osu') {
         statisticsHistory = await mothership.getUserHistory(user, oneYearBefore).catch((err) => {
@@ -28,7 +26,8 @@ class UserController {
       return {
         user,
         recentActivity,
-        statisticsHistory
+        statisticsHistory,
+        historicalBest
       }
     } catch (error) {
       console.log(error.stack)

@@ -24,15 +24,15 @@
           <div class="card-profile-stats d-flex justify-content-md-center">
             <div class="mx-1">
               <span class="heading text-large">{{ mode }}</span>
-              <span class="description text-little-larger">Mode</span>
+              <span class="description text-little-larger">{{ $t('userInfo.mode') }}</span>
             </div>
             <div class="mx-1">
               <span class="heading text-large">{{ acc }}</span>
-              <span class="description text-little-larger">Accuracy</span>
+              <span class="description text-little-larger">{{ $t('userInfo.accuracy') }}</span>
             </div>
             <div v-show="!disabled.includes('level')">
               <span class="heading text-large">{{ user.statistics.level.current + user.statistics.level.progress / 100 }}</span>
-              <span class="description text-little-larger">Lv.</span>
+              <span class="description text-little-larger">{{ $t('userInfo.level') }}</span>
             </div>
           </div>
         </div>
@@ -46,7 +46,7 @@
               <span
                 class="heading text-large"
               >#{{ user.statistics.rank.global }}</span>
-              <span class="description text-little-larger">Global</span>
+              <span class="description text-little-larger">{{ $t('userInfo.global') }}</span>
             </div>
             <div class="mx-1">
               <span
@@ -73,7 +73,7 @@
           class="d-flex justify-content-center align-items-baseline"
         >
           <h3 class="pr-1">
-            aka
+            {{ $t('userInfo.usernameAlias') }}
           </h3>
           <p class="mb-0 text-large">
             {{ user.previous_usernames.join(", ") }}
@@ -94,8 +94,7 @@
         <b-row class="justify-content-md-center flex-wrap">
           <b-col col lg="auto" class="text-nowrap">
             <i class="fas fa-globe-americas" />
-            {{ user.is_online ? "在线" : `离线，最近活动在 ${ new Date(user.last_visit).toLocaleDateString() }
-            ${ new Date(user.last_visit).toLocaleTimeString() }` }}
+            {{ user.is_online ? $t('userInfo.online') : `${$t('userInfo.offline') }, ${$t('userInfo.lastActivityAt', {t: `${new Date(user.last_visit).toLocaleDateString()} ${new Date(user.last_visit).toLocaleTimeString()}`})}` }}
           </b-col>
           <b-col v-if="user.location" col lg="auto" class="text-nowrap">
             <i class="fas fa-map-marked pr-1" />{{ user.location }}
@@ -116,7 +115,7 @@
             class="text-nowrap"
           >
             <i class="fas fa-tags" />
-            用 {{ user.playstyle.join(", ") }} 打图
+            {{ $t('userInfo.playStyle', {styles: user.playstyle.join(", ") }) }}
           </b-col>
           <b-col v-if="user.discord" col lg="auto">
             <!-- <img src="~/assets/images/Discord-Logo-Color.png" height="20px"> -->
@@ -125,8 +124,7 @@
           </b-col>
           <b-col col lg="auto">
             <i class="fas fa-plane-arrival" />
-            注册于 {{ new Date(user.join_date).toLocaleDateString() }}
-            {{ new Date(user.join_date).toLocaleTimeString() }}
+            {{ $t('userInfo.registeredAt', {t: new Date(user.join_date).toLocaleDateString() }) }}
           </b-col>
         </b-row>
       </b-container>

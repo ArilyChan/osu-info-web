@@ -8,8 +8,34 @@
   "statements": {
     "testTitle": "collection sharing alpha"
   },
-  "scoreCard": {
-    "fullCombo": "full combo",
-    "miss": "miss | misses"
-  }
+  "userInfo": {
+    "mode": "Mode",
+    "accuracy": "Accuracy",
+    "global": "Global",
+    "usernameAlias": "aka",
+    "online": "online",
+    "offline": "offline",
+    "lastActivityAt": "last activity at {t}",
+    "playStyle": "playing with {styles}",
+    "registeredAt": "registered at {t}",
+    "level": "Lv."
+  },
+  "numericalStatistics": {
+    "score": "Score",
+    "rankedScore": "Ranked Score",
+    "playCount": "Play Count",
+    "playLength": "Play Times",
+    "totalHits": "TTH",
+    "historicalBestRank": "Best Rank",
+    "historicalBestAccuracy": "Best Accuracy",
+    "disclaimer": "Some historical data provided by OsuTrack"
+  },
+  "CabbageHistory": {
+    "ppTodayBefore": "",
+    "ppTodayAfter": " today",
+    "ppGain": "gained {ppGain}pp in a week 🎉 !",
+    "ppDrop": "lost {ppDrop}pp in a week, you deranked??",
+    "disclaimer": "Historical data provided by Cabbage"
+  },
+  "level": "Level"
 }

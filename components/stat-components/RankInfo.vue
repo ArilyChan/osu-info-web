@@ -1,22 +1,25 @@
 <template>
-  <b-card v-if="numMode(mode) === 0 && statisticsHistory.length" no-body class="shadow">
+  <b-card v-if="numMode(mode) === 0 && history.length" no-body class="shadow">
     <b-card-header class="d-inline-flex justify-content-end align-items-baseline py-2">
       <h5 class="pr-1">
-        今天你
+        {{ $t('CabbageHistory.ppTodayBefore') }}
       </h5>
       <h3>
         <b>{{ user.statistics.pp }}</b><small>pp</small>
       </h3>
+      <h5 class="pl-1">
+        {{ $t('CabbageHistory.ppTodayAfter') }}
+      </h5>
       <div v-if="ppHistory && ppHistory[ppHistory.length - 8] < user.statistics.pp">
-        , 你比上周刷多 {{ Math.round((user.statistics.pp - ppHistory[ppHistory.length - 8]+ Number.EPSILON ) * 100) / 100 }}pp, 真有你的
+        , {{ $t('CabbageHistory.ppGain' , {ppGain: Math.round((user.statistics.pp - ppHistory[ppHistory.length - 8]+ Number.EPSILON ) * 100) / 100}) }}
       </div>
       <div v-else-if="ppHistory && ppHistory[ppHistory.length - 8] > user.statistics.pp">
-        , 你比上周少了 {{ Math.round((user.statistics.pp - ppHistory[ppHistory.length - 8]+ Number.EPSILON ) * 100) / 100 }}pp, 你是不是倒刷了？
+        , {{ $t('CabbageHistory.ppDrop' , {ppDrop: Math.round((user.statistics.pp - ppHistory[ppHistory.length - 8]+ Number.EPSILON ) * 100) / 100}) }}
       </div>
     </b-card-header>
     <apexchart :height="historyChart.chart.height" type="line" :options="historyChart.chart" :series="createSeries()" />
     <b-card-footer class="text-right py-1 small">
-      历史数据由白菜提供
+      {{ $t('CabbageHistory.disclaimer') }}
     </b-card-footer>
   </b-card>
   <b-card v-else-if="user.rankHistory && user.rankHistory.data.length" no-body class="shadow">
@@ -42,6 +45,14 @@
 
 <script>
 export default {
+  filters: {
+    decodeEntities (value) {
+      if (!value) { return '' }
+      value = value.toString()
+      const parsed = new DOMParser().parseFromString(value, 'text/html')
+      return parsed.documentElement.textContent
+    }
+  },
   props: {
     user: {
       type: Object,
@@ -123,21 +134,21 @@ export default {
   },
   computed: {
     pcHistory () {
-      if (!this.statisticsHistory.length) { return [] }
-      return this.statisticsHistory.map(rec => rec.playcount)
+      if (!this.history.length) { return [] }
+      return this.history.map(rec => rec.playcount)
     },
     ppHistory () {
-      if (!this.statisticsHistory.length) { return [] }
-      return this.statisticsHistory.map(rec => rec.ppRaw)
+      if (!this.history.length) { return [] }
+      return this.history.map(rec => rec.ppRaw)
     },
     ppRankHistory () {
-      if (!this.statisticsHistory.length) { return [] }
-      return this.statisticsHistory.map(rec => rec.ppRank)
+      if (!this.history.length) { return [] }
+      return this.history.map(rec => rec.ppRank)
     }
   },
   created () {
     const numMode = this.numMode(this.mode)
-    this.statisticsHistory = this.statisticsHistory.filter(rec => rec.mode === numMode)
+    this.history = this.statisticsHistory.filter(rec => rec.mode === numMode)
     const pp = this.ppHistory
     this.historyChart = {
       chart: {
@@ -222,8 +233,8 @@ export default {
   },
   methods: {
     dateHistory () {
-      if (!this.statisticsHistory.length) { return [] }
-      return this.statisticsHistory.map(({ queryDate: { year, month, day } }) => new Date(`${year}-${month}-${day}`))
+      if (!this.history.length) { return [] }
+      return this.history.map(({ queryDate: { year, month, day } }) => new Date(`${year}-${month}-${day}`))
     },
     numMode (mode) {
       if (mode === 'osu') { return 0 }
@@ -233,7 +244,7 @@ export default {
       return -1
     },
     createSeries () {
-      if (!this.statisticsHistory.length) { return [] }
+      if (!this.history.length) { return [] }
       // const { ppHistory, ppRankHistory, dateHistory } = this
       const pp = this.ppHistory
       const rank = this.ppRankHistory

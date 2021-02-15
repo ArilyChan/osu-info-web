@@ -5,47 +5,49 @@
         {{ item.date.toDate().toLocaleDateString() }}
       </template>
       <template slot="content" slot-scope="{ item }">
-        <div v-for="(activity, index) in item.activity" :key="`${item.date}-${index}`">
-          <b-card-text v-if="activity.type === 'rank'">
-            Placed {{ activity.scoreRank }} <b>#{{ activity.rank }}</b> on <a :href="activity.beatmap.url">{{ activity.beatmap.title }}</a>
-          </b-card-text>
-          <b-card-text v-else-if="activity.type === 'rankLost'">
-            Lost first place on <a :href="activity.beatmap.url">{{ activity.beatmap.title }}</a>
-          </b-card-text>
-          <b-card-text v-else-if="activity.type === 'beatmapPlaycount'">
-            Played <a :href="activity.beatmap.url">{{ activity.beatmap.title }}</a> <b>#{{ activity.count }}</b> times
-          </b-card-text>
-          <b-card-text v-else-if="activity.type === 'achievement'">
-            Achieved "{{ activity.achievement.name }}" achievement
-          </b-card-text>
-          <b-card-text v-else-if="activity.type === 'beatmapsetApprove'">
-            {{ activity.approval | capitalizeFirstLetter }} map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
-          </b-card-text>
-          <b-card-text v-else-if="activity.type === 'beatmapsetDelete'">
-            Deleted map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
-          </b-card-text>
-          <b-card-text v-else-if="activity.type === 'beatmapsetRevive'">
-            Revived map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
-          </b-card-text>
-          <b-card-text v-else-if="activity.type === 'beatmapsetUpdate'">
-            Updated map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
-          </b-card-text>
-          <b-card-text v-else-if="activity.type === 'beatmapsetUpload'">
-            Uploaded map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
-          </b-card-text>
-          <b-card-text v-else-if="activity.type === 'userSupportAgain'">
-            Supported osu again!
-          </b-card-text>
-          <b-card-text v-else-if="activity.type === 'userSupportFirst'">
-            Supported osu for the first time!
-          </b-card-text>
-          <b-card-text v-else-if="activity.type === 'userSupportGift'">
-            Someone gifted <a :href="activity.user.url">{{ activity.user.username }}</a> a supporter tag!
-          </b-card-text>
-          <b-card-text v-else-if="activity.type === 'usernameChange'">
-            Changed username to {{ user.username }}
-          </b-card-text>
-        </div>
+        <b-list-group>
+          <b-list-group-item v-for="(activity, index) in item.activity" :key="`${item.date}-${index}`" class="py-2">
+            <b-card-text v-if="activity.type === 'rank'">
+              Placed {{ activity.scoreRank }} <b>#{{ activity.rank }}</b> on <a :href="activity.beatmap.url">{{ activity.beatmap.title }}</a>
+            </b-card-text>
+            <b-card-text v-else-if="activity.type === 'rankLost'">
+              Lost first place on <a :href="activity.beatmap.url">{{ activity.beatmap.title }}</a>
+            </b-card-text>
+            <b-card-text v-else-if="activity.type === 'beatmapPlaycount'">
+              Played <a :href="activity.beatmap.url">{{ activity.beatmap.title }}</a> <b>#{{ activity.count }}</b> times
+            </b-card-text>
+            <b-card-text v-else-if="activity.type === 'achievement'">
+              Achieved "{{ activity.achievement.name }}" achievement
+            </b-card-text>
+            <b-card-text v-else-if="activity.type === 'beatmapsetApprove'">
+              {{ activity.approval | capitalizeFirstLetter }} map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
+            </b-card-text>
+            <b-card-text v-else-if="activity.type === 'beatmapsetDelete'">
+              Deleted map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
+            </b-card-text>
+            <b-card-text v-else-if="activity.type === 'beatmapsetRevive'">
+              Revived map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
+            </b-card-text>
+            <b-card-text v-else-if="activity.type === 'beatmapsetUpdate'">
+              Updated map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
+            </b-card-text>
+            <b-card-text v-else-if="activity.type === 'beatmapsetUpload'">
+              Uploaded map <a :href="activity.beatmapset.url">{{ activity.beatmapset.title }}</a>
+            </b-card-text>
+            <b-card-text v-else-if="activity.type === 'userSupportAgain'">
+              Supported osu again!
+            </b-card-text>
+            <b-card-text v-else-if="activity.type === 'userSupportFirst'">
+              Supported osu for the first time!
+            </b-card-text>
+            <b-card-text v-else-if="activity.type === 'userSupportGift'">
+              Someone gifted <a :href="activity.user.url">{{ activity.user.username }}</a> a supporter tag!
+            </b-card-text>
+            <b-card-text v-else-if="activity.type === 'usernameChange'">
+              Changed username to {{ user.username }}
+            </b-card-text>
+          </b-list-group-item>
+        </b-list-group>
       </template>
     </light-timeline>
   </b-card>

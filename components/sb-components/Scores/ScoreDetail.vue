@@ -64,8 +64,8 @@
         </div>
       </b-row>
     </b-container>
-    <b-card-footer class="py-1 profile-backdrop">
-      <div class="text-right">
+    <b-card-footer class="py-1 profile-backdrop d-flex align-items-end justify-content-between">
+      <div>
         Score ID: {{ score.id }}
       </div>
       <div v-if="score.pp" class="d-flex align-items-end justify-content-end">
