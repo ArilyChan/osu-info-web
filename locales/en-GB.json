@@ -14,7 +14,7 @@
   },
   "level": "Level",
   "numericalStatistics": {
-    "disclaimer": "Some historical data provided by OsuTrack",
+    "disclaimer": "Some historical data are provided by OsuTrack",
     "historicalBestAccuracy": "Best Accuracy",
     "historicalBestRank": "Best Rank",
     "playCount": "Play Count",
