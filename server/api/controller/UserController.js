@@ -15,7 +15,7 @@ class UserController {
       if (!user.id) { return {} }
       const recentActivity = await bancho.getUserActivity(user, 10, 0)
       const historicalBest = await osuTrack.getUserHistoricalBest(user)
-      osuTrack.updateUser(user)
+      osuTrack.updateUser(user).catch(() => {})
       let statisticsHistory
       if (user.playmode === 'osu') {
         statisticsHistory = await mothership.getUserHistory(user, oneYearBefore).catch((err) => {
