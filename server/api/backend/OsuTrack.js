@@ -11,7 +11,7 @@ class OsuTrack {
   }
 
   updateUser ({ id, playmode }) {
-    return axios.post(`${this.base}/peak`, null, { params: { user: id, mode: translator.mode(playmode) } }).then(data => data.data)
+    return axios.post(`${this.base}/update`, null, { params: { user: id, mode: translator.mode(playmode) } }).then(data => data.data)
   }
 }
 
