@@ -91,8 +91,8 @@ module.exports = {
     ['nuxt-i18n', {
       detectBrowserLanguage: {
         useCookie: true,
-        cookieKey: 'i18n_redirected',
-        onlyOnRoot: true // recommended
+        cookieKey: 'i18n_redirected'
+        // onlyOnRoot: true // recommended
       }
     }],
     // // Doc: https://bootstrap-vue.js.org
@@ -120,15 +120,11 @@ module.exports = {
     ],
     defaultLocale: 'gb',
     langDir: 'locales/',
-    lazy: true
-    // vueI18n: {
-    //   fallbackLocale: 'en',
-    //   // messages: {
-    //   //   en: require('./locales/en-GB.json'),
-    //   //   us: require('./locales/en-US.json'),
-    //   //   cn: require('./locales/zh-CN.json')
-    //   // }
-    // }
+    lazy: true,
+    strategy: 'prefix_and_default',
+    vueI18n: {
+      fallbackLocale: 'gb'
+    }
   },
   publicRuntimeConfig: {
     baseURL: process.env.BASE_URL || 'https://bot.ri.mk',

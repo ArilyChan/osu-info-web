@@ -10,11 +10,12 @@
             gutter: 0,
             itemSelector: '.Waterfall-item',
             columnWidth: '.grid-sizer',
+            stagger: 30
           }"
           style="width: calc(100% + 0.8em); left: -0.4em; padding-top: 0.4em"
         >
           <waterfall-item class="double-size">
-            <level :user="user" />
+            <level :user="user" class="height-fix-level" />
           </waterfall-item>
           <waterfall-item class="quad-size">
             <rank-info
@@ -149,6 +150,33 @@ export default {
     &.quad-size {
       width: calc(var(--var-base) * 4);
     }
+  }
+}
+
+@include media-breakpoint-only(xs) {
+  .height-fix-level {
+    --calc1: calc(450vw - 0.8rem);
+    height: 353.7vw / var(--calc1)
+  }
+}
+@include media-breakpoint-only(sm) {
+  .height-fix-level {
+    height: 377.03px
+  }
+}
+@include media-breakpoint-only(md) {
+  .height-fix-level {
+    height: 152.87px
+  }
+}
+@include media-breakpoint-only(lg) {
+  .height-fix-level {
+    height: 219.53px
+  }
+}
+@include media-breakpoint-only(xl) {
+  .height-fix-level {
+    height: 242.03px
   }
 }
 </style>

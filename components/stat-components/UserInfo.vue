@@ -94,8 +94,9 @@
         <b-row class="justify-content-md-center flex-wrap">
           <b-col col lg="auto" class="text-nowrap">
             <i class="fas fa-globe-americas" />
-            {{ user.is_online ? $t('userInfo.online') : `${$t('userInfo.offline') }, ${$t('userInfo.lastActivityAt', {t: `${new Date(user.last_visit).toLocaleDateString()} ${new Date(user.last_visit).toLocaleTimeString()}`})}` }}
+            {{ user.is_online ? $t('userInfo.online') : `${$t('userInfo.offline') }, ${$t('userInfo.lastActivityAt', {t: `${new Date(user.last_visit).toLocaleDateString(currentLocale.iso)} ${new Date(user.last_visit).toLocaleTimeString(currentLocale.iso)}`})}` }}
           </b-col>
+          <!-- <b-col>{{ $i18n.locale }}</b-col> -->
           <b-col v-if="user.location" col lg="auto" class="text-nowrap">
             <i class="fas fa-map-marked pr-1" />{{ user.location }}
           </b-col>
@@ -157,6 +158,9 @@ export default {
         style: 'percent',
         minimumFractionDigits: 2
       })
+    },
+    currentLocale () {
+      return this.$i18n.locales.find(i => i.code === this.$i18n.locale)
     }
   }
 }
