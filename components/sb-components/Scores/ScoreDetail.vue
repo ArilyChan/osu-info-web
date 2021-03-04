@@ -1,7 +1,7 @@
 <template>
   <beatmap-info v-slot="slotProps" :beatmap="score.beatmap" :beatmapset="score.beatmapset" class="mt-4">
     <b-card-header class="profile-backdrop">
-      <h2>{{ slotProps.songName }}</h2>
+      <h2>{{ slotProps.songName }} - [{{ score.beatmap.version }}]</h2>
       <b-card-sub-title>成绩上传于 {{ new Date(score.created_at).toLocaleDateString() }} {{ new Date(score.created_at).toLocaleTimeString() }} (GMT +9)</b-card-sub-title>
     </b-card-header>
     <b-container fluid>
