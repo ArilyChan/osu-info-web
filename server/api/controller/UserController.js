@@ -71,7 +71,6 @@ class UserController {
     let end
     if (startHoursBefore) {
       startDate = new Date()
-      console.log(startDate.getUTCHours() - startHoursBefore)
       startDate.setUTCHours(startDate.getUTCHours() - startHoursBefore)
       start = startDate
       endDate = new Date()
@@ -86,7 +85,6 @@ class UserController {
       end = endDate || new Date()
     }
 
-    console.log(start, end)
     const rtn = {
       messages: []
     }
@@ -105,7 +103,6 @@ class UserController {
       })
       return rtn
     } catch (error) {
-      console.log(error)
       rtn.messages.push('error-occured')
       return rtn
     }
