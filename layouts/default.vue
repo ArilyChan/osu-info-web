@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper" class="d-flex flex-column">
     <main class="flex-fill position-relative">
-      <section-layout shaped bg-variant="success" :bubble-count="8">
+      <section-layout shaped :bg-variant="colorFromMode" :bubble-count="8">
         <nuxt />
       </section-layout>
     </main>
@@ -13,6 +13,21 @@ import SectionLayout from '~/components/sb-layouts/components/SectionLayout'
 export default {
   components: {
     SectionLayout
+  },
+  computed: {
+    colorFromMode () {
+      if (!this.$store.state.User.mode) { return }
+      switch (this.$store.state.User.mode) {
+        case 'osu':
+          return 'success'
+        case 'taiko':
+          return 'warning'
+        case 'fruits':
+          return 'primary'
+        default:
+          return 'info'
+      }
+    }
   }
 }
 </script>

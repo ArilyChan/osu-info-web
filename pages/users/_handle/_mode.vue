@@ -74,7 +74,7 @@ export default {
     Activities,
     Level
   },
-  async asyncData ({ params, $axios, $config: { baseURL } }) {
+  async asyncData ({ params, $axios, $config: { baseURL }, store }) {
     let result = {
       user: undefined,
       statisticsHistory: []
@@ -90,12 +90,14 @@ export default {
     if (process.client) {
       result = await $axios.get(path).then(res => res.data)
     }
+    const mode = params.mode || (result.user ? result.user.playmode : undefined)
+    store.commit('User/setMode', mode)
     return {
       user: result.user,
       recentActivity: result.recentActivity || [],
       statisticsHistory: result.statisticsHistory || [],
       historicalBest: result.historicalBest[0],
-      mode: params.mode || (result.user ? result.user.playmode : undefined)
+      mode
     }
   }
 }

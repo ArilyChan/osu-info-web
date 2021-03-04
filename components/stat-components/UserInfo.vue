@@ -45,13 +45,13 @@
             <div class="mx-1">
               <span
                 class="heading text-large"
-              >#{{ user.statistics.rank.global || user.statistics.global_rank }}</span>
+              >#{{ user.statistics.rank.global || user.statistics.global_rank || ' - ' }}</span>
               <span class="description text-little-larger">{{ $t('userInfo.global') }}</span>
             </div>
             <div class="mx-1">
               <span
                 class="heading text-large"
-              >#{{ user.statistics.rank.country || user.statistics.country_rank }}</span>
+              >#{{ user.statistics.rank.country || user.statistics.country_rank || ' - ' }}</span>
               <span
                 class="description text-little-larger"
               ><gb-flag
