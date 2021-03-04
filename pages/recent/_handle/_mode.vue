@@ -38,7 +38,7 @@ export default {
     UserInfo,
     ScoreDetail
   },
-  async asyncData ({ params, $axios, $config: { baseURL } }) {
+  async asyncData ({ params, $axios, $config: { baseURL }, store }) {
     let result = {
       user: undefined
     }
@@ -49,12 +49,14 @@ export default {
     if (process.client) {
       result = await $axios.get(path).then(res => res.data)
     }
+    const mode = result.score ? result.score.mode : params.mode || (result.user ? result.user.playmode : undefined)
+    store.commit('User/setMode', mode)
     return {
       messages: result.messages || [],
       user: result.user,
       score: result.score,
       countryRanking: result.countryRanking,
-      mode: params.mode || (result.user ? result.user.playmode : undefined)
+      mode
     }
   }
 }

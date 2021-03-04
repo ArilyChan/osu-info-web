@@ -25,7 +25,7 @@ export default {
     UserInfo,
     ScoreListCard
   },
-  async asyncData ({ params, $axios, $config: { baseURL }, route }) {
+  async asyncData ({ params, $axios, $config: { baseURL }, route, store }) {
     let result = {
       user: undefined
     }
@@ -40,11 +40,13 @@ export default {
         params: route.query
       }).then(res => res.data)
     }
+    const mode = params.mode || (result.user ? result.user.playmode : undefined)
+    store.commit('User/setMode', mode)
     return {
       user: result.user,
       scores: result.scores,
       countryRanking: result.countryRanking,
-      mode: params.mode || (result.user ? result.user.playmode : undefined)
+      mode
     }
   }
 }
