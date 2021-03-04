@@ -114,11 +114,11 @@ module.exports = {
   ],
   i18n: {
     locales: [
-      { code: 'en', iso: 'en-GB', file: 'en-GB.json', dir: 'ltr' },
+      { code: 'gb', iso: 'en-GB', file: 'en-GB.json', dir: 'ltr' },
       { code: 'us', iso: 'en-US', file: 'en-US.json', dir: 'ltr' },
       { code: 'cn', iso: 'zh-CN', file: 'zh-CN.json', dir: 'ltr' }
     ],
-    defaultLocale: 'en-GB',
+    defaultLocale: 'gb',
     langDir: 'locales/',
     lazy: true
     // vueI18n: {
