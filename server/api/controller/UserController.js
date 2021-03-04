@@ -69,25 +69,24 @@ class UserController {
   static async bestPlay (handle, mode, { startDate = undefined, endDate, startHoursBefore, endHoursBefore } = {}) {
     let start
     let end
-    console.log({ startHoursBefore })
     if (startHoursBefore) {
       startDate = new Date()
-      startDate.setHours(startDate.getHours() - startHoursBefore)
+      console.log(startDate.getUTCHours() - startHoursBefore)
+      startDate.setUTCHours(startDate.getUTCHours() - startHoursBefore)
       start = startDate
       endDate = new Date()
-      endDate.setHours(endDate.getHours() - endHoursBefore || 0)
+      endDate.setUTCHours(endDate.getUTCHours() - (endHoursBefore || 0))
       end = endDate
-    } else {
-      if (!startDate) {
-        startDate = new Date(0)
-        // startDate.setHours(0)
-        // startDate.setMinutes(0)
-        // startDate.setSeconds(0)
-      }
+    } else if (!startDate) {
+      startDate = new Date(0)
+      // startDate.setHours(0)
+      // startDate.setMinutes(0)
+      // startDate.setSeconds(0)
       start = startDate
       end = endDate || new Date()
     }
 
+    console.log(start, end)
     const rtn = {
       messages: []
     }
@@ -100,7 +99,8 @@ class UserController {
         return rtn
       }
       rtn.scores = rps.filter((score) => {
-        const date = moment(score.created_at).toDate()
+        const date = moment.utc(score.created_at).toDate()
+        console.log(date, date >= start && date <= end)
         return date >= start && date <= end
       })
       return rtn
