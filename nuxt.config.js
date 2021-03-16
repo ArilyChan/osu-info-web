@@ -67,6 +67,7 @@ module.exports = {
     // { src: '~/plugins/vue-worker.js', mode: 'client' },
     // '~/plugins/i18n.js',
     '~/plugins/osu-assets/index.js',
+    '~/plugins/osu-popup-user/index.js',
     '~/plugins/vue-flag.js',
     '~/plugins/vue-flag.js',
     '~/plugins/light-timeline.js',
@@ -155,6 +156,7 @@ module.exports = {
       config.node = {
         fs: 'empty'
       }
+      config.resolve.alias.vue = 'vue/dist/vue.common'
     },
     transpile: ['js-bbcode-parser']
   },

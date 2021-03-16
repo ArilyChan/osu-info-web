@@ -1,10 +1,11 @@
 <template>
   <card
     shadow
-    class="card-profile bg-cover"
+    class="card-profile"
+    :class="[bgCover ? 'bg-cover' :'']"
     no-body
     :style="{
-      '--cover-url': `url('${user.cover.url}')`,
+      '--cover-url': bgCover ? `url('${user.cover.url}')` :'',
     }"
   >
     <div class="px-4">
@@ -79,6 +80,7 @@
             {{ user.previous_usernames.join(", ") }}
           </p>
         </div>
+        <slot name="body" />
         <!-- <h5>{{ mode }} 模式</h5> -->
         <!-- <h4 class="mb-0 pb-1">
           注册于 {{ new Date(user.join_date).toLocaleDateString() }}
@@ -147,6 +149,10 @@ export default {
     disabled: {
       type: Array,
       default: () => []
+    },
+    bgCover: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {

@@ -11,7 +11,7 @@ class UserController {
     const oneYearBefore = new Date()
     oneYearBefore.setFullYear(oneYearBefore.getFullYear() - 1)
     try {
-      const user = await bancho.getUser(handle, mode).catch(() => { throw new Error(1) })
+      const user = await bancho.getUser(handle, mode)
       if (!user.id) { return {} }
       const recentActivity = await bancho.getUserActivity(user, 10, 0)
       const historicalBest = await osuTrack.getUserHistoricalBest(user)

@@ -45,6 +45,7 @@
     "sass-loader": "^9.0.3",
     "slug": "^3.3.4",
     "v-click-outside": "^3.0.1",
+    "v-runtime-template": "^1.10.0",
     "vue-apexcharts": "^1.6.0",
     "vue-debounce": "^2.5.7",
     "vue-flatpickr-component": "^8.1.5",
