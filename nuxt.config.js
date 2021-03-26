@@ -160,5 +160,6 @@ module.exports = {
     },
     transpile: ['js-bbcode-parser']
   },
+  srcDir: 'client/',
   telemetry: false
 }
