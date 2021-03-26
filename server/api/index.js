@@ -26,6 +26,11 @@ router.get('/best/:handle/:mode?', async (req, res, next) => {
   }))
 })
 
+router.get('/matches/:id', async (req, res, next) => {
+  if (!parseInt(req.params.id)) { return res.status(500).json({ error: 'match ID invalid' }) }
+  return res.json(await Public.getMatchInfo(req.params.id))
+})
+
 router.get('/clientOAuth/code', async (req, res, next) => {
   const code = req.query.code
   const state = JSON.parse(req.query.state)

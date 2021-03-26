@@ -1,60 +1,58 @@
 <template>
-  <div class="col px-0">
-    <div class="row justify-content-center align-items-center">
-      <!-- <img
+  <hero>
+    <!-- <img
               src="img/brand/white.png"
               style="width: 200px;"
                 class="img-fluid">-->
-      <b-container :class="[blur ?'blur' :'blur active']">
-        <b-col>
-          <div class="main-block shadow justify-content-between">
-            <div class="quaver" />
-            <div
-              class="content flex-grow-1 d-flex justify-content-center align-items-center"
-            >
-              <h1
-                class="text-white"
-                v-html="$t('landing.title')"
-              />
-              <p
-                class="lead text-white mt-4 mb-5"
-                v-html="$t('landing.subtitle')"
-              />
-              <div class="buttons">
-                <base-button
-                  tag="a"
-                  href="#"
-                  class="mb-3 mb-sm-0"
-                  type="info"
-                  icon="ni ni-world"
-                  @click.prevent="$router.push({name:'top'})"
-                >
-                  <!-- <template v-slot:icon><font-awesome-icon icon="fa-chess-queen" /></template> -->
-                  {{ $t("landing.topCollectionsButton") }}
-                </base-button>
+    <b-container :class="[blur ?'blur' :'blur active']" fluid>
+      <b-col>
+        <div class="main-block shadow justify-content-between">
+          <div class="quaver" />
+          <div
+            class="content flex-grow-1 d-flex justify-content-center align-items-center"
+          >
+            <h1
+              class="text-white"
+              v-html="$t('landing.title')"
+            />
+            <p
+              class="lead text-white mt-4 mb-5"
+              v-html="$t('landing.subtitle')"
+            />
+            <div class="buttons">
+              <base-button
+                tag="a"
+                href="#"
+                class="mb-3 mb-sm-0"
+                type="info"
+                icon="ni ni-world"
+                @click.prevent="$router.push({name:'top'})"
+              >
+                <!-- <template v-slot:icon><font-awesome-icon icon="fa-chess-queen" /></template> -->
+                {{ $t("landing.topCollectionsButton") }}
+              </base-button>
 
-                <base-button
-                  tag="a"
-                  href="#"
-                  class="mb-3 mb-sm-0"
-                  type="white"
-                  icon="ni ni-cloud-download-95"
-                  @click.prevent="$router.push({name:'recent'})"
-                >
-                  {{ $t("landing.recentCollectionsButton") }}
-                </base-button>
-                <!-- <a href="/u/40455" class="home-btn btn-key">view profile</a>
+              <base-button
+                tag="a"
+                href="#"
+                class="mb-3 mb-sm-0"
+                type="white"
+                icon="ni ni-cloud-download-95"
+                @click.prevent="$router.push({name:'recent'})"
+              >
+                {{ $t("landing.recentCollectionsButton") }}
+              </base-button>
+              <!-- <a href="/u/40455" class="home-btn btn-key">view profile</a>
                   <a
                     href="/leaderboard"
                     class="home-btn btn-how"
                     style="margin-left: 6px;"
                   >view leaderboards</a> -->
-              </div>
             </div>
           </div>
-        </b-col>
-      </b-container>
-    </div>
+        </div>
+      </b-col>
+    </b-container>
     <!-- <div class="col-lg-7 text-center pt-lg">
         123123
       </div> -->
@@ -92,13 +90,15 @@
         </div>
       </div>
     </b-collapse>
-  </div>
+  </hero>
 </template>
 <script>
-
+import hero from '~/components/sb-layouts/hero'
 export default {
   layout: 'hero',
-
+  components: {
+    hero
+  },
   data: () => ({
     blur: true,
     loading: true
