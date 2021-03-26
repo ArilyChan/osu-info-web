@@ -61,6 +61,19 @@ export default {
       countryRanking: result.countryRanking,
       mode: params.mode || (result.user ? result.user.playmode : undefined)
     }
+  },
+  head () {
+    return {
+      title: 'Score: ' + [this.user.username, this.mode].join(' | '),
+      meta: [
+        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+        {
+          hid: 'description',
+          name: 'description',
+          content: ''
+        }
+      ]
+    }
   }
 }
 </script>

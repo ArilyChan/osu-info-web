@@ -48,6 +48,21 @@ export default {
       countryRanking: result.countryRanking,
       mode
     }
+  },
+  head () {
+    return {
+      title: 'Best scores of ' + [this.user.username, this.mode].join(' | '),
+      meta: [
+        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+        {
+          hid: 'description',
+          name: 'description',
+          content: [
+              `Best scores of ${this.user.username}:`
+          ].join('\n')
+        }
+      ]
+    }
   }
 }
 </script>

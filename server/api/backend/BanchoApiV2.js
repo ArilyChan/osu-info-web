@@ -1,6 +1,7 @@
 const axios = require('axios')
 const FormData = require('form-data')
 const MongoClient = require('mongodb').MongoClient
+const UserModel = require('../model/User')
 
 class BanchoApi {
   constructor ({ clientId, clientSecret }) {
@@ -72,6 +73,13 @@ class BanchoApi {
     return {
       Authorization: `${token.token_type} ${token.access_token}`
     }
+  }
+
+  apiCall (endpoint, axiosReq) {
+    return axios({
+      ...axiosReq,
+      url: `https://osu.ppy.sh/api/v2${endpoint}`
+    })
   }
 
   getScore ({ scoreId, mode }, { params, headers } = {}) {
@@ -226,7 +234,7 @@ class BanchoApi {
     const user = await this.getUserMe(undefined, {
       headers: this.accessTokenHeader(res)
     })
-    return this.setUserToken(user, res, scope)
+    return (new UserModel(user)).setToken(res, scope)
   }
 
   refreshUserToken (userToken) {
