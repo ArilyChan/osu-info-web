@@ -17,7 +17,7 @@
             <b-card-body>
               <template v-if="hosts.length">
                 <b-card-title>Host:</b-card-title>
-                <b-avatar-group>
+                <b-avatar-group size="4rem">
                   <b-avatar v-for="player in hosts" :key="`top-players-${player.id}`" :src="player.avatar_url" />
                 </b-avatar-group>
               </template>
