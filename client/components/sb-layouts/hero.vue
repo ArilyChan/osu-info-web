@@ -21,11 +21,6 @@
       </div>
       <div class="container shape-container d-flex align-items-center" />
     </section>
-    <div class="section-hero container shape-container d-flex align-items-center">
-      <div class="w-100">
-        <slot name="top" />
-      </div>
-    </div>
     <div class="container shape-container d-flex align-items-center">
       <div class="w-100">
         <slot />

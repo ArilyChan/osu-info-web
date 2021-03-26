@@ -1,4 +1,3 @@
 import Vue from 'vue'
-import 'fullpage-vue/src/fullpage.css'
-import VueFullpage from 'fullpage-vue'
+import VueFullpage from 'vue-fullpage.js'
 Vue.use(VueFullpage)

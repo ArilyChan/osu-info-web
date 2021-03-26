@@ -1,8 +1,15 @@
 <template>
   <hero>
-    <div class="fullpage-container">
-      <div ref="example" v-fullpage="opts" class="fullpage-wp">
-        <div class="page-1 page container shape-container d-flex align-items-center">
+    <full-page
+      ref="fullpage"
+      class="full-page"
+      :options="{
+        licenseKey: 'YOUR_KEY_HEERE',
+        sectionSelector: '.fullscreen-section'
+      }"
+    >
+      <div class="fullscreen-section">
+        <div class="container shape-container d-flex align-items-center">
           <b-card no-body class="shadow w-100">
             <b-card-header class="text-center">
               {{ match.name }}
@@ -38,112 +45,73 @@
             fullpage-vue
           </p> -->
         </div>
-        <div class="page">
-          <div class="fullpage-horizontal">
-            <div ref="fullpageHorizontal" v-fullpage="horizontalOpts">
-              <div v-for="game in gameResults" :key="`game-${game.id}`" class="page d-flex align-items-center">
-                <div class="min-vw-100">
-                  <div class="container">
-                    <b-card class="mt-2 shadow border-0" no-body>
-                      <!-- {{ event }} -->
-                      <b-card-img :src="game.beatmap.beatmapset.covers['cover@2x']" />
-                      <b-card-footer class="py-2 d-flex justify-content-between">
-                        <div>{{ game.beatmap.beatmapset.artist_unicode || game.beatmap.beatmapset.artist }} - {{ game.beatmap.beatmapset.title_unicode || game.beatmap.beatmapset.title }} [{{ game.beatmap.version }}]</div>
-                        <div>
-                          <i v-for="_ in Math.floor(game.beatmap.difficulty_rating)" :key="`sr-${game.id}-${_}`" class="fas fa-star" /><i v-if=" 0.75 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 < 1 " class="fas fa-star" /><i v-if=" 0.25 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 <= 0.75 " class="fas fa-star-half" />
-                          {{ game.beatmap.difficulty_rating }}
-                        </div>
-                      </b-card-footer>
-                    </b-card>
-                  </div>
-                  <div v-if="game.team_type === 'team-vs'" :key="`game-${game.id}-detail`" class="mt-4 vw-100">
-                    <b-container fluid="lg" class="mx-auto px-2">
-                      <b-row>
-                        <b-col v-for="team in ['blue', 'red']" :key="`game-${game.id}stat-${team}`">
-                          <b-card no-body :border-variant="team === 'red' ? 'warning' : 'info'">
-                            <b-card-header class="d-flex justify-content-between py-2" :header-bg-variant="team === 'red' ? 'warning' : 'info' " :header-boarder-variant="team === 'red' ? 'warning' : 'info' " :header-text-variant="team === 'red' ? 'white' : undefined ">
-                              <div v-if="team === 'blue'">
-                                team {{ team }}
-                              </div>
-                              <b-card-title class="mb-0" :class="[team === 'red' ? 'text-white' : undefined]">
-                                {{ game.teamScore[team] }}
-                              </b-card-title>
-                              <div v-if="team === 'red'">
-                                team {{ team }}
-                              </div>
-                            </b-card-header>
-                            <b-list-group flush>
-                              <mp-score-list-item
-                                v-for="playerScore in game.scores.filter(score => score.match.team === team && score.accuracy > 0.05)"
-                                :key="`score-${game.id}-${playerScore.user_id}`"
-
-                                :team="team"
-                                :player-score="playerScore"
-                                :game="game"
-                              />
-                            </b-list-group>
-                          </b-card>
-                        </b-col>
-                      </b-row>
-                    </b-container>
-                  </div>
-                  <div v-else :key="`game-${game.id}-detail`" class="mt-4 vw-100">
-                    <div class="container">
-                      <b-card no-body>
+      </div>
+      <div class="fullscreen-section min-vw-100">
+        <div v-for="game in gameResults" :key="`game-${game.id}`" class="slide">
+          <div class="d-flex align-items-center">
+            <div class="min-vw-100">
+              <div class="container">
+                <b-card class="mt-2 shadow border-0" no-body>
+                  <!-- {{ event }} -->
+                  <b-card-img :src="game.beatmap.beatmapset.covers['cover@2x']" />
+                  <b-card-footer class="py-2 d-flex justify-content-between">
+                    <div>{{ game.beatmap.beatmapset.artist_unicode || game.beatmap.beatmapset.artist }} - {{ game.beatmap.beatmapset.title_unicode || game.beatmap.beatmapset.title }} [{{ game.beatmap.version }}]</div>
+                    <div>
+                      <i v-for="_ in Math.floor(game.beatmap.difficulty_rating)" :key="`sr-${game.id}-${_}`" class="fas fa-star" /><i v-if=" 0.75 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 < 1 " class="fas fa-star" /><i v-if=" 0.25 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 <= 0.75 " class="fas fa-star-half" />
+                      {{ game.beatmap.difficulty_rating }}
+                    </div>
+                  </b-card-footer>
+                </b-card>
+              </div>
+              <div v-if="game.team_type === 'team-vs'" :key="`game-${game.id}-detail`" class="mt-4 vw-100">
+                <b-container fluid="lg" class="mx-auto px-2">
+                  <b-row>
+                    <b-col v-for="team in ['blue', 'red']" :key="`game-${game.id}-${team}-stat`">
+                      <b-card no-body :border-variant="team === 'red' ? 'warning' : 'info'">
+                        <b-card-header class="d-flex justify-content-between py-2 px-3" :header-bg-variant="team === 'red' ? 'warning' : 'info' " :header-boarder-variant="team === 'red' ? 'warning' : 'info' " :header-text-variant="team === 'red' ? 'white' : undefined ">
+                          <div v-if="team === 'blue'">
+                            team {{ team }}
+                          </div>
+                          <b-card-title class="mb-0" :class="[team === 'red' ? 'text-white' : undefined]">
+                            {{ game.teamScore[team] }}
+                          </b-card-title>
+                          <div v-if="team === 'red'">
+                            team {{ team }}
+                          </div>
+                        </b-card-header>
                         <b-list-group flush>
                           <mp-score-list-item
-                            v-for="playerScore in game.scores.filter(score => score.accuracy > 0.05)"
+                            v-for="playerScore in game.scores.filter(score => score.match.team === team && score.accuracy > 0.05)"
                             :key="`score-${game.id}-${playerScore.user_id}`"
+                            :team="team"
                             :player-score="playerScore"
                             :game="game"
                           />
                         </b-list-group>
                       </b-card>
-                    </div>
-                  </div>
+                    </b-col>
+                  </b-row>
+                </b-container>
+              </div>
+              <div v-else :key="`game-${game.id}-detail`" class="mt-4 vw-100">
+                <div class="container">
+                  <b-card no-body>
+                    <b-list-group flush>
+                      <mp-score-list-item
+                        v-for="playerScore in game.scores.filter(score => score.accuracy > 0.05)"
+                        :key="`score-${game.id}-${playerScore.user_id}`"
+                        :player-score="playerScore"
+                        :game="game"
+                      />
+                    </b-list-group>
+                  </b-card>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        <!-- <div class="
-                                  page-2
-                                  page"
-                                >
-                                  <div class="min-vw-100">
-                                    <b-carousel
-                                      ref="gameCarousel"
-                                      v-model="slide"
-                                      indicators
-                                      :interval="0"
-                                      no-wrap
-                                    >
-                                      <b-carousel-slide v-for="game in games" :key="`game-${game.id}`">
-                                        <template #img>
-                                          <div class="mb-5" />
-                                        </template>
-                                      </b-carousel-slide>
-                                    </b-carousel>
-                                  </div>
-                          </b-list-group></b-card>
-                        </b-col>
-                      </b-row>
-                    </b-container>
-                  </div> -->
-        <!-- <div class="page-3 page">
-          <p v-animate="{value: 'bounceInLeft', delay: 0}" class="part-3">
-            fullpage-vue
-          </p>
-          <p v-animate="{value: 'bounceInRight', delay: 600}" class="part-3">
-            fullpage-vue
-          </p>
-          <p v-animate="{value: 'zoomInDown', delay: 1200}" class="part-3">
-            fullpage-vue
-          </p>
-        </div> -->
       </div>
-    </div>
+    </full-page>
     <!-- <template v-for="event in events">
       <b-card v-if="!event.game" :key="`game-${event.id}`" class="mt-2 shadow">
         {{ event.detail.type }}
@@ -270,12 +238,5 @@ export default {
 .min-vw-100 {
   margin-left: calc(-50vw + 50%);
   min-width: 100vw !important
-}
-.fullpage-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 }
 </style>

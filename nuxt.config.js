@@ -64,7 +64,7 @@ module.exports = {
     // { src: '~/plugins/database/index.js', mode: 'server' }
     // { src: '~/plugins/debounce/index.js', mode: 'client' },
     { src: '~/plugins/apex-chart', mode: 'client' },
-    { src: '~/plugins/fullpage-vue.js', mode: 'client' },
+    // { src: '~/plugins/fullpage-vue.js', mode: 'client' },
     // { src: '~/plugins/vue-worker.js', mode: 'client' },
     // '~/plugins/i18n.js',
     '~/plugins/osu-assets/index.js',
@@ -97,6 +97,7 @@ module.exports = {
         // onlyOnRoot: true // recommended
       }
     }],
+    'nuxt-fullpage.js',
     // // Doc: https://bootstrap-vue.js.org
     // 'bootstrap-vue/nuxt',
     // // Doc: https://axios.nuxtjs.org/usage
