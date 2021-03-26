@@ -3,6 +3,7 @@ const moment = require('moment')
 const MotherShip = require('../backend/MotherShip')
 const bancho = require('../backend/BanchoApiV2')
 const osuTrack = require('../backend/OsuTrack')
+const UserModel = require('../model/User.js')
 
 const mothership = new MotherShip()
 
@@ -11,23 +12,24 @@ class UserController {
     const oneYearBefore = new Date()
     oneYearBefore.setFullYear(oneYearBefore.getFullYear() - 1)
     try {
-      const user = await bancho.getUser(handle, mode)
-      if (!user.id) { return {} }
-      const recentActivity = await bancho.getUserActivity(user, 10, 0)
-      const historicalBest = await osuTrack.getUserHistoricalBest(user)
-      osuTrack.updateUser(user).catch(() => {})
+      const userResult = await bancho.getUser(handle, mode)
+      const user = new UserModel(userResult)
+      if (!user.data.id) { return {} }
+      const recentActivity = user.getActivity(10, 0)
+      const historicalBest = osuTrack.getUserHistoricalBest(user.data)
+      osuTrack.updateUser(user.data).catch(() => {})
       let statisticsHistory
-      if (user.playmode === 'osu') {
-        statisticsHistory = await mothership.getUserHistory(user, oneYearBefore).catch((err) => {
+      if (user.data.playmode === 'osu') {
+        statisticsHistory = mothership.getUserHistory(user.data, oneYearBefore).catch((err) => {
           console.error(err.stack)
           return []
         })
       }
       return {
-        user,
-        recentActivity,
-        statisticsHistory,
-        historicalBest
+        user: user.data,
+        recentActivity: await recentActivity,
+        statisticsHistory: await statisticsHistory,
+        historicalBest: await historicalBest
       }
     } catch (error) {
       console.log(error.stack)
@@ -39,9 +41,10 @@ class UserController {
       messages: []
     }
     try {
-      const user = await bancho.getUser(handle)
-      rtn.user = user
-      const rps = await bancho.getUserRecentScores(user, { mode })
+      const banchoUserResult = await bancho.getUser(handle)
+      const user = new UserModel(banchoUserResult)
+      rtn.user = user.data
+      const rps = await user.getRecentScores({ mode })
       const rp = rps[0]
       if (!rp) {
         rtn.messages.push('no-recent')
@@ -49,8 +52,8 @@ class UserController {
       }
       rtn.score = rp
       try {
-        if (!user.is_supporter) { rtn.messages.push('may-need-supporter') }
-        const countryRank = await bancho.getBeatmapScoresCountry(rp.beatmap, user)
+        if (!user.data.is_supporter) { rtn.messages.push('may-need-supporter') }
+        const countryRank = await user.getCountryRankingOnBeatmap(rp.beatmap)
         countryRank.scores.forEach((score) => {
           delete score.beatmap
         })
@@ -76,12 +79,8 @@ class UserController {
       endDate = new Date()
       endDate.setUTCHours(endDate.getUTCHours() - (endHoursBefore || 0))
       end = endDate
-    } else if (!startDate) {
-      startDate = new Date(0)
-      // startDate.setHours(0)
-      // startDate.setMinutes(0)
-      // startDate.setSeconds(0)
-      start = startDate
+    } else {
+      start = startDate || new Date(0)
       end = endDate || new Date()
     }
 
@@ -89,9 +88,10 @@ class UserController {
       messages: []
     }
     try {
-      const user = await bancho.getUser(handle)
-      rtn.user = user
-      const rps = await bancho.getUserBestScores(user, { mode, limit: 100 })
+      const userResult = await bancho.getUser(handle)
+      const user = new UserModel(userResult)
+      rtn.user = user.data
+      const rps = await user.getBestScores({ mode, limit: 100 })
       if (!rps || !rps.length) {
         rtn.messages.push('no-bp')
         return rtn
@@ -117,12 +117,12 @@ class UserController {
     }
   }
 
-  static setUserToken (user, token, scope) {
-    return bancho.setUserToken(user, token, scope)
-  }
+  // static setUserToken (user, token, scope) {
+  //   return bancho.setUserToken(user, token, scope)
+  // }
 
-  static OAuthCode (user, code, scope) {
-    return bancho.userOAuthCode(user, code, scope)
+  static OAuthCode (code, scope) {
+    return bancho.userOAuthCode(code, scope)
   }
 }
 

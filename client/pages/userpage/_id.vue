@@ -121,6 +121,21 @@ export default {
       const splitted = str.split('.')
       return `${splitted[0]}<small>.${splitted[1]}</small></span>`
     }
+  },
+  head () {
+    return {
+      title: 'Userpage of ' + [this.user.username].join(' | '),
+      meta: [
+        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+        {
+          hid: 'description',
+          name: 'description',
+          content: [
+              `Userpage of ${this.user.username}:`
+          ].join('\n')
+        }
+      ]
+    }
   }
 }
 </script>

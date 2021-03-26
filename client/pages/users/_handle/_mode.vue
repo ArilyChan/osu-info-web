@@ -99,6 +99,23 @@ export default {
       historicalBest: result.historicalBest[0],
       mode
     }
+  },
+  head () {
+    return {
+      title: 'Statistics of ' + [this.user.username, this.mode].join(' | '),
+      meta: [
+        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+        {
+          hid: 'description',
+          name: 'description',
+          content: [
+              `Statistics of ${this.user.username}:`,
+              `${this.$t('userInfo.global')} Rank: #${this.user.statistics.rank.global || this.user.statistics.global_rank || ' - '}`,
+              `${this.user.country.code} Rank: #${this.user.statistics.rank.country || this.user.statistics.country_rank || ' - '}`
+          ].join('\n')
+        }
+      ]
+    }
   }
 }
 </script>
