@@ -1,117 +1,119 @@
 <template>
   <hero>
-    <full-page
-      ref="fullpage"
-      class="full-page"
-      :options="{
-        licenseKey: 'YOUR_KEY_HEERE',
-        sectionSelector: '.fullscreen-section'
-      }"
-    >
-      <div class="fullscreen-section">
-        <div class="container shape-container d-flex align-items-center">
-          <b-card no-body class="shadow w-100">
-            <b-card-header class="text-center">
-              {{ match.name }}
-            </b-card-header>
-            <b-card-body>
-              <template v-if="hosts.length">
-                <b-card-title>Host:</b-card-title>
+    <client-only>
+      <full-page
+        ref="fullpage"
+        class="full-page"
+        :options="{
+          licenseKey: 'D56AAA76-BCAA4731-81149063-E140B512',
+          sectionSelector: '.fullscreen-section'
+        }"
+      >
+        <div class="fullscreen-section">
+          <div class="container shape-container d-flex align-items-center">
+            <b-card no-body class="shadow w-100">
+              <b-card-header class="text-center">
+                {{ match.name }}
+              </b-card-header>
+              <b-card-body>
+                <template v-if="hosts.length">
+                  <b-card-title>Host:</b-card-title>
+                  <b-avatar-group size="4rem">
+                    <b-avatar v-for="player in hosts" :key="`top-players-${player.id}`" :src="player.avatar_url" />
+                  </b-avatar-group>
+                </template>
+                <b-card-title>Players:</b-card-title>
                 <b-avatar-group size="4rem">
-                  <b-avatar v-for="player in hosts" :key="`top-players-${player.id}`" :src="player.avatar_url" />
+                  <b-avatar v-for="player in players" :key="`top-players-${player.id}`">
+                    <osu-popup-user class="display-inline" :user="player">
+                      <div>
+                        <b-img :src="player.avatar_url" class="w-100" />
+                      </div>
+                      <template #fallback-no-aka>
+                        <h5 class="text-nowrap m-0">
+                          {{ player.username }}
+                        </h5>
+                        <a href="https://osu.ppy.sh/users/$1">Bancho profile</a>
+                      </template>
+                    </osu-popup-user>
+                  </b-avatar>
                 </b-avatar-group>
-              </template>
-              <b-card-title>Players:</b-card-title>
-              <b-avatar-group size="4rem">
-                <b-avatar v-for="player in players" :key="`top-players-${player.id}`">
-                  <osu-popup-user class="display-inline" :user="player">
-                    <div>
-                      <b-img :src="player.avatar_url" class="w-100" />
-                    </div>
-                    <template #fallback-no-aka>
-                      <h5 class="text-nowrap m-0">
-                        {{ player.username }}
-                      </h5>
-                      <a href="https://osu.ppy.sh/users/$1">Bancho profile</a>
-                    </template>
-                  </osu-popup-user>
-                </b-avatar>
-              </b-avatar-group>
-              <hr>
-              <b-card-sub-title>{{ new Date(match.start_time) }} - {{ new Date(match.end_time) }}</b-card-sub-title>
-            </b-card-body>
-          </b-card>
+                <hr>
+                <b-card-sub-title>{{ new Date(match.start_time) }} - {{ new Date(match.end_time) }}</b-card-sub-title>
+              </b-card-body>
+            </b-card>
           <!-- <p v-animate="{value: 'bounceInLeft'}" class="part-1">
             fullpage-vue
           </p> -->
+          </div>
         </div>
-      </div>
-      <div class="fullscreen-section min-vw-100">
-        <div v-for="game in gameResults" :key="`game-${game.id}`" class="slide">
-          <div class="d-flex align-items-center">
-            <div class="min-vw-100">
-              <div class="container">
-                <b-card class="mt-2 shadow border-0" no-body>
-                  <!-- {{ event }} -->
-                  <b-card-img :src="game.beatmap.beatmapset.covers['cover@2x']" />
-                  <b-card-footer class="py-2 d-flex justify-content-between">
-                    <div>{{ game.beatmap.beatmapset.artist_unicode || game.beatmap.beatmapset.artist }} - {{ game.beatmap.beatmapset.title_unicode || game.beatmap.beatmapset.title }} [{{ game.beatmap.version }}]</div>
-                    <div>
-                      <i v-for="_ in Math.floor(game.beatmap.difficulty_rating)" :key="`sr-${game.id}-${_}`" class="fas fa-star" /><i v-if=" 0.75 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 < 1 " class="fas fa-star" /><i v-if=" 0.25 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 <= 0.75 " class="fas fa-star-half" />
-                      {{ game.beatmap.difficulty_rating }}
-                    </div>
-                  </b-card-footer>
-                </b-card>
-              </div>
-              <div v-if="game.team_type === 'team-vs'" :key="`game-${game.id}-detail`" class="mt-4 vw-100">
-                <b-container fluid="lg" class="mx-auto px-2">
-                  <b-row>
-                    <b-col v-for="team in ['blue', 'red']" :key="`game-${game.id}-${team}-stat`">
-                      <b-card no-body :border-variant="team === 'red' ? 'warning' : 'info'">
-                        <b-card-header class="d-flex justify-content-between py-2 px-3" :header-bg-variant="team === 'red' ? 'warning' : 'info' " :header-boarder-variant="team === 'red' ? 'warning' : 'info' " :header-text-variant="team === 'red' ? 'white' : undefined ">
-                          <div v-if="team === 'blue'">
-                            team {{ team }}
-                          </div>
-                          <b-card-title class="mb-0" :class="[team === 'red' ? 'text-white' : undefined]">
-                            {{ game.teamScore[team] }}
-                          </b-card-title>
-                          <div v-if="team === 'red'">
-                            team {{ team }}
-                          </div>
-                        </b-card-header>
-                        <b-list-group flush>
-                          <mp-score-list-item
-                            v-for="playerScore in game.scores.filter(score => score.match.team === team && score.accuracy > 0.05)"
-                            :key="`score-${game.id}-${playerScore.user_id}`"
-                            :team="team"
-                            :player-score="playerScore"
-                            :game="game"
-                          />
-                        </b-list-group>
-                      </b-card>
-                    </b-col>
-                  </b-row>
-                </b-container>
-              </div>
-              <div v-else :key="`game-${game.id}-detail`" class="mt-4 vw-100">
+        <div class="fullscreen-section min-vw-100">
+          <div v-for="game in gameResults" :key="`game-${game.id}`" class="slide">
+            <div class="d-flex align-items-center">
+              <div class="min-vw-100">
                 <div class="container">
-                  <b-card no-body>
-                    <b-list-group flush>
-                      <mp-score-list-item
-                        v-for="playerScore in game.scores.filter(score => score.accuracy > 0.05)"
-                        :key="`score-${game.id}-${playerScore.user_id}`"
-                        :player-score="playerScore"
-                        :game="game"
-                      />
-                    </b-list-group>
+                  <b-card class="mt-2 shadow border-0" no-body>
+                    <!-- {{ event }} -->
+                    <b-card-img :src="game.beatmap.beatmapset.covers['cover@2x']" />
+                    <b-card-footer class="py-2 d-flex justify-content-between">
+                      <div>{{ game.beatmap.beatmapset.artist_unicode || game.beatmap.beatmapset.artist }} - {{ game.beatmap.beatmapset.title_unicode || game.beatmap.beatmapset.title }} [{{ game.beatmap.version }}]</div>
+                      <div>
+                        <i v-for="_ in Math.floor(game.beatmap.difficulty_rating)" :key="`sr-${game.id}-${_}`" class="fas fa-star" /><i v-if=" 0.75 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 < 1 " class="fas fa-star" /><i v-if=" 0.25 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 <= 0.75 " class="fas fa-star-half" />
+                        {{ game.beatmap.difficulty_rating }}
+                      </div>
+                    </b-card-footer>
                   </b-card>
+                </div>
+                <div v-if="game.team_type === 'team-vs'" :key="`game-${game.id}-detail`" class="mt-4 vw-100">
+                  <b-container fluid="lg" class="mx-auto px-2">
+                    <b-row>
+                      <b-col v-for="team in ['blue', 'red']" :key="`game-${game.id}-${team}-stat`">
+                        <b-card no-body :border-variant="team === 'red' ? 'warning' : 'info'">
+                          <b-card-header class="d-flex justify-content-between py-2 px-3" :header-bg-variant="team === 'red' ? 'warning' : 'info' " :header-boarder-variant="team === 'red' ? 'warning' : 'info' " :header-text-variant="team === 'red' ? 'white' : undefined ">
+                            <div v-if="team === 'blue'">
+                              team {{ team }}
+                            </div>
+                            <b-card-title class="mb-0" :class="[team === 'red' ? 'text-white' : undefined]">
+                              {{ game.teamScore[team] }}
+                            </b-card-title>
+                            <div v-if="team === 'red'">
+                              team {{ team }}
+                            </div>
+                          </b-card-header>
+                          <b-list-group flush>
+                            <mp-score-list-item
+                              v-for="playerScore in game.scores.filter(score => score.match.team === team && score.accuracy > 0.05)"
+                              :key="`score-${game.id}-${playerScore.user_id}`"
+                              :team="team"
+                              :player-score="playerScore"
+                              :game="game"
+                            />
+                          </b-list-group>
+                        </b-card>
+                      </b-col>
+                    </b-row>
+                  </b-container>
+                </div>
+                <div v-else :key="`game-${game.id}-detail`" class="mt-4 vw-100">
+                  <div class="container">
+                    <b-card no-body>
+                      <b-list-group flush>
+                        <mp-score-list-item
+                          v-for="playerScore in game.scores.filter(score => score.accuracy > 0.05)"
+                          :key="`score-${game.id}-${playerScore.user_id}`"
+                          :player-score="playerScore"
+                          :game="game"
+                        />
+                      </b-list-group>
+                    </b-card>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </full-page>
+      </full-page>
+    </client-only>
     <!-- <template v-for="event in events">
       <b-card v-if="!event.game" :key="`game-${event.id}`" class="mt-2 shadow">
         {{ event.detail.type }}
