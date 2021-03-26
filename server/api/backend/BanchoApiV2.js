@@ -247,6 +247,12 @@ class BanchoApi {
       headers: this.publicTokenHeader()
     }).then(res => res.data)
   }
+
+  getMatch (id) {
+    return axios.get(`https://osu.ppy.sh/api/v2/matches/${id}`, {
+      headers: this.publicTokenHeader()
+    }).then(res => res.data)
+  }
 }
 
 // module.exports = BanchoApi

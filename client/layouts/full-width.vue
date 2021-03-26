@@ -31,3 +31,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+body, #wrapper {
+   min-height:100vh;
+}
+</style>

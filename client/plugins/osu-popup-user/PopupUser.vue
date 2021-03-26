@@ -12,10 +12,12 @@
         :to="localePath(`/users/${user.id || user.username }`)"
       >
         <div class="d-flex align-items-center">
-          <b-avatar
+          <b-img
             :src="`https://a.ppy.sh/${user.id}`"
-            size="3rem"
-            class="shadow mr-2"
+            :style="{
+              width: '5rem'
+            }"
+            class="shadow mr-2 rounded"
           />
           <div>
             <slot name="content">
