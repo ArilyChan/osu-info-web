@@ -28,7 +28,6 @@ import bbCodeParser from 'js-bbcode-parser'
 import VRuntimeTemplate from 'v-runtime-template'
 import UserInfo from '~/components/stat-components/UserInfo.vue'
 const defaultCodes = [...bbCodeParser.codes]
-console.log(defaultCodes)
 bbCodeParser.setCodes({
   '\\[center\\](.+?)\\[/center\\]': '<div class="text-center">$1</div>',
   '\\[centre\\](.+?)\\[/centre\\]': '<div class="text-center">$1</div>',
