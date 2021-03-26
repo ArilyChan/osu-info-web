@@ -2,6 +2,7 @@
   <b-list-group-item
     :set="(player = playerScore.user)"
     :variant="game.teamWinner === team ? undefined : 'dark'"
+    class="py-2"
   >
     <div class="d-flex">
       <div
