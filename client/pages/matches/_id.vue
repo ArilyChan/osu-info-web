@@ -272,13 +272,7 @@ export default {
       client: process.client
     })
     const path = `/api/matches/${params.id}`
-    let result
-    if (process.server) {
-      result = await $axios.get(`http://localhost:${process.env.PORT || 3000}${path}`).then(res => res.data)
-    }
-    if (process.client) {
-      result = await $axios.get(path).then(res => res.data)
-    }
+    const result = await $axios.get(path).then(res => res.data)
     store.commit('User/setMode', 'mania')
     return result
   },

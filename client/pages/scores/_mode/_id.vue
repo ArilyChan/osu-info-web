@@ -48,12 +48,8 @@ export default {
       }
     }
     const path = `/api/scores/${params.mode}/${params.id}`
-    if (process.server) {
-      result = await $axios.get(`http://localhost:${process.env.PORT || 3000}${path}`).then(res => res.data)
-    }
-    if (process.client) {
-      result = await $axios.get(path).then(res => res.data)
-    }
+    result = await $axios.get(path).then(res => res.data)
+
     return {
       messages: result.messages || [],
       user: result.user,

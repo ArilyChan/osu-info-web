@@ -124,10 +124,20 @@ module.exports = {
       fallbackLocale: 'gb'
     }
   },
-  // publicRuntimeConfig: {
-  //   baseURL: process.env.BASE_URL || 'https://bot.ri.mk',
-  //   path: process.env.BANCHO_STAT_WEB_PATH || '/stats'
-  // },
+  axios: {
+    baseURL: '/'
+  },
+  publicRuntimeConfig: {
+    axios: {
+      browserBaseURL: '/'
+    }
+  },
+
+  privateRuntimeConfig: {
+    axios: {
+      baseURL: `http://localhost:${process.env.PORT || 3000}`
+    }
+  },
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
