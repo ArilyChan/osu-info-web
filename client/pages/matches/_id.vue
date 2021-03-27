@@ -267,6 +267,10 @@ export default {
     MpScoreListItem
   },
   async asyncData ({ params, $axios, $config: { baseURL }, store }) {
+    console.log({
+      server: process.server,
+      client: process.client
+    })
     const path = `/api/matches/${params.id}`
     let result
     if (process.server) {
@@ -409,7 +413,7 @@ export default {
         }
         return { mvpCount, userTotalScore, teamVS }
       }, this.statistics)
-      this.statistics.maxUserTotalScore = Math.max(...Array.from(this.statistics.userTotalScore).map(([user, score]) => { console.log(score); return score }))
+      this.statistics.maxUserTotalScore = Math.max(...Array.from(this.statistics.userTotalScore).map(([user, score]) => score))
     },
     updateTeamVSWinner () {
       this.statistics.teamVS.played = Object.values(this.statistics.teamVS.win).reduce((acc, cur) => cur + acc, 0) > 0
