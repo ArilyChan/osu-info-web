@@ -58,12 +58,8 @@ export default {
       user: undefined
     }
     const path = `/api/users/${params.id}${params.mode ? `/${params.mode}` : ''}`
-    if (process.server) {
-      result = await $axios.get(`http://localhost:${process.env.PORT || 3000}${path}`).then(res => res.data)
-    }
-    if (process.client) {
-      result = await $axios.get(path).then(res => res.data)
-    }
+    result = await $axios.get(path).then(res => res.data)
+
     const mode = result.score ? result.score.mode : params.mode || (result.user ? result.user.playmode : undefined)
     store.commit('User/setMode', mode)
     return {
