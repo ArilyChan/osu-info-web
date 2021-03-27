@@ -2,7 +2,7 @@
   <hero>
     <client-only>
       <full-page
-        ref="fullpage"
+        ref="full-page"
         class="full-page"
         :options="{
           licenseKey: 'D56AAA76-BCAA4731-81149063-E140B512',
@@ -12,28 +12,29 @@
         <div class="fullscreen-section">
           <div class="container shape-container d-flex align-items-center">
             <b-card no-body class="shadow w-100">
-              <b-card-header class="text-center">
-                {{ match.name }}
+              <b-card-header>
+                <div class="d-flex">
+                  <div class="text-center mr-auto">
+                    {{ match.name }}
+                  </div>
+                  <div class="d-flex">
+                    <b-card-text class="text-nowrap mb-0">
+                      tournament starts at game #
+                    </b-card-text>
+                    <b-form-input
+                      v-model.lazy="inputTournamentStartsAt"
+                      type="number"
+                      class="input-group-alternative"
+                      size="sm"
+                      style="width: 3em;"
+                    />
+                    <b-button size="sm" class="ml-2" @click="calcStats">
+                      Reload
+                    </b-button>
+                  </div>
+                </div>
               </b-card-header>
               <b-card-body>
-                <template v-if="hosts.length">
-                  <b-card-title>Host:</b-card-title>
-                  <b-avatar-group size="4em">
-                    <b-avatar v-for="player in hosts" :key="`top-players-${player.id}`" :src="player.avatar_url" class="shadow-sm">
-                      <osu-popup-user class="display-inline" :user="player">
-                        <div>
-                          <b-img :src="player.avatar_url" class="w-100" />
-                        </div>
-                        <template #fallback-no-aka>
-                          <h5 class="text-nowrap m-0">
-                            {{ player.username }}
-                          </h5>
-                          <a href="https://osu.ppy.sh/users/$1">Bancho profile</a>
-                        </template>
-                      </osu-popup-user>
-                    </b-avatar>
-                  </b-avatar-group>
-                </template>
                 <b-card-title>Players:</b-card-title>
                 <b-avatar-group size="4em">
                   <b-avatar v-for="player in players" :key="`top-players-${player.id}`" class="shadow-sm">
@@ -51,42 +52,113 @@
                   </b-avatar>
                 </b-avatar-group>
                 <hr>
-                <b-card-title>MVP:</b-card-title>
-                <div class="d-flex ">
-                  <div
-                    v-for="player in matchStatistics.mvp"
-                    :key="`mvp-${player.id}`"
-                    class="d-flex"
-                  >
-                    <b-avatar
-                      :src="player.avatar_url"
-                      :alt="player.username"
-                      class="shadow-sm"
-                      size="4em"
-                      badge-variant="warning"
-                      badge-top
-                      badge-offset="-0.3em"
+                <b-container>
+                  <b-row>
+                    <b-col>
+                      <b-card-title>MVP:</b-card-title>
+                      <div class="d-flex align-items-end">
+                        <b-avatar
+                          v-for="player in statistics.mvp"
+                          :key="`mvp-${player.id}`"
+                          :src="player.avatar_url"
+                          class="shadow-sm"
+                          size="4rem"
+                          badge-variant="danger"
+                          badge-top
+                        >
+                          <osu-popup-user class="display-inline" :user="player">
+                            <div>
+                              <b-img :src="player.avatar_url" class="w-100" />
+                            </div>
+                            <template #fallback-no-aka>
+                              <h5 class="text-nowrap m-0">
+                                {{ player.username }}
+                              </h5>
+                              <a :href="`https://osu.ppy.sh/users/${player.id}`">Bancho profile</a>
+                            </template>
+                          </osu-popup-user>
+                        </b-avatar>
+                        <h1 class="ml-2 my-0">
+                          × {{ statistics.maxMvpCount }}
+                        </h1>
+                      </div>
+                    </b-col>
+                    <b-col v-if="hosts.length">
+                      <b-card-title>Host:</b-card-title>
+                      <b-avatar-group size="4em">
+                        <b-avatar v-for="player in hosts" :key="`top-players-${player.id}`" :src="player.avatar_url" class="shadow-sm">
+                          <osu-popup-user class="display-inline" :user="player">
+                            <div>
+                              <b-img :src="player.avatar_url" class="w-100" />
+                            </div>
+                            <template #fallback-no-aka>
+                              <h5 class="text-nowrap m-0">
+                                {{ player.username }}
+                              </h5>
+                              <a href="https://osu.ppy.sh/users/$1">Bancho profile</a>
+                            </template>
+                          </osu-popup-user>
+                        </b-avatar>
+                      </b-avatar-group>
+                    </b-col>
+                  </b-row>
+                </b-container>
+                <template v-if="statistics.teamVS.played">
+                  <hr>
+                  <b-card-title>Team VS Scores:</b-card-title>
+                  <b-progress show-value height="2rem" :max="Object.values(statistics.teamVS.win).reduce((a,b) => a + b, 0)">
+                    <b-progress-bar v-if="statistics.teamVS.win.blue" :value="statistics.teamVS.win.blue" variant="info">
+                      <b-card-text>Blue: <strong>{{ statistics.teamVS.win.blue }}</strong></b-card-text>
+                    </b-progress-bar>
+                    <b-progress-bar v-if="statistics.teamVS.win.draw" :value="statistics.teamVS.win.draw" variant="secondary">
+                      <b-card-text>Draw: <strong>{{ statistics.teamVS.win.draw }}</strong></b-card-text>
+                    </b-progress-bar>
+                    <b-progress-bar v-if="statistics.teamVS.win.red" :value="statistics.teamVS.win.red" variant="warning">
+                      <b-card-text>Red: <strong>{{ statistics.teamVS.win.red }}</strong></b-card-text>
+                    </b-progress-bar>
+                  </b-progress>
+                </template>
+                <template>
+                  <hr>
+                  <b-card-title>Score Summing:</b-card-title>
+                  <b-list-group>
+                    <b-list-group-item
+                      v-for="([player, totalScore]) in Array.from(statistics.userTotalScore).sort((a, b) => b[1] - a[1]).slice(0,5)"
+                      :key="`player-totalscore-${player.id}`"
+                      class="py-2"
                     >
-                      <template #badge>
-                        <i class="fas fa-crown" />
-                      </template>
-                      <osu-popup-user class="display-inline" :user="player">
-                        <div>
-                          <b-img :src="player.avatar_url" class="w-100" />
-                        </div>
-                        <template #fallback-no-aka>
-                          <h5 class="text-nowrap m-0">
+                      <div class="d-flex">
+                        <div
+                          class="d-flex align-items-center"
+                        >
+                          <b-avatar
+                            :src="player.avatar_url"
+                            :alt="player.username"
+                            size="3rem"
+                            class="shadow"
+                            badge-top
+                            badge-offset="-0.3em"
+                            button
+                            badge-variant="danger"
+                          >
+                            <template v-if="statistics.mvp.includes(player)" #badge>
+                              <i class="fas fa-crown" />
+                            </template>
+                          </b-avatar>
+                          <h5 class="mx-2 mb-0">
                             {{ player.username }}
                           </h5>
-                          <a :href="`https://osu.ppy.sh/users/${player.id}`">Bancho profile</a>
-                        </template>
-                      </osu-popup-user>
-                    </b-avatar>
-                    <h1 class="ml-2">
-                      × {{ matchStatistics.mvpCount.get(player) }}
-                    </h1>
-                  </div>
-                </div>
+                        </div>
+                      </div>
+                      <b-progress
+                        :value="totalScore"
+                        :max="statistics.maxUserTotalScore"
+                        animated
+                        class="mt-1 mb-0"
+                      />
+                    </b-list-group-item>
+                  </b-list-group>
+                </template>
                 <hr>
                 <b-card-sub-title>{{ new Date(match.start_time) }} - {{ new Date(match.end_time) }}</b-card-sub-title>
               </b-card-body>
@@ -211,11 +283,17 @@ export default {
       players: [],
       hosts: [],
       games: [],
-      matchStatistics: {
+      inputTournamentStartsAt: 1,
+      tournamentStartsAt: 0,
+      gameResults: [],
+      statistics: {
         mvpCount: new Map(),
         mvp: [],
+        maxMvpCount: 0,
         userTotalScore: new Map(),
+        maxUserTotalScore: 0,
         teamVS: {
+          Played: false,
           win: {
             red: 0,
             blue: 0,
@@ -232,7 +310,23 @@ export default {
     }
   },
   computed: {
-    gameResults () {
+  },
+  watch: {
+    inputTournamentStartsAt (newv, oldv) {
+      const v = parseInt(newv)
+      if (v < 1) { this.inputTournamentStartsAt = 1 }
+      if (v > this.games.length) { this.inputTournamentStartsAt = this.games.length }
+      this.inputTournamentStartsAt = v
+    }
+  },
+  created () {
+    this.init()
+  },
+  mounted () {
+    this.initClientOnlyComp()
+  },
+  methods: {
+    allGameResults () {
       return this.games.map((game) => {
         const { player, host } = game.scores.reduce((acc, score) => {
           score.accuracy > 0.03 ? acc.player.push(score) : acc.host.push(score)
@@ -266,29 +360,87 @@ export default {
           worst
         }
       })
-    }
-  },
-  created () {
-    const matches = this.events.filter(event => event.game && event.game.scores.length).map(event => event.game)
-    this.games = matches
-    const userPlayed = this.users.filter(user => matches.some((match) => {
-      const userScore = match.scores.find(score => score.user_id === user.id)
-      return userScore && userScore.score > 5000
-    }))
-    this.players = userPlayed
-    this.hosts = this.users.filter(user => !this.players.includes(user))
+    },
+    calcStats () {
+      this.resetStats()
+      this.updateGameStatistics()
 
-    this.users.map((user) => {
-      this.matchStatistics.mvpCount.set(user, 0)
-      this.matchStatistics.userTotalScore.set(user, 0)
-    })
-    this.gameResults.reduce(({ mvpCount, userTotalScore }, game) => {
-      mvpCount.set(game.mvp.user, mvpCount.get(game.mvp.user) + 1)
-      game.scores.forEach((score) => { userTotalScore.set(score.user, userTotalScore.get(score.user) + score.score) })
-      return { mvpCount, userTotalScore }
-    }, this.matchStatistics)
-    const maxMvpCount = Math.max(...Array.from(this.matchStatistics.mvpCount).map(([user, count]) => count))
-    this.matchStatistics.mvp = Array.from(this.matchStatistics.mvpCount).filter(([mvp, count]) => count === maxMvpCount).map(([mvp]) => mvp)
+      this.updateTeamVSWinner()
+      this.updateMvpCount()
+      this.$refs['full-page'].api.reBuild()
+    },
+    resetStats () {
+      this.tournamentStartsAt = this.inputTournamentStartsAt - 1
+      this.statistics = {
+        mvpCount: new Map(),
+        mvp: [],
+        userTotalScore: new Map(),
+        maxUserTotalScore: 0,
+        teamVS: {
+          Played: false,
+          win: {
+            red: 0,
+            blue: 0,
+            draw: 0
+          },
+          totalScore: {
+            red: 0,
+            blue: 0
+          },
+          winner: 'draw'
+        },
+        totalMatchPlayed: 0
+      }
+      this.users.map((user) => {
+        this.statistics.mvpCount.set(user, 0)
+        this.statistics.userTotalScore.set(user, 0)
+      })
+    },
+    updateGameStatistics () {
+      this.gameResults.slice(this.tournamentStartsAt).reduce(({ mvpCount, userTotalScore, teamVS }, game) => {
+        mvpCount.set(game.mvp.user, mvpCount.get(game.mvp.user) + 1)
+        game.scores.forEach((score) => {
+          userTotalScore.set(score.user, userTotalScore.get(score.user) + score.score)
+        })
+        if (game.team_type === 'team-vs') {
+          teamVS.totalScore.red += game.teamScore.red
+          teamVS.totalScore.blue += game.teamScore.blue
+          teamVS.win[game.teamWinner] += 1
+        }
+        return { mvpCount, userTotalScore, teamVS }
+      }, this.statistics)
+      this.statistics.maxUserTotalScore = Math.max(...Array.from(this.statistics.userTotalScore).map(([user, score]) => { console.log(score); return score }))
+    },
+    updateTeamVSWinner () {
+      this.statistics.teamVS.played = Object.values(this.statistics.teamVS.win).reduce((acc, cur) => cur + acc, 0) > 0
+      if (this.statistics.teamVS.played) {
+        this.statistics.winner = this.statistics.teamVS.win.red - this.statistics.teamVS.win.blue > 0 ? 'red' : this.statistics.teamVS.win.red === this.statistics.teamVS.win.blue ? 'draw' : 'blue'
+      }
+    },
+    updateMvpCount () {
+      this.statistics.maxMvpCount = Math.max(...Array.from(this.statistics.mvpCount).map(([user, count]) => count))
+      this.statistics.mvp = Array.from(this.statistics.mvpCount).filter(([mvp, count]) => count === this.statistics.maxMvpCount).map(([mvp]) => mvp)
+    },
+    init () {
+      const matches = this.events.filter(event => event.game && event.game.scores.length).map(event => event.game)
+      this.games = matches
+      const userPlayed = this.users.filter(user => matches.some((match) => {
+        const userScore = match.scores.find(score => score.user_id === user.id)
+        return userScore && userScore.score > 5000
+      }))
+      this.players = userPlayed
+      this.hosts = this.users.filter(user => !this.players.includes(user))
+      this.gameResults = this.allGameResults()
+    },
+    initClientOnlyComp (count = 10) {
+      this.$nextTick(() => {
+        if (this.$refs['full-page']) {
+          this.calcStats()
+        } else if (count > 0) {
+          this.initClientOnlyComp(count - 1)
+        }
+      })
+    }
   },
   head () {
     return {
