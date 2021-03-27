@@ -12,13 +12,17 @@
         :to="localePath(`/users/${user.id || user.username }`)"
       >
         <div class="d-flex align-items-center">
-          <b-img
-            :src="`https://a.ppy.sh/${user.id}`"
-            :style="{
-              width: '5rem'
-            }"
-            class="shadow mr-2 rounded"
-          />
+          <b-aspect :aspect="1">
+            <b-img
+              :src="`https://a.ppy.sh/${user.id}`"
+              :style="{
+                width: '5rem'
+              }"
+              rounded
+              class="shadow mr-2"
+            />
+          </b-aspect>
+
           <div>
             <slot name="content">
               <div v-if="user.username_aka && user.username_aka !== ''">
