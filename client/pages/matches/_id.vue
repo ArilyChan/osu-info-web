@@ -12,7 +12,7 @@
         }"
       >
         <div class="fullscreen-section fp-auto-height-responsive fp-auto-height">
-          <div class="container my-4">
+          <b-container fluid="md">
             <b-card no-body class="shadow w-100">
               <b-card-header>
                 <div class="d-flex">
@@ -165,42 +165,43 @@
                 <b-card-sub-title>{{ new Date(match.start_time) }} - {{ new Date(match.end_time) }}</b-card-sub-title>
               </b-card-body>
             </b-card>
-          <!-- <p v-animate="{value: 'bounceInLeft'}" class="part-1">
-            fullpage-vue
-          </p> -->
-          </div>
+          </b-container>
         </div>
         <div class="fullscreen-section min-vw-100 fp-auto-height-responsive">
           <div v-for="game in gameResults" :key="`game-${game.id}`" class="slide">
             <div class="d-flex align-items-center">
               <div class="min-vw-100">
-                <div class="container">
-                  <b-card
-                    class="mt-2 shadow border-0"
-                    overlay
-                    :img-src="game.beatmap.beatmapset.covers['cover@2x']"
-                  >
-                    <!-- {{ event }} -->
-                    <!-- <b-card-img  /> -->
-                    <div class="d-flex">
-                      <div class="rounded-lg overflow-hidden">
-                        <div class="backdrop-blur hue-reversal">
-                          <b-badge style="background-color: rgba(255,255,255);">
-                            <b-card-title class="py-0 my-1 text-dark px-2">
-                              {{ game.beatmap.beatmapset.artist_unicode || game.beatmap.beatmapset.artist }} - {{ game.beatmap.beatmapset.title_unicode || game.beatmap.beatmapset.title }} [{{ game.beatmap.version }}]
-                            </b-card-title>
-                          </b-badge>
+                <b-container fluid="md">
+                  <b-row>
+                    <b-col>
+                      <b-card
+                        class="mt-2 shadow border-0"
+                        overlay
+                        :img-src="game.beatmap.beatmapset.covers['cover@2x']"
+                      >
+                        <!-- {{ event }} -->
+                        <!-- <b-card-img  /> -->
+                        <div class="d-flex">
+                          <div class="rounded-lg overflow-hidden">
+                            <div class="backdrop-blur hue-reversal">
+                              <b-badge style="background-color: rgba(255,255,255);">
+                                <b-card-title class="py-0 my-1 text-dark px-2">
+                                  {{ game.beatmap.beatmapset.artist_unicode || game.beatmap.beatmapset.artist }} - {{ game.beatmap.beatmapset.title_unicode || game.beatmap.beatmapset.title }} [{{ game.beatmap.version }}]
+                                </b-card-title>
+                              </b-badge>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <div class="hue-reversal text-white text-hue pl-1 pt-2">
-                      <div>
-                        <i v-for="index in Math.floor(game.beatmap.difficulty_rating)" :key="`sr-${game.id}-${index}`" class="fas fa-star" /><i v-if=" 0.75 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 < 1 " class="fas fa-star" /><i v-if=" 0.25 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 <= 0.75 " class="fas fa-star-half" />
-                        {{ game.beatmap.difficulty_rating }}
-                      </div>
-                    </div>
-                  </b-card>
-                </div>
+                        <div class="hue-reversal text-white text-hue pl-1 pt-2">
+                          <div>
+                            <i v-for="index in Math.floor(game.beatmap.difficulty_rating)" :key="`sr-${game.id}-${index}`" class="fas fa-star" /><i v-if=" 0.75 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 < 1 " class="fas fa-star" /><i v-if=" 0.25 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 <= 0.75 " class="fas fa-star-half" />
+                            {{ game.beatmap.difficulty_rating }}
+                          </div>
+                        </div>
+                      </b-card>
+                    </b-col>
+                  </b-row>
+                </b-container>
                 <div v-if="game.team_type === 'team-vs'" :key="`game-${game.id}-detail`" class="vw-100">
                   <b-container fluid="lg" class="mx-auto px-2">
                     <b-row>
