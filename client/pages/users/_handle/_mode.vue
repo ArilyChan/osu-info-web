@@ -75,10 +75,6 @@ export default {
     Level
   },
   async asyncData ({ params, $axios, $config: { baseURL }, store }) {
-    console.log({
-      server: process.server,
-      client: process.client
-    })
     let result = {
       user: undefined,
       statisticsHistory: []
