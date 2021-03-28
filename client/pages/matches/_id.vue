@@ -12,159 +12,163 @@
         }"
       >
         <div class="fullscreen-section fp-auto-height-responsive fp-auto-height">
-          <b-container fluid="md">
-            <b-card no-body class="shadow w-100">
-              <b-card-header>
-                <div class="d-flex">
-                  <div class="text-center mr-auto">
-                    {{ match.name }}
-                  </div>
-                  <div class="d-flex">
-                    <b-card-text class="text-nowrap mb-0">
-                      tournament starts at game #
-                    </b-card-text>
-                    <b-form-input
-                      v-model.lazy="inputTournamentStartsAt"
-                      type="number"
-                      class="input-group-alternative"
-                      size="sm"
-                      style="width: 3em;"
-                    />
-                    <b-button size="sm" class="ml-2" @click="calcStats">
-                      Reload
-                    </b-button>
-                  </div>
-                </div>
-              </b-card-header>
-              <b-card-body>
-                <b-card-title>Players:</b-card-title>
-                <b-avatar-group size="4em">
-                  <b-avatar v-for="player in players" :key="`top-players-${player.id}`" class="shadow-sm">
-                    <osu-popup-user class="display-inline" :user="player">
-                      <div>
-                        <b-img :src="player.avatar_url" class="w-100" />
+          <b-container fluid="lg">
+            <b-row>
+              <b-col>
+                <b-card no-body class="shadow">
+                  <b-card-header>
+                    <div class="d-flex">
+                      <div class="text-center mr-auto">
+                        {{ match.name }}
                       </div>
-                      <template #fallback-no-aka>
-                        <h5 class="text-nowrap m-0">
-                          {{ player.username }}
-                        </h5>
-                        <a :href="`https://osu.ppy.sh/users/${player.id}`">Bancho profile</a>
-                      </template>
-                    </osu-popup-user>
-                  </b-avatar>
-                </b-avatar-group>
-                <hr>
-                <b-container>
-                  <b-row>
-                    <b-col>
-                      <b-card-title>MVP:</b-card-title>
-                      <div class="d-flex align-items-end">
-                        <b-avatar
-                          v-for="player in statistics.mvp"
-                          :key="`mvp-${player.id}`"
-                          :src="player.avatar_url"
-                          class="shadow-sm"
-                          size="4rem"
-                          badge-variant="danger"
-                          badge-top
-                        >
-                          <osu-popup-user class="display-inline" :user="player">
-                            <div>
-                              <b-img :src="player.avatar_url" class="w-100" />
-                            </div>
-                            <template #fallback-no-aka>
-                              <h5 class="text-nowrap m-0">
-                                {{ player.username }}
-                              </h5>
-                              <a :href="`https://osu.ppy.sh/users/${player.id}`">Bancho profile</a>
-                            </template>
-                          </osu-popup-user>
-                        </b-avatar>
-                        <h1 class="ml-2 my-0">
-                          × {{ statistics.maxMvpCount }}
-                        </h1>
-                      </div>
-                    </b-col>
-                    <b-col v-if="hosts.length">
-                      <b-card-title>Host:</b-card-title>
-                      <b-avatar-group size="4em">
-                        <b-avatar v-for="player in hosts" :key="`top-players-${player.id}`" :src="player.avatar_url" class="shadow-sm">
-                          <osu-popup-user class="display-inline" :user="player">
-                            <div>
-                              <b-img :src="player.avatar_url" class="w-100" />
-                            </div>
-                            <template #fallback-no-aka>
-                              <h5 class="text-nowrap m-0">
-                                {{ player.username }}
-                              </h5>
-                              <a href="https://osu.ppy.sh/users/$1">Bancho profile</a>
-                            </template>
-                          </osu-popup-user>
-                        </b-avatar>
-                      </b-avatar-group>
-                    </b-col>
-                  </b-row>
-                </b-container>
-                <template v-if="statistics.teamVS.played">
-                  <hr>
-                  <b-card-title>Team VS Scores:</b-card-title>
-                  <b-progress show-value height="2rem" :max="Object.values(statistics.teamVS.win).reduce((a,b) => a + b, 0)">
-                    <b-progress-bar v-if="statistics.teamVS.win.blue" :value="statistics.teamVS.win.blue" variant="info">
-                      <b-card-text>Blue: <strong>{{ statistics.teamVS.win.blue }}</strong></b-card-text>
-                    </b-progress-bar>
-                    <b-progress-bar v-if="statistics.teamVS.win.draw" :value="statistics.teamVS.win.draw" variant="secondary">
-                      <b-card-text>Draw: <strong>{{ statistics.teamVS.win.draw }}</strong></b-card-text>
-                    </b-progress-bar>
-                    <b-progress-bar v-if="statistics.teamVS.win.red" :value="statistics.teamVS.win.red" variant="warning">
-                      <b-card-text>Red: <strong>{{ statistics.teamVS.win.red }}</strong></b-card-text>
-                    </b-progress-bar>
-                  </b-progress>
-                </template>
-                <template>
-                  <hr>
-                  <b-card-title>Score Summing:</b-card-title>
-                  <b-list-group>
-                    <b-list-group-item
-                      v-for="([player, totalScore]) in Array.from(statistics.userTotalScore).sort((a, b) => b[1] - a[1]).slice(0,5)"
-                      :key="`player-totalscore-${player.id}`"
-                      class="py-2"
-                    >
                       <div class="d-flex">
-                        <div
-                          class="d-flex align-items-center"
-                        >
-                          <b-avatar
-                            :src="player.avatar_url"
-                            :alt="player.username"
-                            size="3rem"
-                            class="shadow"
-                            badge-top
-                            badge-offset="-0.3em"
-                            button
-                            badge-variant="danger"
-                          >
-                            <template v-if="statistics.mvp.includes(player)" #badge>
-                              <i class="fas fa-crown" />
-                            </template>
-                          </b-avatar>
-                          <h5 class="mx-2 mb-0">
-                            {{ player.username }}
-                          </h5>
-                        </div>
+                        <b-card-text class="text-nowrap mb-0">
+                          tournament starts at game #
+                        </b-card-text>
+                        <b-form-input
+                          v-model.lazy="inputTournamentStartsAt"
+                          type="number"
+                          class="input-group-alternative"
+                          size="sm"
+                          style="width: 3em;"
+                        />
+                        <b-button size="sm" class="ml-2" @click="calcStats">
+                          Reload
+                        </b-button>
                       </div>
-                      <b-progress
-                        :value="totalScore"
-                        :max="statistics.maxUserTotalScore"
-                        animated
-                        class="mt-1 mb-0"
-                      />
-                    </b-list-group-item>
-                  </b-list-group>
-                </template>
-                <hr>
-                <b-card-sub-title>{{ new Date(match.start_time) }} - {{ new Date(match.end_time) }}</b-card-sub-title>
-              </b-card-body>
-            </b-card>
+                    </div>
+                  </b-card-header>
+                  <b-card-body>
+                    <b-card-title>Players:</b-card-title>
+                    <b-avatar-group size="4em">
+                      <b-avatar v-for="player in players" :key="`top-players-${player.id}`" class="shadow-sm">
+                        <osu-popup-user class="display-inline" :user="player">
+                          <div>
+                            <b-img :src="player.avatar_url" class="w-100" />
+                          </div>
+                          <template #fallback-no-aka>
+                            <h5 class="text-nowrap m-0">
+                              {{ player.username }}
+                            </h5>
+                            <a :href="`https://osu.ppy.sh/users/${player.id}`">Bancho profile</a>
+                          </template>
+                        </osu-popup-user>
+                      </b-avatar>
+                    </b-avatar-group>
+                    <hr>
+                    <b-container>
+                      <b-row>
+                        <b-col>
+                          <b-card-title>MVP:</b-card-title>
+                          <div class="d-flex align-items-end">
+                            <b-avatar
+                              v-for="player in statistics.mvp"
+                              :key="`mvp-${player.id}`"
+                              :src="player.avatar_url"
+                              class="shadow-sm"
+                              size="4rem"
+                              badge-variant="danger"
+                              badge-top
+                            >
+                              <osu-popup-user class="display-inline" :user="player">
+                                <div>
+                                  <b-img :src="player.avatar_url" class="w-100" />
+                                </div>
+                                <template #fallback-no-aka>
+                                  <h5 class="text-nowrap m-0">
+                                    {{ player.username }}
+                                  </h5>
+                                  <a :href="`https://osu.ppy.sh/users/${player.id}`">Bancho profile</a>
+                                </template>
+                              </osu-popup-user>
+                            </b-avatar>
+                            <h1 class="ml-2 my-0">
+                              × {{ statistics.maxMvpCount }}
+                            </h1>
+                          </div>
+                        </b-col>
+                        <b-col v-if="hosts.length">
+                          <b-card-title>Host:</b-card-title>
+                          <b-avatar-group size="4em">
+                            <b-avatar v-for="player in hosts" :key="`top-players-${player.id}`" :src="player.avatar_url" class="shadow-sm">
+                              <osu-popup-user class="display-inline" :user="player">
+                                <div>
+                                  <b-img :src="player.avatar_url" class="w-100" />
+                                </div>
+                                <template #fallback-no-aka>
+                                  <h5 class="text-nowrap m-0">
+                                    {{ player.username }}
+                                  </h5>
+                                  <a href="https://osu.ppy.sh/users/$1">Bancho profile</a>
+                                </template>
+                              </osu-popup-user>
+                            </b-avatar>
+                          </b-avatar-group>
+                        </b-col>
+                      </b-row>
+                    </b-container>
+                    <template v-if="statistics.teamVS.played">
+                      <hr>
+                      <b-card-title>Team VS Scores:</b-card-title>
+                      <b-progress show-value height="2rem" :max="Object.values(statistics.teamVS.win).reduce((a,b) => a + b, 0)">
+                        <b-progress-bar v-if="statistics.teamVS.win.blue" :value="statistics.teamVS.win.blue" variant="info">
+                          <b-card-text>Blue: <strong>{{ statistics.teamVS.win.blue }}</strong></b-card-text>
+                        </b-progress-bar>
+                        <b-progress-bar v-if="statistics.teamVS.win.draw" :value="statistics.teamVS.win.draw" variant="secondary">
+                          <b-card-text>Draw: <strong>{{ statistics.teamVS.win.draw }}</strong></b-card-text>
+                        </b-progress-bar>
+                        <b-progress-bar v-if="statistics.teamVS.win.red" :value="statistics.teamVS.win.red" variant="warning">
+                          <b-card-text>Red: <strong>{{ statistics.teamVS.win.red }}</strong></b-card-text>
+                        </b-progress-bar>
+                      </b-progress>
+                    </template>
+                    <template>
+                      <hr>
+                      <b-card-title>Score Summing:</b-card-title>
+                      <b-list-group>
+                        <b-list-group-item
+                          v-for="([player, totalScore]) in Array.from(statistics.userTotalScore).sort((a, b) => b[1] - a[1]).slice(0,5)"
+                          :key="`player-totalscore-${player.id}`"
+                          class="py-2"
+                        >
+                          <div class="d-flex">
+                            <div
+                              class="d-flex align-items-center"
+                            >
+                              <b-avatar
+                                :src="player.avatar_url"
+                                :alt="player.username"
+                                size="3rem"
+                                class="shadow"
+                                badge-top
+                                badge-offset="-0.3em"
+                                button
+                                badge-variant="danger"
+                              >
+                                <template v-if="statistics.mvp.includes(player)" #badge>
+                                  <i class="fas fa-crown" />
+                                </template>
+                              </b-avatar>
+                              <h5 class="mx-2 mb-0">
+                                {{ player.username }}
+                              </h5>
+                            </div>
+                          </div>
+                          <b-progress
+                            :value="totalScore"
+                            :max="statistics.maxUserTotalScore"
+                            animated
+                            class="mt-1 mb-0"
+                          />
+                        </b-list-group-item>
+                      </b-list-group>
+                    </template>
+                    <hr>
+                    <b-card-sub-title>{{ new Date(match.start_time) }} - {{ new Date(match.end_time) }}</b-card-sub-title>
+                  </b-card-body>
+                </b-card>
+              </b-col>
+            </b-row>
           </b-container>
         </div>
         <div class="fullscreen-section min-vw-100 fp-auto-height-responsive">
