@@ -124,9 +124,6 @@ module.exports = {
       fallbackLocale: 'gb'
     }
   },
-  axios: {
-    baseURL: '/'
-  },
   publicRuntimeConfig: {
     axios: {
       browserBaseURL: '/'
@@ -138,11 +135,18 @@ module.exports = {
       baseURL: `http://localhost:${process.env.PORT || 3000}`
     }
   },
+
+  loading: {
+    color: 'white',
+    height: '2px'
+  },
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
-  axios: {},
+  axios: {
+    baseURL: '/'
+  },
   /*
   ** Content module configuration
   ** See https://content.nuxtjs.org/configuration

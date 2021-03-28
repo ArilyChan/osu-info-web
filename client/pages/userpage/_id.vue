@@ -29,12 +29,13 @@ import VRuntimeTemplate from 'v-runtime-template'
 import UserInfo from '~/components/stat-components/UserInfo.vue'
 const defaultCodes = [...bbCodeParser.codes]
 bbCodeParser.setCodes({
-  '\\[center\\](.+?)\\[/center\\]': '<div class="text-center">$1</div>',
-  '\\[centre\\](.+?)\\[/centre\\]': '<div class="text-center">$1</div>',
-  '\\[s\\](.+?)\\[/s\\]': '<s>$1</s>',
+  '\\[center\\](.*?)\\[/center\\]': '<div class="text-center">$1</div>',
+  '\\[centre\\](.*?)\\[/centre\\]': '<div class="text-center">$1</div>',
+  '\\[s\\](.*?)\\[/s\\]': '<s>$1</s>',
+  '\\[strike\\](.*?)\\[/strike\\]': '<s>$1</s>',
   '\\[img\\]\\[/img\\]': ' ',
-  '\\[list\\](.+?)\\[/list\\]': '<b-list-group>$1</b-list-group>',
-  '\\[list=(.+?)\\](<br>)?(.+?)(<br>)?\\[/list\\]': '<b-card class="shadow" no-body><b-card-header class="p-2">$1</b-card-header><b-list-group flush>$3</b-list-group></b-card>',
+  '\\[list\\](.*?)\\[/list\\]': '<b-list-group>$1</b-list-group>',
+  '\\[list=(.+?)\\](<br>)??(.*?)(<br>)??\\[/list\\]': '<b-card no-body><b-card-header class="p-2">$1</b-card-header><b-list-group flush>$3</b-list-group></b-card>',
   // '<br>\\[\\*\\](.+?)<br><br>': '<b-list-group-item>$1</b-list-group-item>',
   // '<br>\\[\\*\\](.+?)<br>': '<b-list-group-item>$1</b-list-group-item>',
   '\\[\\*\\](.+?)<br>': '<b-list-group-item>$1</b-list-group-item>',
@@ -42,8 +43,12 @@ bbCodeParser.setCodes({
   '\\[profile=([0-9]+)\\](.+?)\\[/profile\\]': '<osu-popup-user class="display-inline" :user="{id: \'$1\', username: \'$2\'}">$2<template #fallback-no-aka><h5 class="text-nowrap m-0">$2</h5><nuxt-link :to="localePath(\'/userpage/$1\')">userpage</nuxt-link><br><a href="https://osu.ppy.sh/users/$1">Bancho profile</a></template></osu-popup-user>',
   '\\[profile](.+?)\\[/profile\\]': '<nuxt-link :to="localePath(\'/users/$1\')">$1</nuxt-link>',
   '\\[heading\\](.+?)\\[/heading\\]': '<b-card-title class="text-center">$1</b-card-title>',
+  '\\[notice\\](.*?)\\[/notice\\]': '<b-jumbotron>$1</b-jumbotron>',
   '\\[size=([0-9]+)\\](.+?)\\[/size\\]': '<div style="font-size: calc($1px / 5)">$2</div>',
-  '\\[box=(.+?)\\](<br>)?(.+?)\\[/box\\]': '<b-card no-body class="mt-2 shadow"><b-card-header class="p-2">$1</b-card-header><b-card-body>$3</b-card-body></b-card>'
+  '\\[box=(.*?)\\](<br>)??(.+?)\\[/box\\]': [
+    '<b-card no-body class="mt-2">',
+    '<b-card-header class="p-2" v-if="`$1` !== ``">$1</b-card-header>',
+    '<b-card-body>$3</b-card-body></b-card>'].join('')
 })
 const newCodes = [...bbCodeParser.codes]
 bbCodeParser.codes = [...newCodes, ...defaultCodes]

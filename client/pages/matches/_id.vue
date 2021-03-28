@@ -6,11 +6,13 @@
         class="full-page"
         :options="{
           licenseKey: 'D56AAA76-BCAA4731-81149063-E140B512',
-          sectionSelector: '.fullscreen-section'
+          sectionSelector: '.fullscreen-section',
+          responsiveHeight: 900,
+          scrollOverflow: true
         }"
       >
-        <div class="fullscreen-section">
-          <div class="container shape-container d-flex align-items-center">
+        <div class="fullscreen-section fp-auto-height-responsive fp-auto-height">
+          <div class="container my-4">
             <b-card no-body class="shadow w-100">
               <b-card-header>
                 <div class="d-flex">
@@ -168,7 +170,7 @@
           </p> -->
           </div>
         </div>
-        <div class="fullscreen-section min-vw-100">
+        <div class="fullscreen-section min-vw-100 fp-auto-height-responsive">
           <div v-for="game in gameResults" :key="`game-${game.id}`" class="slide">
             <div class="d-flex align-items-center">
               <div class="min-vw-100">
@@ -199,10 +201,10 @@
                     </div>
                   </b-card>
                 </div>
-                <div v-if="game.team_type === 'team-vs'" :key="`game-${game.id}-detail`" class="mt-4 vw-100">
+                <div v-if="game.team_type === 'team-vs'" :key="`game-${game.id}-detail`" class="vw-100">
                   <b-container fluid="lg" class="mx-auto px-2">
                     <b-row>
-                      <b-col v-for="team in ['blue', 'red']" :key="`game-${game.id}-${team}-stat`">
+                      <b-col v-for="team in ['blue', 'red']" :key="`game-${game.id}-${team}-stat`" class="py-4" md>
                         <b-card no-body :border-variant="team === 'red' ? 'warning' : 'info'">
                           <b-card-header class="d-flex justify-content-between py-2 px-3" :header-bg-variant="team === 'red' ? 'warning' : 'info' " :header-boarder-variant="team === 'red' ? 'warning' : 'info' " :header-text-variant="team === 'red' ? 'white' : undefined ">
                             <div v-if="team === 'blue'">
@@ -267,10 +269,6 @@ export default {
     MpScoreListItem
   },
   async asyncData ({ params, $axios, $config: { baseURL }, store }) {
-    console.log({
-      server: process.server,
-      client: process.client
-    })
     const path = `/api/matches/${params.id}`
     const result = await $axios.get(path).then(res => res.data)
     store.commit('User/setMode', 'mania')
