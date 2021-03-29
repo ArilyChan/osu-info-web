@@ -346,6 +346,12 @@ export default {
             user: this.users.find(user => score.user_id === user.id)
           }
         })
+        // const hostScores = game.hostScores.map((score) => {
+        //   return {
+        //     ...score,
+        //     user: this.users.find(user => score.user_id === user.id)
+        //   }
+        // })
         const maxScore = Math.max(...scores.map(score => score.score))
         const minScore = Math.min(...scores.map(score => score.score))
         const mvp = scores.find(score => score.score === maxScore)
@@ -424,7 +430,7 @@ export default {
     init () {
       const matches = this.events.filter(event => event.game && event.game.scores.length).map(event => event.game)
       this.games = matches
-      const userPlayed = this.users.filter(user => matches.some((match) => {
+      const userPlayed = this.users.filter(user => this.games.slice(this.tournamentStartsAt).some((match) => {
         const userScore = match.scores.find(score => score.user_id === user.id)
         return userScore && userScore.score > 5000
       }))
