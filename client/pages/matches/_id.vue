@@ -100,7 +100,7 @@
                                   <h5 class="text-nowrap m-0">
                                     {{ player.username }}
                                   </h5>
-                                  <a href="https://osu.ppy.sh/users/$1">Bancho profile</a>
+                                  <a :href="`https://osu.ppy.sh/users/${player.id}`">Bancho profile</a>
                                 </template>
                               </osu-popup-user>
                             </b-avatar>
