@@ -8,8 +8,8 @@
   },
   "landing": {
     "recentCollectionsButton": "recent",
-    "subtitle": "find more [ M A P S ]",
-    "title": "collection sharing",
+    "subtitle": "osu-info-web-alpha",
+    "title": "osu info web",
     "topCollectionsButton": "most voted"
   },
   "level": "Level",
@@ -28,7 +28,7 @@
     "miss": "miss | misses"
   },
   "statements": {
-    "testTitle": "collection sharing alpha"
+    "testTitle": "contact: discord(arily#8735)"
   },
   "userInfo": {
     "accuracy": "Accuracy",

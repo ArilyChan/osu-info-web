@@ -1,82 +1,117 @@
 <template>
   <hero>
-    <!-- <img
-              src="img/brand/white.png"
-              style="width: 200px;"
-                class="img-fluid">-->
-    <b-container :class="[blur ?'blur' :'blur active']" fluid>
-      <b-col>
-        <div class="main-block shadow justify-content-between">
-          <div class="quaver" />
-          <div
-            class="content flex-grow-1 d-flex justify-content-center align-items-center"
+    <section class="position-absolute" style="top:0;left:0;right:0;bottom:0; height:100vh">
+      <b-container :class="[blur ?'blur' :'blur active']" fluid="md" class="h-100">
+        <b-row class="h-100">
+          <b-col class="my-auto">
+            <b-row>
+              <b-col>
+                <div class="main-block shadow justify-content-between">
+                  <div class="quaver" />
+                  <div
+                    class="content flex-grow-1 d-flex justify-content-center align-items-center"
+                  >
+                    <h1
+                      class="text-white"
+                      v-html="$t('landing.title')"
+                    />
+                    <p
+                      class="lead text-white mt-4 mb-5"
+                      v-html="$t('landing.subtitle')"
+                    />
+                    <div class="d-flex w-100 py-1">
+                      <b-form-input
+                        v-model="inputs.user"
+                        class="alternative mx-1"
+                        size="sm"
+                        placeholder="osu username or id"
+                      />
+                      <b-button
+                        class="mx-1"
+                        size="sm"
+                        :to="localePath({
+                          name: 'users-handle-mode',
+                          params: { handle: inputs.user }
+                        })"
+                      >
+                        to user profile
+                      </b-button>
+                      <b-button
+                        class="mx-1"
+                        size="sm"
+                        :to="localePath({
+                          name: 'best-handle-mode',
+                          params: { handle: inputs.user }
+                        })"
+                      >
+                        best plays
+                      </b-button>
+                      <b-button
+                        class="mx-1"
+                        size="sm"
+                        :to="localePath({
+                          name: 'userpage-handle-mode',
+                          params: { handle: inputs.user }
+                        })"
+                      >
+                        userpage
+                      </b-button>
+                      <b-button
+                        class="mx-1"
+                        size="sm"
+                        :to="localePath({
+                          name: 'recent-handle-mode',
+                          params: { handle: inputs.user }
+                        })"
+                      >
+                        recent
+                      </b-button>
+                    </div>
+                    <div class="d-flex w-100 py-1">
+                      <b-form-input
+                        v-model="inputs.matchId"
+                        class="alternative mx-1"
+                        size="sm"
+                        placeholder="match id"
+                      />
+                      <b-button
+                        class="mx-1"
+                        size="sm"
+                        :to="localePath({
+                          name: 'matches-id',
+                          params: { id: inputs.matchId }
+                        })"
+                      >
+                        to match statistics
+                      </b-button>
+                    </div>
+                  </div>
+                </div>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col>
+                <b-collapse v-model="show">
+                  <div class="row align-items-center pt-lg justify-content-around">
+                    <!-- <div class="btn-wrapper" /> -->
+                  </div>
+                  <div class="row align-items-center pt-lg justify-content-around">
+                    <div class="col mt-4">
+                      <span class="text-white alpha-7 ml-3">{{ $t('landing.title') }}</span>
+                      <!-- <a
+            href="https://github.com/creativetimofficial/argon-design-system"
+            target="_blank"
+            title="Support us on Github"
           >
-            <h1
-              class="text-white"
-              v-html="$t('landing.title')"
-            />
-            <p
-              class="lead text-white mt-4 mb-5"
-              v-html="$t('landing.subtitle')"
-            />
-            <div class="buttons">
-              <base-button
-                tag="a"
-                href="#"
-                class="mb-3 mb-sm-0"
-                type="info"
-                icon="ni ni-world"
-                @click.prevent="$router.push({name:'top'})"
-              >
-                <!-- <template v-slot:icon><font-awesome-icon icon="fa-chess-queen" /></template> -->
-                {{ $t("landing.topCollectionsButton") }}
-              </base-button>
-
-              <base-button
-                tag="a"
-                href="#"
-                class="mb-3 mb-sm-0"
-                type="white"
-                icon="ni ni-cloud-download-95"
-                @click.prevent="$router.push({name:'recent'})"
-              >
-                {{ $t("landing.recentCollectionsButton") }}
-              </base-button>
-              <!-- <a href="/u/40455" class="home-btn btn-key">view profile</a>
-                  <a
-                    href="/leaderboard"
-                    class="home-btn btn-how"
-                    style="margin-left: 6px;"
-                  >view leaderboards</a> -->
-            </div>
-          </div>
-        </div>
-      </b-col>
-    </b-container>
-    <!-- <div class="col-lg-7 text-center pt-lg">
-        123123
-      </div> -->
-    <b-collapse v-model="show">
-      <div class="row align-items-center pt-lg justify-content-around">
-        <!-- <div class="btn-wrapper" /> -->
-      </div>
-      <div class="row align-items-center pt-lg justify-content-around">
-        <div class="col mt-4">
-          <span class="text-white alpha-7 ml-3">{{ $t('landing.title') }}</span>
-          <!-- <a
-                            href="https://github.com/creativetimofficial/argon-design-system"
-                            target="_blank"
-                            title="Support us on Github"
-                        >
-                            <img
-                                src="img/brand/github-white-slim.png"
-                                style="height: 22px; margin-top: -3px"
-                            />
-                        </a>-->
-        </div>
-        <div class="col mt-4 mt-sm-0 text-right">
-          <span class="text-white alpha-7">{{ $t("statements.testTitle") }}</span>
-          <!-- <a
+            <img
+              src="img/brand/github-white-slim.png"
+              style="height: 22px; margin-top: -3px"
+            >
+          </a> -->
+                    </div>
+                    <div class="col mt-4 mt-sm-0 text-right">
+                      <span class="text-white alpha-7 mr-3">{{ $t("statements.testTitle") }}</span>
+                      <!-- <a
               href="https://www.creative-tim.com"
               target="_blank"
               title="Creative Tim - Premium Bootstrap Themes and Templates"
@@ -87,9 +122,15 @@
                 style="height: 30px;"
               >
             </a> -->
-        </div>
-      </div>
-    </b-collapse>
+                    </div>
+                  </div>
+                </b-collapse>
+              </b-col>
+            </b-row>
+          </b-col>
+        </b-row>
+      </b-container>
+    </section>
   </hero>
 </template>
 <script>
@@ -101,7 +142,10 @@ export default {
   },
   data: () => ({
     blur: true,
-    loading: true
+    loading: true,
+    inputs: {
+      user: ''
+    }
   }),
   computed: {
     show: {
