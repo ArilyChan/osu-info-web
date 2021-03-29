@@ -50,7 +50,7 @@
                         class="mx-1"
                         size="sm"
                         :to="localePath({
-                          name: 'userpage-handle',
+                          name: 'userpage-id',
                           params: { id: inputs.user }
                         })"
                       >
