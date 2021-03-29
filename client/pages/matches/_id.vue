@@ -8,10 +8,11 @@
           licenseKey: 'D56AAA76-BCAA4731-81149063-E140B512',
           sectionSelector: '.fullscreen-section',
           responsiveHeight: 900,
-          scrollOverflow: true
+          scrollOverflow: true,
+          verticalCentered: true
         }"
       >
-        <div class="fullscreen-section fp-auto-height-responsive fp-auto-height">
+        <div class="fullscreen-section fp-auto-height-responsive">
           <b-container fluid="lg">
             <b-row>
               <b-col>
@@ -173,82 +174,80 @@
         </div>
         <div class="fullscreen-section min-vw-100 fp-auto-height-responsive">
           <div v-for="game in gameResults" :key="`game-${game.id}`" class="slide">
-            <div class="d-flex align-items-center">
-              <div class="min-vw-100">
-                <b-container fluid="md">
+            <div class="min-vw-100">
+              <b-container fluid="md">
+                <b-row>
+                  <b-col>
+                    <b-card
+                      class="mt-2 shadow border-0"
+                      overlay
+                      :img-src="game.beatmap.beatmapset.covers['cover@2x']"
+                    >
+                      <!-- {{ event }} -->
+                      <!-- <b-card-img  /> -->
+                      <div class="d-flex">
+                        <div class="rounded-lg overflow-hidden">
+                          <div class="backdrop-blur hue-reversal">
+                            <b-badge style="background-color: rgba(255,255,255);">
+                              <b-card-title class="py-0 my-1 text-dark px-2">
+                                {{ game.beatmap.beatmapset.artist_unicode || game.beatmap.beatmapset.artist }} - {{ game.beatmap.beatmapset.title_unicode || game.beatmap.beatmapset.title }} [{{ game.beatmap.version }}]
+                              </b-card-title>
+                            </b-badge>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="hue-reversal text-white text-hue pl-1 pt-2">
+                        <div>
+                          <i v-for="index in Math.floor(game.beatmap.difficulty_rating)" :key="`sr-${game.id}-${index}`" class="fas fa-star" /><i v-if=" 0.75 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 < 1 " class="fas fa-star" /><i v-if=" 0.25 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 <= 0.75 " class="fas fa-star-half" />
+                          {{ game.beatmap.difficulty_rating }}
+                        </div>
+                      </div>
+                    </b-card>
+                  </b-col>
+                </b-row>
+              </b-container>
+              <div v-if="game.team_type === 'team-vs'" :key="`game-${game.id}-detail`" class="vw-100">
+                <b-container fluid="lg" class="mx-auto px-2">
                   <b-row>
-                    <b-col>
-                      <b-card
-                        class="mt-2 shadow border-0"
-                        overlay
-                        :img-src="game.beatmap.beatmapset.covers['cover@2x']"
-                      >
-                        <!-- {{ event }} -->
-                        <!-- <b-card-img  /> -->
-                        <div class="d-flex">
-                          <div class="rounded-lg overflow-hidden">
-                            <div class="backdrop-blur hue-reversal">
-                              <b-badge style="background-color: rgba(255,255,255);">
-                                <b-card-title class="py-0 my-1 text-dark px-2">
-                                  {{ game.beatmap.beatmapset.artist_unicode || game.beatmap.beatmapset.artist }} - {{ game.beatmap.beatmapset.title_unicode || game.beatmap.beatmapset.title }} [{{ game.beatmap.version }}]
-                                </b-card-title>
-                              </b-badge>
-                            </div>
+                    <b-col v-for="team in ['blue', 'red']" :key="`game-${game.id}-${team}-stat`" class="py-4" md>
+                      <b-card no-body :border-variant="team === 'red' ? 'warning' : 'info'">
+                        <b-card-header class="d-flex justify-content-between py-2 px-3" :header-bg-variant="team === 'red' ? 'warning' : 'info' " :header-boarder-variant="team === 'red' ? 'warning' : 'info' " :header-text-variant="team === 'red' ? 'white' : undefined ">
+                          <div v-if="team === 'blue'">
+                            team {{ team }}
                           </div>
-                        </div>
-                        <div class="hue-reversal text-white text-hue pl-1 pt-2">
-                          <div>
-                            <i v-for="index in Math.floor(game.beatmap.difficulty_rating)" :key="`sr-${game.id}-${index}`" class="fas fa-star" /><i v-if=" 0.75 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 < 1 " class="fas fa-star" /><i v-if=" 0.25 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 <= 0.75 " class="fas fa-star-half" />
-                            {{ game.beatmap.difficulty_rating }}
+                          <b-card-title class="mb-0" :class="[team === 'red' ? 'text-white' : undefined]">
+                            {{ game.teamScore[team] }}
+                          </b-card-title>
+                          <div v-if="team === 'red'">
+                            team {{ team }}
                           </div>
-                        </div>
+                        </b-card-header>
+                        <b-list-group flush>
+                          <mp-score-list-item
+                            v-for="playerScore in game.scores.filter(score => score.match.team === team && score.accuracy > 0.05)"
+                            :key="`score-${game.id}-${playerScore.user_id}`"
+                            :team="team"
+                            :player-score="playerScore"
+                            :game="game"
+                          />
+                        </b-list-group>
                       </b-card>
                     </b-col>
                   </b-row>
                 </b-container>
-                <div v-if="game.team_type === 'team-vs'" :key="`game-${game.id}-detail`" class="vw-100">
-                  <b-container fluid="lg" class="mx-auto px-2">
-                    <b-row>
-                      <b-col v-for="team in ['blue', 'red']" :key="`game-${game.id}-${team}-stat`" class="py-4" md>
-                        <b-card no-body :border-variant="team === 'red' ? 'warning' : 'info'">
-                          <b-card-header class="d-flex justify-content-between py-2 px-3" :header-bg-variant="team === 'red' ? 'warning' : 'info' " :header-boarder-variant="team === 'red' ? 'warning' : 'info' " :header-text-variant="team === 'red' ? 'white' : undefined ">
-                            <div v-if="team === 'blue'">
-                              team {{ team }}
-                            </div>
-                            <b-card-title class="mb-0" :class="[team === 'red' ? 'text-white' : undefined]">
-                              {{ game.teamScore[team] }}
-                            </b-card-title>
-                            <div v-if="team === 'red'">
-                              team {{ team }}
-                            </div>
-                          </b-card-header>
-                          <b-list-group flush>
-                            <mp-score-list-item
-                              v-for="playerScore in game.scores.filter(score => score.match.team === team && score.accuracy > 0.05)"
-                              :key="`score-${game.id}-${playerScore.user_id}`"
-                              :team="team"
-                              :player-score="playerScore"
-                              :game="game"
-                            />
-                          </b-list-group>
-                        </b-card>
-                      </b-col>
-                    </b-row>
-                  </b-container>
-                </div>
-                <div v-else :key="`game-${game.id}-detail`" class="mt-4 vw-100">
-                  <div class="container">
-                    <b-card no-body>
-                      <b-list-group flush>
-                        <mp-score-list-item
-                          v-for="playerScore in game.scores.filter(score => score.accuracy > 0.05)"
-                          :key="`score-${game.id}-${playerScore.user_id}`"
-                          :player-score="playerScore"
-                          :game="game"
-                        />
-                      </b-list-group>
-                    </b-card>
-                  </div>
+              </div>
+              <div v-else :key="`game-${game.id}-detail`" class="mt-4 vw-100">
+                <div class="container">
+                  <b-card no-body>
+                    <b-list-group flush>
+                      <mp-score-list-item
+                        v-for="playerScore in game.scores.filter(score => score.accuracy > 0.05)"
+                        :key="`score-${game.id}-${playerScore.user_id}`"
+                        :player-score="playerScore"
+                        :game="game"
+                      />
+                    </b-list-group>
+                  </b-card>
                 </div>
               </div>
             </div>
@@ -466,10 +465,10 @@ export default {
   margin: auto;
   width: 80vw !important
 }
-.min-vw-100 {
-  margin-left: calc(-50vw + 50%);
-  min-width: 100vw !important
-}
+// .min-vw-100 {
+//   margin-left: calc(-50vw + 50%);
+//   min-width: 100vw !important
+// }
 
 .hue-reversal {
   mix-blend-mode: exclusion;
