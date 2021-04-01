@@ -37,7 +37,7 @@
       :options="recentHistory.chart"
       :series="[{
         name: 'Rank',
-        data: user.rankHistory.data.map((data,index) => ({x: index, y: data}))
+        data: user.rankHistory.data.map((data,index) => ({x: index, y: data || null}))
       }]"
     />
   </b-card>
