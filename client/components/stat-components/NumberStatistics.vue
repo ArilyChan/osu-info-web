@@ -78,8 +78,8 @@ export default {
         floating: true,
         fontSize: '13px',
         position: 'left',
-        offsetX: 0,
-        offsetY: 0,
+        offsetX: 10,
+        offsetY: -10,
         labels: {
           useSeriesColors: true
         },
@@ -93,14 +93,48 @@ export default {
           vertical: 0
         }
       },
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          legend: {
-            show: false
+      responsive: [
+        {
+          breakpoint: 576,
+          options: {
+            legend: {
+              offsetX: 70,
+              offsetY: 0
+            }
+          }
+        },
+        {
+          breakpoint: 768,
+          options: {
+            legend: {
+              offsetX: 90,
+              offsetY: 0
+            }
+          }
+        },
+        {
+          breakpoint: 992,
+          options: {
+            legend: {
+              fontSize: '9px',
+              offsetX: -28,
+              offsetY: -10
+            },
+            chart: {
+              height: 270
+            }
+          }
+        },
+        {
+          breakpoint: 1200,
+          options: {
+            legend: {
+              offsetX: 0,
+              offsetY: -10
+            }
           }
         }
-      }]
+      ]
     }
   },
   methods: {
