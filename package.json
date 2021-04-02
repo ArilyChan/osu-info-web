@@ -8,7 +8,7 @@
     "express-dev": "node -r dotenv/config ./server/run-app",
     "express-api": "node -r dotenv/config ./server/app-api",
     "build": "nuxt build",
-    "start": "nuxt start",
+    "start": "NODE_ENV=production node -r dotenv/config ./server/run-app",
     "generate": "nuxt generate",
     "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "test": "jest",
