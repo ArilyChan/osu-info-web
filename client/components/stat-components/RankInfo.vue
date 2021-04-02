@@ -17,7 +17,7 @@
         , {{ $t('CabbageHistory.ppDrop' , {ppDrop: Math.round((user.statistics.pp - ppHistory[ppHistory.length - 8]+ Number.EPSILON ) * 100) / 100}) }}
       </div>
     </b-card-header>
-    <apexchart :height="historyChart.chart.height" type="line" :options="historyChart.chart" :series="createSeries()" />
+    <apexchart :height="motherShipHistory.chart.height" type="line" :options="motherShipHistory.chart" :series="createSeries()" />
     <b-card-footer class="text-right py-1 small">
       {{ $t('CabbageHistory.disclaimer') }}
     </b-card-footer>
@@ -33,8 +33,8 @@
     </b-card-header>
     <apexchart
       type="line"
-      :height="recentHistory.chart.height"
-      :options="recentHistory.chart"
+      :height="banchoV2.chart.height"
+      :options="banchoV2.chart"
       :series="[{
         name: 'Rank',
         data: user.rankHistory.data.map((data,index) => ({x: index, y: data || null}))
@@ -69,16 +69,18 @@ export default {
   },
   data () {
     return {
-      historyChart: {
-        chart: {
-          height: 200,
-          type: 'line'
-        }
-      },
-      recentHistory: {
+      motherShipHistory: {
         chart: {
           height: 200,
           type: 'line',
+          stroke: {
+            curve: 'smooth'
+          }
+        }
+      },
+      banchoV2: {
+        chart: {
+          height: 200,
           stroke: {
             curve: 'smooth'
           },
@@ -150,7 +152,8 @@ export default {
     const numMode = this.numMode(this.mode)
     this.history = this.statisticsHistory.filter(rec => rec.mode === numMode)
     const pp = this.ppHistory
-    this.historyChart = {
+    const ppRank = this.ppRankHistory
+    this.motherShipHistory = {
       chart: {
         height: 300,
         type: 'line',
@@ -162,17 +165,21 @@ export default {
             show: false
           }
         },
+        legend: {
+        },
+        colors: ['#2E93fA', '#E91E63'],
         xaxis: {
           type: 'datetime',
           formatter: date => date.toLocaleDateString('en-US'),
           labels: {
-            show: false
+            show: true,
+            hideOverlappingLabels: false
           },
           axisBorder: {
             show: false
           },
           axisTicks: {
-            show: false
+            show: true
           },
           crosshairs: {
             show: false
@@ -191,22 +198,25 @@ export default {
           },
           axisBorder: {
             show: true,
-            color: '#FF1654'
+            color: '#2E93fA'
           },
           labels: {
             style: {
-              colors: '#FF1654'
-            }
-          },
-          title: {
-            text: 'PP',
-            style: {
-              color: '#FF1654'
+              colors: '#2E93fA'
             }
           }
+          // title: {
+          //   text: 'PP',
+          //   style: {
+          //     color: '#2E93fA'
+          //   }
+          // }
         },
         {
+          min (min) { return Math.min(...ppRank) },
+          max (max) { return Math.max(...ppRank) },
           reversed: true,
+          forceNiceScale: true,
           opposite: true,
           decimalsInFloat: 0,
           axisTicks: {
@@ -214,19 +224,20 @@ export default {
           },
           axisBorder: {
             show: true,
-            color: '#247BA0'
+            color: '#E91E63'
           },
           labels: {
             style: {
-              colors: '#247BA0'
-            }
-          },
-          title: {
-            text: 'Rank',
-            style: {
-              color: '#247BA0'
+              colors: '#E91E63'
             }
           }
+          // title: {
+          //   text: 'Rank',
+          //   style: {
+          //     cssClass: 'chart-yaxis-title',
+          //     color: '#E91E63'
+          //   }
+          // }
         }]
       }
     }
@@ -248,11 +259,11 @@ export default {
       // const { ppHistory, ppRankHistory, dateHistory } = this
       const pp = this.ppHistory
       const rank = this.ppRankHistory
-      const dateHistory = this.dateHistory()
+      const dateHistory = this.dateHistory().slice(-180)
       return Object.entries({ pp, rank }).map(([name, data]) => {
         return ({
           name,
-          data: data.map((d, index) => ({
+          data: data.slice(-180).map((d, index) => ({
             x: dateHistory[index],
             y: d
           }))
@@ -262,3 +273,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.chart-yaxis-title {
+  margin: 0;
+  padding: 0;
+}
+</style>
