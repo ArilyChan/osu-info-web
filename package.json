@@ -9,7 +9,7 @@
     "api": "node -r dotenv/config ./server/app-api",
     "dev-api": "nodemon --watch server -r dotenv/config ./server/app-api",
     "build": "nuxt build",
-    "start": "NODE_ENV=production node -r dotenv/config ./server/run-app",
+    "start": "NODE_ENV=production nuxt start",
     "generate": "nuxt generate",
     "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "test": "jest",
