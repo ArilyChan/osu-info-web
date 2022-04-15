@@ -84,7 +84,7 @@ export default {
     const mode = params.mode || (result.user ? result.user.playmode : undefined)
     store.commit('user/setMode', mode)
     store.commit('user/setUser', result.user)
-    store.commit('users/setRecentActivity', result.recentActivity)
+    store.commit('user/setRecentActivity', result.recentActivity)
     if (query.server) { store.commit('setServer', query.server) }
     return {
       // user: result.user,
