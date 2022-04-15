@@ -1,5 +1,5 @@
 <template>
-  <b-card v-if="numMode(mode) === 0 && history.length" no-body class="shadow">
+  <b-card v-if="history.length" no-body class="shadow">
     <b-card-header class="d-inline-flex justify-content-end align-items-baseline py-2">
       <h5 class="pr-1">
         {{ $t('CabbageHistory.ppTodayBefore') }}
@@ -25,7 +25,7 @@
   <b-card v-else-if="user.rankHistory && user.rankHistory.data.length" no-body class="shadow">
     <b-card-header class="d-inline-flex justify-content-end align-items-baseline py-2">
       <h5 class="pr-1">
-        今天你
+        {{ $t('CabbageHistory.ppTodayBefore') }}
       </h5>
       <h3>
         <b>{{ user.statistics.pp }}</b><small>pp</small>
@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   filters: {
     decodeEntities (value) {
@@ -54,18 +55,18 @@ export default {
     }
   },
   props: {
-    user: {
-      type: Object,
-      default: () => {}
-    },
+    // user: {
+    //   type: Object,
+    //   default: () => {}
+    // },
     statisticsHistory: {
       type: Array,
       default: () => []
-    },
-    mode: {
-      type: String,
-      default: undefined
     }
+    // mode: {
+    //   type: String,
+    //   default: undefined
+    // }
   },
   data () {
     return {
@@ -135,6 +136,10 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      user: state => state.user.data,
+      mode: state => state.user.mode
+    }),
     pcHistory () {
       if (!this.history.length) { return [] }
       return this.history.map(rec => rec.playcount)
@@ -241,6 +246,9 @@ export default {
         }]
       }
     }
+    if (this.history.length || (this.user.rankHistory && this.user.rankHistory.data.length)) {
+      this.$store.commit('user/addLayout', 'RankHistoryChart')
+    }
   },
   methods: {
     dateHistory () {
@@ -248,7 +256,7 @@ export default {
       return this.history.map(({ queryDate: { year, month, day } }) => new Date(`${year}-${month}-${day}`))
     },
     numMode (mode) {
-      if (mode === 'osu') { return 0 }
+      if (['osu', 'osu-rx'].includes(mode)) { return 0 }
       if (mode === 'taiko') { return 1 }
       if (mode === 'fruits') { return 2 }
       if (mode === 'mania') { return 3 }

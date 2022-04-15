@@ -95,6 +95,38 @@
 
 // Vendor
 
-@import "custom/vendor/flatpickr.scss";
-@import "custom/vendor/headroom.scss";
-@import "custom/vendor/nouislider.scss";
+@import "custom/vendor/flatpickr";
+@import "custom/vendor/headroom";
+@import "custom/vendor/nouislider";
+
+
+//spinners are not included in the argon kit
+// Spinners
+
+// $spinner-width:         2rem !default;
+// $spinner-height:        $spinner-width !default;
+// $spinner-border-width:  .25em !default;
+
+// $spinner-width-sm:        1rem !default;
+// $spinner-height-sm:       $spinner-width-sm !default;
+// $spinner-border-width-sm: .2em !default;
+
+// // Toasts
+
+// $toast-max-width:                   350px !default;
+// $toast-padding-x:                   .75rem !default;
+// $toast-padding-y:                   .25rem !default;
+// $toast-font-size:                   .875rem !default;
+// $toast-color:                       null !default;
+// $toast-background-color:            rgba($white, .85) !default;
+// $toast-border-width:                1px !default;
+// $toast-border-color:                rgba(0, 0, 0, .1) !default;
+// $toast-border-radius:               .25rem !default;
+// $toast-box-shadow:                  0 .25rem .75rem rgba($black, .1) !default;
+
+// $toast-header-color:                $gray-600 !default;
+// $toast-header-background-color:     rgba($white, .85) !default;
+// $toast-header-border-color:         rgba(0, 0, 0, .05) !default;
+
+// @import "new_bootstrap/_spinners";
+// @import "new_bootstrap/_toasts";

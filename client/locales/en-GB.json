@@ -41,5 +41,20 @@
     "playStyle": "playing with {styles}",
     "registeredAt": "registered at {t}",
     "usernameAlias": "aka"
+  },
+  "mode": {
+    "osu": "osu!",
+    "osuRX": "osu! Relax",
+    "osuAP": "osu! Auto Pilot",
+    "taiko": "Taiko",
+    "taikoRX": "Taiko Relax",
+    "friuts": "Catch the beats",
+    "mania": "Mania"
+  },
+  "pp": "pp",
+  "rank": "rank",
+  "server": {
+    "bancho": "osu! offical server",
+    "sb": "ppy.sb"
   }
 }

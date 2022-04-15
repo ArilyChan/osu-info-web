@@ -2,7 +2,7 @@
   <div class="col px-0 profile-page">
     <div v-if="user" class="card-profile container" style="margin-top: 5em">
       <div class="b-overlay-wrap position-relative">
-        <user-info :user="user" :mode="mode" :disabled="['pp', 'level']" />
+        <user-info :disabled="['pp', 'level']" />
       </div>
       <no-ssr>
         <waterfall
@@ -15,23 +15,21 @@
           style="width: calc(100% + 0.8em); left: -0.4em; padding-top: 0.4em"
         >
           <waterfall-item class="double-size">
-            <level :user="user" class="height-fix-level" />
+            <level class="height-fix-level" />
           </waterfall-item>
           <waterfall-item class="quad-size">
             <rank-info
-              :user="user"
               :statistics-history="statisticsHistory"
-              :mode="mode"
             />
           </waterfall-item>
-          <waterfall-item class="double-size">
-            <number-statistics :user="user" :historical-best="historicalBest" />
+          <waterfall-item :class="$store.state.user.createdLayouts.includes('RankHistoryChart')?'double-size':'quad-size'">
+            <number-statistics :historical-best="historicalBest" />
           </waterfall-item>
           <waterfall-item
             v-if="recentActivity.length"
             class="quad-size"
           >
-            <activities :user="user" :recent-activity="recentActivity" />
+            <activities />
           </waterfall-item>
           <waterfall-item
             v-for="badge of user.badges"
@@ -48,7 +46,7 @@
     </div>
     <div v-else class="card-profile container pt-5">
       <b-card
-        title="没有这个用户"
+        title="$t('notFound')"
         header="Something went wrong..."
         class="shadow"
       />
@@ -58,9 +56,10 @@
 
 <script>
 import { Waterfall, WaterfallItem } from 'vue2-waterfall'
+import { mapState } from 'vuex'
 import UserInfo from '~/components/stat-components/UserInfo.vue'
 import RankInfo from '~/components/stat-components/RankInfo.vue'
-import NumberStatistics from '~/components/stat-components/NumberStatistics.vue'
+import NumberStatistics from '~/components/stat-components/StatisticTable.vue'
 import Activities from '~/components/stat-components/Activities.vue'
 import Level from '~/components/stat-components/Level.vue'
 export default {
@@ -74,25 +73,31 @@ export default {
     Activities,
     Level
   },
-  async asyncData ({ params, $axios, $config: { baseURL }, store }) {
+  async asyncData ({ params, $axios, query, store, error }) {
     let result = {
-      user: undefined,
-      statisticsHistory: []
     }
     const path = `/api/users/${params.handle}${
       params.mode ? `/${params.mode}` : ''
     }`
-    result = await $axios.get(path).then(res => res.data)
+    result = await $axios.get(path, { params: { server: query.server } }).then(res => res.data)
+    if (!result) { return error({ statusCode: 404, message: 'User not found' }) }
     const mode = params.mode || (result.user ? result.user.playmode : undefined)
-    store.commit('User/setMode', mode)
+    store.commit('user/setMode', mode)
+    store.commit('user/setUser', result.user)
+    store.commit('users/setRecentActivity', result.recentActivity)
+    if (query.server) { store.commit('setServer', query.server) }
     return {
-      user: result.user,
-      recentActivity: result.recentActivity || [],
+      // user: result.user,
+      // recentActivity: result.recentActivity || [],
       statisticsHistory: result.statisticsHistory || [],
-      historicalBest: result.historicalBest[0],
+      historicalBest: result.historicalBest?.[0],
       mode
     }
   },
+  computed: mapState({
+    user: state => state.user.data,
+    recentActivity: state => state.user.recentActivity
+  }),
   head () {
     return {
       title: 'Statistics of ' + [this.user.username, this.mode].join(' | '),
@@ -104,7 +109,7 @@ export default {
           content: [
               `Statistics of ${this.user.username}:`,
               `${this.$t('userInfo.global')} Rank: #${this.user.statistics.rank.global || this.user.statistics.global_rank || ' - '}`,
-              `${this.user.country.code} Rank: #${this.user.statistics.rank.country || this.user.statistics.country_rank || ' - '}`
+              `${this.user.country_code || (this.user.country && this.user.country.code)} Rank: #${this.user.statistics.rank.country || this.user.statistics.country_rank || ' - '}`
           ].join('\n')
         }
       ]

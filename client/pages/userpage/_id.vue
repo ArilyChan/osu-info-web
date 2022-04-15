@@ -66,7 +66,7 @@ export default {
     result = await $axios.get(path).then(res => res.data)
 
     const mode = result.score ? result.score.mode : params.mode || (result.user ? result.user.playmode : undefined)
-    store.commit('User/setMode', mode)
+    store.commit('user/setMode', mode)
     return {
       user: result.user,
       mode

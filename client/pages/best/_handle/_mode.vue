@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import ScoreListCard from '~/components/sb-components/Scores/ScoreListCard.vue'
 import UserInfo from '~/components/stat-components/UserInfo.vue'
 export default {
@@ -25,16 +26,22 @@ export default {
     UserInfo,
     ScoreListCard
   },
-  async asyncData ({ params, $axios, $config: { baseURL }, route, store }) {
+  async asyncData ({ params, $axios, query, error, route, store }) {
     let result = {
       user: undefined
     }
     const path = `/api/best/${params.handle}${params.mode ? `/${params.mode}` : ''}`
     result = await $axios.get(path, {
-      params: route.query
+      params: {
+        ...route.query,
+        server: query.server
+      }
     }).then(res => res.data)
+    if (!result.user) { return error({ status: 404, message: 'user not found' }) }
     const mode = params.mode || (result.user ? result.user.playmode : undefined)
-    store.commit('User/setMode', mode)
+    store.commit('user/setMode', mode)
+    store.commit('user/setUser', result.user)
+    if (query.server) { store.commit('setServer', query.server) }
     return {
       user: result.user,
       scores: result.scores,
@@ -42,6 +49,9 @@ export default {
       mode
     }
   },
+  computed: mapState({
+    user: state => state.user.data
+  }),
   head () {
     return {
       title: 'Best scores of ' + [this.user.username, this.mode].join(' | '),

@@ -1,10 +1,7 @@
+import { resolve } from 'path'
+import packageJSON from './package.json'
 // eslint-disable-next-line nuxt/no-cjs-in-config
-module.exports = {
-  /*
-  ** Nuxt rendering mode
-  ** See https://nuxtjs.org/api/configuration-mode
-  */
-  mode: 'universal',
+export default {
   /*
   ** Nuxt target
   ** See https://nuxtjs.org/api/configuration-target
@@ -51,7 +48,7 @@ module.exports = {
   css: [
     '~assets/argon/vendor/nucleo/css/nucleo.css',
     '@fortawesome/fontawesome-free/css/all.css',
-    '~assets/argon/scss/argon.scss',
+    // '~assets/argon/scss/argon.scss',
     'bootstrap-vue/dist/bootstrap-vue.css',
     '~assets/transitions.css'
   ],
@@ -93,8 +90,7 @@ module.exports = {
         // onlyOnRoot: true // recommended
       }
     }],
-    // // Doc: https://bootstrap-vue.js.org
-    // 'bootstrap-vue/nuxt',
+    '@nuxtjs/proxy',
     // // Doc: https://axios.nuxtjs.org/usage
     // '@nuxtjs/axios',
     // Doc: https://github.com/nuxt/content
@@ -147,6 +143,7 @@ module.exports = {
   axios: {
     baseURL: '/'
   },
+
   /*
   ** Content module configuration
   ** See https://content.nuxtjs.org/configuration
@@ -172,5 +169,23 @@ module.exports = {
     transpile: ['js-bbcode-parser']
   },
   srcDir: 'client/',
-  telemetry: false
+  telemetry: false,
+  alias: {
+    ...Object.entries(packageJSON?._moduleAliases ?? {}).reduce((acc, [k, v]) => { acc[k] = resolve(v); return acc }, {})
+  },
+  proxy: {
+    // see Proxy section
+    '/api': process.env.API_SCHEME?.startsWith('unix')
+      ? {
+        changeOrigin: false,
+        target: { socketPath: process.env.API_LISTEN }
+      }
+      : {
+        changeOrigin: false,
+        target: `${process.env.API_SCHEME}${process.env.API_DOMAIN}:${process.env.API_LISTEN}`
+      }
+  },
+  server: {
+    host: '0' // default: localhost
+  }
 }

@@ -1,3 +1,12 @@
 {
-    "nuxt.isNuxtApp": true
+    "nuxt.isNuxtApp": true,
+    "i18n-ally.localesPaths": [
+        "client/locales"
+    ],
+    "i18n-ally.keystyle": "nested",
+    "i18n-ally.extract.ignoredByFiles": {
+        "client/pages/users/_handle/_mode.vue": [
+            "/api/users/${params.handle}${\n      params.mode ? `/${params.mode}` : ''\n    }"
+        ]
+    }
 }

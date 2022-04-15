@@ -16,8 +16,8 @@ export default {
   },
   computed: {
     colorFromMode () {
-      if (!this.$store.state.User.mode) { return }
-      switch (this.$store.state.User.mode) {
+      if (!this.$store.state.user.mode) { return }
+      switch (this.$store.state.user.mode) {
         case 'osu':
           return 'success'
         case 'taiko':

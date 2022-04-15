@@ -24,7 +24,7 @@
         >
           <div class="card-profile-stats d-flex justify-content-md-center">
             <div class="mx-1">
-              <span class="heading text-large">{{ mode }}</span>
+              <span class="heading text-large text-transform-clear text-nowrap">{{ $t(`mode.${mode}`) }}</span>
               <span class="description text-little-larger">{{ $t('userInfo.mode') }}</span>
             </div>
             <div class="mx-1">
@@ -41,7 +41,7 @@
           <div class="card-profile-stats d-flex justify-content-md-center">
             <div v-show="!disabled.includes('pp')" class="mr-1">
               <span class="heading text-large">{{ user.statistics.pp }}</span>
-              <span class="description text-little-larger">PP</span>
+              <span class="description text-little-larger">{{ $t('pp') }}</span>
             </div>
             <div class="mx-1">
               <span
@@ -56,7 +56,7 @@
               <span
                 class="description text-little-larger"
               ><gb-flag
-                :code="user.country.code"
+                :code="user.country_code || user.country && user.country.code"
                 size="small"
                 icon-path="/assets/flags"
                 class="mr-1"
@@ -70,7 +70,7 @@
           {{ user.username }}
         </h1>
         <div
-          v-if="user.previous_usernames.length"
+          v-if="user.previous_usernames && user.previous_usernames.length"
           class="d-flex justify-content-center align-items-baseline"
         >
           <h3 class="pr-1">
@@ -136,16 +136,17 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   props: {
-    user: {
-      type: Object,
-      default: () => {}
-    },
-    mode: {
-      type: String,
-      default: undefined
-    },
+    // user: {
+    //   type: Object,
+    //   default: () => {}
+    // },
+    // mode: {
+    //   type: String,
+    //   default: undefined
+    // },
     disabled: {
       type: Array,
       default: () => []
@@ -156,6 +157,10 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      user: state => state.user.data,
+      mode: state => state.user.mode
+    }),
     avatarSrc () {
       return this.user.avatar_url
     },
@@ -176,6 +181,15 @@ export default {
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
+.card-profile-image {
+  img {
+    min-width: 120px;
+    max-width: 180px;
+  }
+}
+.text-transform-clear {
+  text-transform: none !important
+}
 .text-large {
   font-size: 150% !important;
 }

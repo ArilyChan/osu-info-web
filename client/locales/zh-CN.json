@@ -42,5 +42,20 @@
     "playStyle": "用 {styles} 玩",
     "registeredAt": "注册于 {t}",
     "usernameAlias": "曾用名："
+  },
+  "mode": {
+    "friuts": "接水果",
+    "mania": "mania",
+    "osu": "osu",
+    "osuAP": "osu! AP",
+    "osuRX": "osu! Relax",
+    "taiko": "太鼓",
+    "taikoRX": "太鼓 Relax"
+  },
+  "pp": "pp",
+  "rank": "排名",
+  "server": {
+    "bancho": "osu! 官方服务器",
+    "sb": "ppy.sb私服"
   }
 }

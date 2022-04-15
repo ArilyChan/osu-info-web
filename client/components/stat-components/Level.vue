@@ -5,13 +5,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
-  props: {
-    user: {
-      type: Object,
-      default: () => {}
-    }
-  },
   data () {
     return {
       levelRender: {
@@ -57,6 +52,12 @@ export default {
         labels: [this.$t('level')]
       }
     }
+  },
+  computed: mapState({
+    user: state => state.user.data
+  }),
+  created () {
+    this.$store.commit('user/addLayout', 'LevelChart')
   }
 }
 </script>

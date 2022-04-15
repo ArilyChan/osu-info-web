@@ -275,7 +275,7 @@ export default {
   async asyncData ({ params, $axios, $config: { baseURL }, store }) {
     const path = `/api/matches/${params.id}`
     const result = await $axios.get(path).then(res => res.data)
-    store.commit('User/setMode', 'mania')
+    store.commit('user/setMode', 'mania')
     return result
   },
   data () {

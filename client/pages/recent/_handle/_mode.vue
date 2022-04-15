@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import ScoreDetail from '~/components/sb-components/Scores/ScoreDetail'
 import UserInfo from '~/components/stat-components/UserInfo.vue'
 export default {
@@ -38,22 +39,27 @@ export default {
     UserInfo,
     ScoreDetail
   },
-  async asyncData ({ params, $axios, $config: { baseURL }, store }) {
+  async asyncData ({ params, $axios, query, error, store }) {
     let result = {
       user: undefined
     }
     const path = `/api/recent/${params.handle}${params.mode ? `/${params.mode}` : ''}`
-    result = await $axios.get(path).then(res => res.data)
+    result = await $axios.get(path, { params: { server: query.server } }).then(res => res.data)
+    if (!result.user) { return error({ status: 404, message: 'user not found' }) }
     const mode = result.score ? result.score.mode : params.mode || (result.user ? result.user.playmode : undefined)
-    store.commit('User/setMode', mode)
+    store.commit('user/setMode', mode)
+    store.commit('user/setUser', result.user)
+    if (query.server) { store.commit('setServer', query.server) }
     return {
       messages: result.messages || [],
-      user: result.user,
       score: result.score,
       countryRanking: result.countryRanking,
       mode
     }
   },
+  computed: mapState({
+    user: state => state.user.data
+  }),
   head () {
     return {
       title: 'Recent score of ' + [this.user.username, this.mode].join(' | '),

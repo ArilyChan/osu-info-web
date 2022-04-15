@@ -110,15 +110,13 @@ import BaseDropdown from '@/components/argon/BaseDropdown'
 import CloseButton from '@/components/argon/CloseButton'
 
 import SwitchLocale from '@/components/sb-components/SwitchLocale'
-import SearchCollection from '@/components/sb-components/SearchCollection'
 
 export default {
   components: {
     BaseNav,
     CloseButton,
     BaseDropdown,
-    SwitchLocale,
-    SearchCollection
+    SwitchLocale
   }
 }
 </script>

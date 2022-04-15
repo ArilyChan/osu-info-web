@@ -80,6 +80,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   filters: {
     capitalizeFirstLetter (string) {
@@ -87,15 +88,19 @@ export default {
     }
   },
   props: {
-    user: {
-      type: Object,
-      default: () => {}
-    },
-    recentActivity: {
-      type: Array,
-      default: () => []
-    }
+    // user: {
+    //   type: Object,
+    //   default: () => {}
+    // },
+    // recentActivity: {
+    //   type: Array,
+    //   default: () => []
+    // }
   },
+  computed: mapState({
+    user: state => state.user.data,
+    recentActivity: state => state.user.recentActivity
+  }),
   methods: {
     groupActivity () {
       return this.recentActivity.reduce((acc, cur, index, recentActivity) => {
