@@ -3,14 +3,16 @@
     <main class="flex-fill position-relative">
       <section-layout shaped :bg-variant="colorFromMode" :bubble-count="8">
         <nuxt />
-        <div class="info-footer-spacer" />
+        <div class="d-flex">
+          <div class="mx-auto info-footer">
+            {{ $t(`server.${this.$store.state.server}`) }}
+          </div>
+        </div>
       </section-layout>
     </main>
-    <div class="d-flex position-relative info-footer-wrapper">
-      <div class="mx-auto info-footer">
-        {{ $t(`server.${this.$store.state.server}`) }}
-      </div>
-    </div>
+    <!-- <div class="d-flex position-relative info-footer-wrapper">
+
+    </div> -->
   </div>
 </template>
 
@@ -49,10 +51,10 @@ export default {
 <style lang="scss" scoped>
 $info-footer-size: 3em;
 .info-footer-wrapper {
-  bottom: $info-footer-size * 1.4;
+  // bottom: $info-footer-size * 1.4;
 }
 .info-footer-spacer {
-  margin-bottom: max(calc($info-footer-size * 0.7 - 1em), 0);
+  // margin-bottom: max(calc($info-footer-size * 0.7 - 1em), 0);
 }
 .info-footer {
   padding: 0;
