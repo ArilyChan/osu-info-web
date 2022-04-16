@@ -43,7 +43,7 @@ export default {
     let result = {
       user: undefined
     }
-    const path = `/api/recent/${params.handle}${params.mode ? `/${params.mode}` : ''}`
+    const path = `/api/recent/${encodeURIComponent(params.handle)}${params.mode ? `/${params.mode}` : ''}`
     result = await $axios.get(path, { params: { server: query.server } }).then(res => res.data)
     if (!result.user) { return error({ status: 404, message: 'user not found' }) }
     const mode = result.score ? result.score.mode : params.mode || (result.user ? result.user.playmode : undefined)

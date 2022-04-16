@@ -6,7 +6,7 @@
     "i18n-ally.keystyle": "nested",
     "i18n-ally.extract.ignoredByFiles": {
         "client/pages/users/_handle/_mode.vue": [
-            "/api/users/${params.handle}${\n      params.mode ? `/${params.mode}` : ''\n    }"
+            "/api/users/${encodeURIComponent(params.handle)}${\n      params.mode ? `/${params.mode}` : ''\n    }"
         ]
     }
 }

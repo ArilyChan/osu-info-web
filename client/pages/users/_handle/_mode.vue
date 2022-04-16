@@ -76,7 +76,7 @@ export default {
   async asyncData ({ params, $axios, query, store, error }) {
     let result = {
     }
-    const path = `/api/users/${params.handle}${
+    const path = `/api/users/${encodeURIComponent(params.handle)}${
       params.mode ? `/${params.mode}` : ''
     }`
     result = await $axios.get(path, { params: { server: query.server } }).then(res => res.data)

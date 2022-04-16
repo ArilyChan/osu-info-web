@@ -30,7 +30,7 @@ export default {
     let result = {
       user: undefined
     }
-    const path = `/api/best/${params.handle}${params.mode ? `/${params.mode}` : ''}`
+    const path = `/api/best/${encodeURIComponent(params.handle)}${params.mode ? `/${params.mode}` : ''}`
     result = await $axios.get(path, {
       params: {
         ...route.query,
