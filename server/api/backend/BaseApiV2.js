@@ -11,7 +11,7 @@ class BaseApiV2 {
     const req = {
       method: 'get',
       ...axiosReq,
-      url: `${this.apiBase}${endpoint}`
+      url: `${this.apiBase}${encodeURIComponent(endpoint)}`
     }
     return axios(req)
   }

@@ -22,12 +22,12 @@ const getServer = (server) => {
 }
 router.get('/users/:handle/:mode?', async (req, res, next) => {
   const { User } = getServer(req.query.server)
-  return res.json(await User.getUserInfo(encodeURIComponent(req.params.handle), req.params.mode))
+  return res.json(await User.getUserInfo(req.params.handle, req.params.mode))
 })
 
 router.get('/recent/:handle/:mode?', async (req, res, next) => {
   const { User } = getServer(req.query.server)
-  return res.json(await User.recentPlay(encodeURIComponent(req.params.handle), req.params.mode))
+  return res.json(await User.recentPlay(req.params.handle, req.params.mode))
 })
 router.get('/scores/:mode/:id?', async (req, res, next) => {
   const { Public } = getServer(req.query.server)
@@ -36,7 +36,7 @@ router.get('/scores/:mode/:id?', async (req, res, next) => {
 
 router.get('/best/:handle/:mode?', async (req, res, next) => {
   const { User } = getServer(req.query.server)
-  return res.json(await User.bestPlay(encodeURIComponent(req.params.handle), req.params.mode, {
+  return res.json(await User.bestPlay(req.params.handle, req.params.mode, {
     startDate: req.query.start ? moment(req.query.start).toDate() : undefined,
     endDate: req.query.end ? moment(req.query.end).toDate() : undefined,
     startHoursBefore: req.query.startHoursBefore,
