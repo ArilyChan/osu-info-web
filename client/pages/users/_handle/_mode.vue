@@ -9,38 +9,52 @@
           :options="{
             gutter: 0,
             itemSelector: '.Waterfall-item',
-            columnWidth: '.grid-sizer',
+            columnWidth: '.wf-1',
             stagger: 30
           }"
-          style="width: calc(100% + 0.8em); left: -0.4em; padding-top: 0.4em"
         >
-          <waterfall-item class="double-size">
+          <waterfall-item class="wf-2">
             <level class="height-fix-level" />
           </waterfall-item>
-          <waterfall-item class="quad-size">
+          <waterfall-item class="wf-4">
             <rank-info
               :statistics-history="statisticsHistory"
             />
           </waterfall-item>
-          <waterfall-item :class="$store.state.user.createdLayouts.includes('RankHistoryChart')?'double-size':'quad-size'">
+          <waterfall-item :class="$store.state.user.createdLayouts.includes('RankHistoryChart')?'wf-2':'wf-4'">
             <number-statistics :historical-best="historicalBest" />
           </waterfall-item>
           <waterfall-item
             v-if="recentActivity.length"
-            class="quad-size"
+            class="wf-4"
           >
             <activities />
           </waterfall-item>
           <waterfall-item
             v-for="badge of user.badges"
             :key="badge.description"
-            class="grid-sizer"
+            class="wf-1"
           >
             <b-card no-body class="border-0 shadow">
               <b-card-img :src="badge.image_url" />
             </b-card>
           </waterfall-item>
-          <waterfall-item v-show="false" class="grid-sizer" />
+          <waterfall-item v-show="false" class="wf-1" />
+          <!-- <waterfall-item class="wf-2">
+            <b-card class="shadow">
+              <b-card-img :src="require('~/assets/icons/ripple.svg')" />
+            </b-card>
+          </waterfall-item>
+          <waterfall-item class="wf-2" no-body>
+            <b-card class="shadow">
+              <b-card-img :src="require('~/assets/icons/akatsuki.png')" />
+            </b-card>
+          </waterfall-item>
+          <waterfall-item class="wf-2">
+            <b-card class="shadow">
+              <b-card-img :src="require('~/assets/icons/bancho.png')" />
+            </b-card>
+          </waterfall-item> -->
         </waterfall>
       </no-ssr>
     </div>
@@ -119,8 +133,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.Waterfall-item > * {
-  margin: 0.4rem !important;
+$gap-base: 0.6rem;
+.waterfall {
+  width: calc(100% + 2 * $gap-base);
+  left: -$gap-base;
+  margin-top: $gap-base;
+  margin-bottom: $gap-base
+}
+.Waterfall-item {
+  & > * {
+    margin: $gap-base !important;
+  }
+
+  .card {
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(5px);
+    overflow: hidden;
+  }
 }
 .pt-0-8 {
   padding-top: 0.8rem !important;
@@ -138,16 +167,16 @@ export default {
 @include media-breakpoint-down(md) {
   .Waterfall-item {
     --var-base: calc(100% / 4);
-    &.grid-sizer {
+    &.wf-1 {
       width: var(--var-base);
     }
-    &.single-size {
+    &.wf-1 {
       width: calc(var(--var-base));
     }
-    &.double-size {
+    &.wf-2 {
       width: calc(var(--var-base) * 4);
     }
-    &.quad-size {
+    &.wf-4 {
       width: calc(var(--var-base) * 4);
     }
   }
@@ -155,16 +184,13 @@ export default {
 @include media-breakpoint-up(md) {
   .Waterfall-item {
     --var-base: calc(100% / 6);
-    &.grid-sizer {
+    &.wf-1 {
       width: var(--var-base);
     }
-    &.single-size {
-      width: calc(var(--var-base));
-    }
-    &.double-size {
+    &.wf-2 {
       width: calc(var(--var-base) * 2);
     }
-    &.quad-size {
+    &.wf-4 {
       width: calc(var(--var-base) * 4);
     }
   }

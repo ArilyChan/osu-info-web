@@ -13,6 +13,15 @@
     "topCollectionsButton": "most voted"
   },
   "level": "Level",
+  "mode": {
+    "friuts": "Catch the beats",
+    "mania": "Mania",
+    "osu": "osu!",
+    "osuAP": "osu! Auto Pilot",
+    "osuRX": "osu! Relax",
+    "taiko": "Taiko",
+    "taikoRX": "Taiko Relax"
+  },
   "numericalStatistics": {
     "disclaimer": "Some historical data is provided by OsuTrack",
     "historicalBestAccuracy": "Best Accuracy",
@@ -23,9 +32,15 @@
     "score": "Score",
     "totalHits": "TTH"
   },
+  "pp": "pp",
+  "rank": "rank",
   "scoreCard": {
     "fullCombo": "full combo",
     "miss": "miss | misses"
+  },
+  "server": {
+    "bancho": "osu! offical server",
+    "sb": "ppy.sb"
   },
   "statements": {
     "testTitle": "contact: discord(arily#8735)"
@@ -41,20 +56,5 @@
     "playStyle": "playing with {styles}",
     "registeredAt": "registered at {t}",
     "usernameAlias": "aka"
-  },
-  "mode": {
-    "osu": "osu!",
-    "osuRX": "osu! Relax",
-    "osuAP": "osu! Auto Pilot",
-    "taiko": "Taiko",
-    "taikoRX": "Taiko Relax",
-    "friuts": "Catch the beats",
-    "mania": "Mania"
-  },
-  "pp": "pp",
-  "rank": "rank",
-  "server": {
-    "bancho": "osu! offical server",
-    "sb": "ppy.sb"
   }
 }

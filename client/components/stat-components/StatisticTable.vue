@@ -1,6 +1,13 @@
 <template>
   <b-card no-body class="shadow border-0">
-    <apexchart v-if="rankGradeCounts.max && ready" height="300" type="radialBar" :options="ranks" :series="rankGradeCounts.percentages" />
+    <apexchart
+      v-if="rankGradeCounts.max && ready"
+      height="300"
+      type="radialBar"
+      :options="ranks"
+      :series="rankGradeCounts.percentages"
+      class="ranks-chart"
+    />
     <kv-table :kv-stats="kvStats()" />
     <b-card-footer v-if="historicalBest" class="py-1 text-right small rounded-bottom">
       {{ $t('numericalStatistics.disclaimer') }}
@@ -107,8 +114,9 @@ export default {
           breakpoint: 576,
           options: {
             legend: {
-              offsetX: 70,
-              offsetY: 0
+              fontSize: '10px',
+              offsetX: 10,
+              offsetY: -10
             }
           }
         },
@@ -116,7 +124,7 @@ export default {
           breakpoint: 768,
           options: {
             legend: {
-              offsetX: 90,
+              offsetX: 10,
               offsetY: 0
             }
           }
@@ -125,7 +133,6 @@ export default {
           breakpoint: 992,
           options: {
             legend: {
-              fontSize: '9px',
               offsetX: -28,
               offsetY: -10
             },
@@ -173,3 +180,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.ranks-chart {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+</style>

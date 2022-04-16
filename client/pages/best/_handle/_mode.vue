@@ -43,7 +43,6 @@ export default {
     store.commit('user/setUser', result.user)
     if (query.server) { store.commit('setServer', query.server) }
     return {
-      user: result.user,
       scores: result.scores,
       countryRanking: result.countryRanking,
       mode
@@ -83,9 +82,6 @@ export default {
 }
 .mt-0-8 {
   margin-top: 0.8rem !important;
-}
-.grid-sizer {
-  width: calc(100% / 6);
 }
 .mx--4 {
   margin-left: (1em * -1.5) !important;

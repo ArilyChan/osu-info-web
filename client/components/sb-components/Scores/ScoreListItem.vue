@@ -4,7 +4,7 @@
       <div class="d-flex">
         <img
           :src="smallPreviewImgSrc"
-          class="align-top mr-2 hide-when-too-small bp-img rounded shadow"
+          class="align-top mr-2 hide-when-too-small bp-img rounded-sm shadow"
         >
         <div class="align-top">
           <div class="d-flex">
@@ -17,13 +17,13 @@
               <div class="d-flex align-items-baseline flex-wrap">
                 <h5 class="mb-0 pr-1">
                   <nuxt-link
-                    :to="{
+                    :to="localePath({
                       name:'beatmapsets-beatmapSetId-beatmapId',
                       params: {
                         beatmapSetId: score.beatmap.beatmapset_id,
                         beatmapId: score.beatmap.id
                       }
-                    }"
+                    })"
                   >
                     {{ score.beatmapset.artist_unicode }} - {{ score.beatmapset.title_unicode }} [{{ score.beatmap.version }}]
                   </nuxt-link>

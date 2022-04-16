@@ -1,42 +1,61 @@
 {
+  "CabbageHistory": {
+    "disclaimer": "历史数据由白菜提供",
+    "ppDrop": "你比上周少了 {ppDrop}pp, 你是不是倒刷了？",
+    "ppGain": "你比上周刷多 {ppGain}pp, 真有你的",
+    "ppTodayAfter": "",
+    "ppTodayBefore": "今天你"
+  },
   "landing": {
     "recentCollectionsButton": "最近上传",
     "subtitle": "阅尽世间 [ 好图 ]",
     "title": "OSU!收藏夹分享站",
     "topCollectionsButton": "最受好评"
   },
+  "level": "等级",
   "locale": "切换语言",
+  "numericalStatistics": {
+    "disclaimer": "一些历史信息由 OsuTrack 提供",
+    "historicalBestAccuracy": "历史最高ACC",
+    "historicalBestRank": "历史最高排名",
+    "playCount": "游玩次数",
+    "playLength": "游玩总时长",
+    "rankedScore": "排名总分",
+    "score": "总分",
+    "totalHits": "总共按了几下"
+  },
+  "scoreCard": {
+    "fullCombo": "full combo",
+    "miss": "miss | misses"
+  },
   "statements": {
     "testTitle": "osu-info-web"
   },
   "userInfo": {
-    "mode": "模式",
     "accuracy": "准确度",
     "global": "全球",
-    "usernameAlias": "曾用名：",
-    "online": "在线",
-    "offline": "离线",
     "lastActivityAt": "最近活动于 {t}",
+    "level": "等级",
+    "mode": "模式",
+    "offline": "离线",
+    "online": "在线",
     "playStyle": "用 {styles} 玩",
     "registeredAt": "注册于 {t}",
-    "level": "等级"
+    "usernameAlias": "曾用名："
   },
-  "numericalStatistics": {
-    "score": "总分",
-    "rankedScore": "排名总分",
-    "playCount": "游玩次数",
-    "playLength": "游玩总时长",
-    "totalHits": "总共按了几下",
-    "historicalBestRank": "历史最高排名",
-    "historicalBestAccuracy": "历史最高ACC",
-    "disclaimer": "一些历史信息由 OsuTrack 提供"
+  "mode": {
+    "friuts": "接水果",
+    "mania": "mania",
+    "osu": "osu",
+    "osuAP": "osu! AP",
+    "osuRX": "osu! Relax",
+    "taiko": "太鼓",
+    "taikoRX": "太鼓 Relax"
   },
-  "CabbageHistory": {
-    "ppTodayBefore": "今天你",
-    "ppTodayAfter": "",
-    "ppGain": "你比上周刷多 {ppGain}pp, 真有你的",
-    "ppDrop": "你比上周少了 {ppDrop}pp, 你是不是倒刷了？",
-    "disclaimer": "历史数据由白菜提供"
-  },
-  "level": "等级"
+  "pp": "pp",
+  "rank": "排名",
+  "server": {
+    "bancho": "osu! 官方服务器",
+    "sb": "ppy.sb私服"
+  }
 }

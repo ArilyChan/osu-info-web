@@ -14,9 +14,9 @@
       >
         <div class="col-lg-3 order-1 order-lg-2">
           <div class="card-profile-image">
-            <a :href="`https://osu.ppy.sh/users/${user.username}`">
+            <nuxt-link :to="localePath(`/users/${user.username}`)">
               <img v-lazy="avatarSrc" class="rounded-circle">
-            </a>
+            </nuxt-link>
           </div>
         </div>
         <div
@@ -181,6 +181,7 @@ export default {
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
+@import '~/assets/argon/scss/custom/variables';
 .card-profile-image {
   img {
     min-width: 120px;
@@ -220,7 +221,7 @@ export default {
   &::before {
     content: "";
     position: absolute;
-    border-radius: 0.25rem;
+    border-radius: $border-radius;
     width: 100%;
     height: 100%;
     z-index: -1;

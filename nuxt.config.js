@@ -49,7 +49,7 @@ export default {
     '~assets/argon/vendor/nucleo/css/nucleo.css',
     '@fortawesome/fontawesome-free/css/all.css',
     // '~assets/argon/scss/argon.scss',
-    'bootstrap-vue/dist/bootstrap-vue.css',
+    // 'bootstrap-vue/dist/bootstrap-vue.css',
     '~assets/transitions.css'
   ],
 
@@ -71,7 +71,7 @@ export default {
   ** Auto import components
   ** See https://nuxtjs.org/api/configuration-components
   */
-  components: true,
+  components: false,
   /*
   ** Nuxt.js dev-modules
   */
@@ -83,7 +83,7 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
-    ['nuxt-i18n', {
+    ['@nuxtjs/i18n', {
       detectBrowserLanguage: {
         useCookie: true,
         cookieKey: 'i18n_redirected'
@@ -94,7 +94,7 @@ export default {
     // // Doc: https://axios.nuxtjs.org/usage
     // '@nuxtjs/axios',
     // Doc: https://github.com/nuxt/content
-    '@nuxt/content',
+    // '@nuxt/content',
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     // Doc: https://bootstrap-vue.js.org/docs/
@@ -102,8 +102,7 @@ export default {
       bootstrapCSS: false,
       bootstrapVueCSS: false
 
-    }],
-    'nuxt-clipboard2'
+    }]
     // '@nuxtjs/pwa'
   ],
   i18n: {
