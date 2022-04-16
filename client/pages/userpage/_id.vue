@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import bbCodeParser from 'js-bbcode-parser'
 import VRuntimeTemplate from 'v-runtime-template'
 import UserInfo from '~/components/stat-components/UserInfo.vue'
@@ -62,13 +63,13 @@ export default {
     let result = {
       user: undefined
     }
-    const path = `/api/users/${params.id}${params.mode ? `/${params.mode}` : ''}`
+    const path = `/api/users/${encodeURIComponent(params.id)}${params.mode ? `/${params.mode}` : ''}`
     result = await $axios.get(path).then(res => res.data)
 
     const mode = result.score ? result.score.mode : params.mode || (result.user ? result.user.playmode : undefined)
     store.commit('user/setMode', mode)
+    store.commit('user/setUser', result.user)
     return {
-      user: result.user,
       mode
     }
   },
@@ -77,6 +78,9 @@ export default {
       userpage: ''
     }
   },
+  computed: mapState({
+    user: state => state.user.data
+  }),
   mounted () {
     this.userpage = this.convertBBCode(this.user.page.raw)
   },
