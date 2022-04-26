@@ -48,6 +48,7 @@ export default {
     const mode = result.score ? result.score.mode : params.mode || (result.user ? result.user.playmode : undefined)
     store.commit('user/setMode', mode)
     store.commit('user/setUser', result.user)
+    if (query.server) { store.commit('setServer', query.server) }
     return {
       messages: result.messages || [],
       score: result.score,
