@@ -34,7 +34,7 @@ export default {
     UserInfo,
     ScoreDetail
   },
-  async asyncData ({ params, $axios, store }) {
+  async asyncData ({ params, $axios, store, query }) {
     let result = {
       user: undefined
     }
@@ -44,7 +44,7 @@ export default {
       }
     }
     const path = `/api/scores/${params.mode}/${params.id}`
-    result = await $axios.get(path).then(res => res.data)
+    result = await $axios.get(path, { params: { server: query.server } }).then(res => res.data)
     const mode = result.score ? result.score.mode : params.mode || (result.user ? result.user.playmode : undefined)
     store.commit('user/setMode', mode)
     store.commit('user/setUser', result.user)

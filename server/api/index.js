@@ -6,6 +6,7 @@ const BanchoUser = require('./controller/BanchoUserController')
 const BanchoPublic = require('./controller/BanchoPublicController')
 
 const PpySbUser = require('./controller/PpySbUserController')
+const PpySbPublic = require('./controller/PpySbPublicController')
 // const UserModel = require('./model/User')
 const servers = {
   bancho: {
@@ -13,7 +14,8 @@ const servers = {
     Public: BanchoPublic
   },
   sb: {
-    User: PpySbUser
+    User: PpySbUser,
+    Public: PpySbPublic
   }
 }
 
@@ -29,9 +31,13 @@ router.get('/recent/:handle/:mode?', async (req, res, next) => {
   const { User } = getServer(req.query.server)
   return res.json(await User.recentPlay(req.params.handle, req.params.mode))
 })
-router.get('/scores/:mode/:id?', async (req, res, next) => {
+router.get('/scores/:mode/:id', async (req, res, next) => {
   const { Public } = getServer(req.query.server)
-  return res.json(await Public.getScore(req.params.mode, req.params.id))
+  try {
+    return res.json(await Public.getScore(req.params.mode, req.params.id))
+  } catch (err) {
+    console.error(err.message, err.stack)
+  }
 })
 
 router.get('/best/:handle/:mode?', async (req, res, next) => {
