@@ -2,9 +2,9 @@
   <div class="col px-0 profile-page">
     <div v-if="user" class="card-profile container" style="margin-top: 5em">
       <div class="b-overlay-wrap position-relative">
-        <user-info :user="user" :mode="mode" />
+        <user-info />
       </div>
-      <score-detail v-if="score" :score="score" />
+      <score-detail v-if="score" :score="score" class="mt-4"/>
       <template v-else-if="messages.includes('no-recent')">
         <b-card
           class="shadow mt-2 pb-0"

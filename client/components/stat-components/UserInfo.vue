@@ -27,12 +27,12 @@
               <span class="heading text-large text-transform-clear text-nowrap">{{ $t(`mode.${mode}`) }}</span>
               <span class="description text-little-larger">{{ $t('userInfo.mode') }}</span>
             </div>
-            <div class="mx-1">
-              <span class="heading text-large">{{ acc }}</span>
+            <div v-show="!disabled.includes('acc')" class="mx-1">
+              <span v-if="!disabled.includes('acc')" class="heading text-large">{{ acc }}</span>
               <span class="description text-little-larger">{{ $t('userInfo.accuracy') }}</span>
             </div>
             <div v-show="!disabled.includes('level')">
-              <span class="heading text-large">{{ user.statistics.level.current + user.statistics.level.progress / 100 }}</span>
+              <span v-if="!disabled.includes('level')" class="heading text-large">{{ user.statistics.level.current + user.statistics.level.progress / 100 }}</span>
               <span class="description text-little-larger">{{ $t('userInfo.level') }}</span>
             </div>
           </div>
@@ -40,17 +40,25 @@
         <div class="col-lg-4 order-2 order-lg-3 px-0">
           <div class="card-profile-stats d-flex justify-content-md-center">
             <div v-show="!disabled.includes('pp')" class="mr-1">
-              <span class="heading text-large">{{ user.statistics.pp }}</span>
+              <span v-if="!disabled.includes('pp')" class="heading text-large">{{ user.statistics.pp }}</span>
               <span class="description text-little-larger">{{ $t('pp') }}</span>
             </div>
-            <div class="mx-1">
+            <div
+              v-show="!disabled.includes('rank')"
+              class="mx-1"
+            >
               <span
+                v-if="!disabled.includes('rank')"
                 class="heading text-large"
               >#{{ user.statistics.rank.global || user.statistics.global_rank || ' - ' }}</span>
               <span class="description text-little-larger">{{ $t('userInfo.global') }}</span>
             </div>
-            <div class="mx-1">
+            <div
+              v-show="!disabled.includes('countryRank')"
+              class="mx-1"
+            >
               <span
+                v-if="!disabled.includes('countryRank')"
                 class="heading text-large"
               >#{{ user.statistics.rank.country || user.statistics.country_rank || ' - ' }}</span>
               <span
@@ -94,7 +102,7 @@
     <b-card-footer class="py-1 profile-backdrop">
       <b-container fluid>
         <b-row class="justify-content-md-center flex-wrap">
-          <b-col col lg="auto" class="text-nowrap">
+          <b-col v-if="user.is_online || user.last_visit" col lg="auto" class="text-nowrap">
             <i class="fas fa-globe-americas" />
             {{ user.is_online ? $t('userInfo.online') : `${$t('userInfo.offline') }, ${$t('userInfo.lastActivityAt', {t: `${new Date(user.last_visit).toLocaleDateString(currentLocale.iso)} ${new Date(user.last_visit).toLocaleTimeString(currentLocale.iso)}`})}` }}
           </b-col>
@@ -125,7 +133,7 @@
             <i class="fa-fw fab fa-discord" />
             {{ user.discord }}
           </b-col>
-          <b-col col lg="auto">
+          <b-col v-if="user.join_date" col lg="auto">
             <i class="fas fa-plane-arrival" />
             {{ $t('userInfo.registeredAt', {t: new Date(user.join_date).toLocaleDateString() }) }}
           </b-col>
@@ -165,6 +173,7 @@ export default {
       return this.user.avatar_url
     },
     acc () {
+      if (!this.user.statistics) { return '' }
       return (this.user.statistics.hit_accuracy / 100).toLocaleString('en-GB', {
         style: 'percent',
         minimumFractionDigits: 2

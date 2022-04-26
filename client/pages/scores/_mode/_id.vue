@@ -2,21 +2,16 @@
   <div class="col px-0 profile-page">
     <div v-if="user" class="card-profile container" style="margin-top: 5em">
       <div class="b-overlay-wrap position-relative">
-        <user-info :user="user" :mode="mode" />
+        <user-info :disabled="['level', 'pp', 'rank', 'countryRank', 'acc']" />
       </div>
-      <score-detail v-if="score" :score="score" />
+      <score-detail v-if="score" :score="score" class="mt-4" />
       <template v-else-if="messages.includes('no-recent')">
-        <b-card
-          class="shadow mt-2 pb-0"
-        >
+        <b-card class="shadow mt-2 pb-0">
           <b-card-title>最近24h没有成绩。</b-card-title>
         </b-card>
       </template>
       <template v-else>
-        <b-card
-          title="Something Went Wrong"
-          class="shadow mt-2"
-        />
+        <b-card title="Something Went Wrong" class="shadow mt-2" />
       </template>
     </div>
     <div v-else class="card-profile container pt-5">
@@ -30,6 +25,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import ScoreDetail from '~/components/sb-components/Scores/ScoreDetail'
 import UserInfo from '~/components/stat-components/UserInfo.vue'
 export default {
@@ -38,7 +34,7 @@ export default {
     UserInfo,
     ScoreDetail
   },
-  async asyncData ({ params, $axios, $config: { baseURL } }) {
+  async asyncData ({ params, $axios, store }) {
     let result = {
       user: undefined
     }
@@ -49,15 +45,19 @@ export default {
     }
     const path = `/api/scores/${params.mode}/${params.id}`
     result = await $axios.get(path).then(res => res.data)
-
+    const mode = result.score ? result.score.mode : params.mode || (result.user ? result.user.playmode : undefined)
+    store.commit('user/setMode', mode)
+    store.commit('user/setUser', result.user)
     return {
       messages: result.messages || [],
-      user: result.user,
       score: result.score,
       countryRanking: result.countryRanking,
       mode: params.mode || (result.user ? result.user.playmode : undefined)
     }
   },
+  computed: mapState({
+    user: state => state.user.data
+  }),
   head () {
     return {
       title: 'Score: ' + [this.user.username, this.mode].join(' | '),

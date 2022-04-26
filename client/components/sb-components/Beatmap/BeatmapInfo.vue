@@ -1,7 +1,7 @@
 <template>
   <card
     shadow
-    class="bg-cover border-0"
+    class="bg-cover border-0 rounded"
     no-body
     hover
     :style="{
@@ -36,6 +36,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import 'bootstrap/scss/functions';
+@import '~assets/argon/scss/custom/variables';
 .bg-cover {
   background: transparent;
   transition: all 0.15s ease;
@@ -47,7 +49,7 @@ export default {
   &::before {
     content: "";
     position: absolute;
-    border-radius: 0.25rem;
+    border-radius: $border-radius;
     width: 100%;
     height: 100%;
     opacity: 1;
@@ -57,7 +59,7 @@ export default {
   &::after {
     content: "";
     position: absolute;
-    border-radius: 0.25rem;
+    border-radius: $border-radius;
     width: 100%;
     height: 100%;
     z-index: -1;
@@ -68,7 +70,7 @@ export default {
 
   .card-body-backdrop-filter-base {
     opacity: 1;
-    border-radius: 0.25rem;
+    border-radius: $border-radius;
     backdrop-filter: blur(2px);
     transition: all 0.15s ease;
 
