@@ -24,7 +24,11 @@ const getServer = (server) => {
 }
 router.get('/users/:handle/:mode?', async (req, res, next) => {
   const { User } = getServer(req.query.server)
-  return res.json(await User.getUserInfo(req.params.handle, req.params.mode))
+  try {
+    return res.json(await User.getUserInfo(req.params.handle, req.params.mode))
+  } catch (error) {
+    res.json({ error })
+  }
 })
 
 router.get('/recent/:handle/:mode?', async (req, res, next) => {

@@ -30,7 +30,7 @@ class PpySbUserController {
       const banchoUserResult = await api.getUser(handle)
       const user = new UserModel(banchoUserResult)
       rtn.user = user.data
-      const rps = await user.getRecentScores({ mode })
+      const rps = await user.getRecentScores({ mode, include_fails: 1 })
       const rp = rps[0]
       if (!rp) {
         rtn.messages.push('no-recent')
