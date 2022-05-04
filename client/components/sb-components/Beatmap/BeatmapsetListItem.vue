@@ -91,11 +91,8 @@
 // const moment = require("moment");
 
 // import modHelper from "@/helpers/enum.js";
-import LazyImage from './LazyImage.vue'
+
 export default {
-  components: {
-    LazyImage
-  },
   props: {
     set: {
       type: Object,
