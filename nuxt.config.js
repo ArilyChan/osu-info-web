@@ -63,7 +63,6 @@ export default {
     '~/plugins/osu-assets/index.js',
     '~/plugins/osu-popup-user/index.js',
     '~/plugins/vue-flag.js',
-    '~/plugins/vue-flag.js',
     '~/plugins/light-timeline.js',
     '~/plugins/moment.js'
   ],
@@ -71,11 +70,12 @@ export default {
   ** Auto import components
   ** See https://nuxtjs.org/api/configuration-components
   */
-  components: false,
+  components: true,
   /*
   ** Nuxt.js dev-modules
   */
   buildModules: [
+    // 'nuxt-purgecss',
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module'
   ],
@@ -101,7 +101,6 @@ export default {
     ['bootstrap-vue/nuxt', {
       bootstrapCSS: false,
       bootstrapVueCSS: false
-
     }]
     // '@nuxtjs/pwa'
   ],
@@ -153,6 +152,14 @@ export default {
   ** See https://nuxtjs.org/api/configuration-build/
   */
   build: {
+    loaders: {
+      scss: {
+        sassOptions: {
+          quietDeps: true
+        }
+      }
+    },
+    analyze: true,
     extend (config, { isDev, isClient }) {
       // Web Worker support
       config.module.rules.push({
@@ -186,5 +193,8 @@ export default {
   },
   server: {
     host: '0' // default: localhost
+  },
+  router: {
+    prefetchLinks: false
   }
 }

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 const Moment = {}
-const moment = require('moment')
+const moment = require('dayjs')
 Moment.install = function (Vue, { locale = 'en-gb' } = {}) {
   //     // 1. 添加全局方法或 property
   //     Vue.myGlobalMethod = function () {

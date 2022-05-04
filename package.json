@@ -24,8 +24,9 @@
     "@nuxtjs/i18n": "^7.2.1",
     "@nuxtjs/proxy": "^2.1.0",
     "apexcharts": "^3.22.2",
-    "bootstrap": "4.5",
+    "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.21.2",
+    "dayjs": "^1.11.1",
     "express": "^4.17.1",
     "form-data": "^3.0.0",
     "humanize-duration": "^3.24.0",
@@ -35,7 +36,7 @@
     "mongodb": "^3.6.3",
     "nouislider": "^14.6.1",
     "nuxt": "^2.15.7",
-    "sass": "^1.26.10",
+    "sass": "1.30",
     "v-click-outside": "^3.0.1",
     "v-runtime-template": "^1.10.0",
     "vue-apexcharts": "^1.6.0",
@@ -51,7 +52,6 @@
     "worker-loader": "^3.0.3"
   },
   "devDependencies": {
-    "glob": "^8.0.1",
     "@nuxtjs/eslint-config": "^3.1.0",
     "@nuxtjs/eslint-module": "^2.0.0",
     "@vue/test-utils": "^1.0.3",
@@ -60,9 +60,11 @@
     "babel-jest": "^26.1.0",
     "eslint": "^7.5.0",
     "eslint-plugin-nuxt": "^1.0.0",
+    "glob": "^8.0.1",
     "jest": "^26.1.0",
     "json-stable-stringify": "^1.0.1",
     "nodemon": "^2.0.15",
+    "nuxt-purgecss": "^1.0.0",
     "vue-jest": "^3.0.4"
   },
   "_moduleAliases": {
