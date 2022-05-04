@@ -63,12 +63,7 @@
 <script>
 /* eslint-disable vue/require-prop-types */
 // import modHelper from '@/helpers/enum.js'
-// import LazyImage from './LazyImage.vue'
-// import Image from './LazyImage.vue'
 export default {
-  components: {
-    // Image
-  },
   props: ['score', 'k'],
   computed: {
     htmlCounts () {
