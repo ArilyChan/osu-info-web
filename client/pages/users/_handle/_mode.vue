@@ -133,16 +133,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$gap-base: 0.6rem;
 .waterfall {
-  width: calc(100% + 2 * $gap-base);
-  left: -$gap-base;
-  margin-top: $gap-base;
-  margin-bottom: $gap-base
+  --var-gap-base: 0.6rem;
+  width: calc(100% + 2 * var(--var-gap-base));
+  left: calc(var(--var-gap-base) * -1);
+  margin-top: var(--var-gap-base);
+  margin-bottom: var(--var-gap-base)
 }
 .Waterfall-item {
   & > * {
-    margin: $gap-base !important;
+    margin: var(--var-gap-base) !important;
   }
 
   .card {
