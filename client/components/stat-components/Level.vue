@@ -6,7 +6,14 @@
 
 <script>
 import { mapState } from 'vuex'
+let apexchart
+if (process.browser) {
+  apexchart = require('vue-apexcharts')
+}
 export default {
+  components: {
+    apexchart
+  },
   data () {
     return {
       levelRender: {

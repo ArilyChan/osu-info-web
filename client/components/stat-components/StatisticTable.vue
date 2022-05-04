@@ -19,8 +19,12 @@
 import { mapState } from 'vuex'
 import KVTable from './KVTable.vue'
 const humanizeDuration = require('humanize-duration')
+let apexchart
+if (process.browser) {
+  apexchart = require('vue-apexcharts')
+}
 export default {
-  components: { 'kv-table': KVTable },
+  components: { 'kv-table': KVTable, apexchart },
   props: {
     // user: {
     //   type: Object,

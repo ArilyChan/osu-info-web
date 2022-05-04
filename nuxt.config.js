@@ -58,7 +58,7 @@ export default {
   */
   plugins: [
     '~/plugins/argon/argon-kit',
-    { src: '~/plugins/apex-chart', mode: 'client' },
+    // { src: '~/plugins/apex-chart', mode: 'client' },
     { src: '~/plugins/fullpage-vue.js', mode: 'client' },
     '~/plugins/osu-assets/index.js',
     '~/plugins/osu-popup-user/index.js',
@@ -152,13 +152,6 @@ export default {
   ** See https://nuxtjs.org/api/configuration-build/
   */
   build: {
-    loaders: {
-      scss: {
-        sassOptions: {
-          quietDeps: true
-        }
-      }
-    },
     analyze: true,
     extend (config, { isDev, isClient }) {
       // Web Worker support
