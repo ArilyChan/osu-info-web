@@ -50,9 +50,9 @@
       </div>
     </div>
     <b-progress
-      height="3px"
+      height="0.3rem"
       :value="playerScore.score"
-      :max="game.teamScore && game.teamScore[team] || game.totalScore"
+      :max="game.teamScore && game.teamScore[team] || game.scoreBarMaxScore || game.maxScore"
       animated
       class="mt-1 mb-0"
       :variant="team === 'red' ? 'warning' : 'info'"

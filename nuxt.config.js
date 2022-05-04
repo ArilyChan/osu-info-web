@@ -59,7 +59,7 @@ export default {
   plugins: [
     '~/plugins/argon/argon-kit',
     // { src: '~/plugins/apex-chart', mode: 'client' },
-    { src: '~/plugins/fullpage-vue.js', mode: 'client' },
+    // { src: '~/plugins/fullpage-vue.js', mode: 'client' },
     '~/plugins/osu-assets/index.js',
     '~/plugins/osu-popup-user/index.js',
     '~/plugins/vue-flag.js',
@@ -99,8 +99,8 @@ export default {
     '@nuxtjs/axios',
     // Doc: https://bootstrap-vue.js.org/docs/
     ['bootstrap-vue/nuxt', {
-      bootstrapCSS: false,
-      bootstrapVueCSS: false
+      bootstrapCSS: false
+      // bootstrapVueCSS: false
     }]
     // '@nuxtjs/pwa'
   ],

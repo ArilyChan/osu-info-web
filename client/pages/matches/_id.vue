@@ -24,14 +24,24 @@
                       </div>
                       <div class="d-flex">
                         <b-card-text class="text-nowrap mb-0">
-                          tournament starts at game #
+                          count from game #
                         </b-card-text>
                         <b-form-input
                           v-model.lazy="inputTournamentStartsAt"
                           type="number"
                           class="input-group-alternative"
                           size="sm"
-                          style="width: 3em;"
+                          style="width: 5em;"
+                        />
+                        <b-card-text class="text-nowrap mb-0">
+                          to #
+                        </b-card-text>
+                        <b-form-input
+                          v-model.lazy="inputTournamentEndsAt"
+                          type="number"
+                          class="input-group-alternative"
+                          size="sm"
+                          style="width: 5em;"
                         />
                         <b-button size="sm" class="ml-2" @click="calcStats">
                           Reload
@@ -181,12 +191,12 @@
                     <b-card
                       class="mt-2 shadow border-0"
                       overlay
-                      :img-src="game.beatmap.beatmapset.covers['cover@2x']"
+                      :img-src="game.beatmap && game.beatmap.beatmapset && game.beatmap.beatmapset.covers['cover@2x']"
                     >
                       <!-- {{ event }} -->
                       <!-- <b-card-img  /> -->
                       <div class="d-flex">
-                        <div class="rounded-lg overflow-hidden">
+                        <div v-if="game.beatmap && game.beatmap.beatmapset" class="rounded-lg overflow-hidden">
                           <div class="backdrop-blur hue-reversal">
                             <b-badge style="background-color: rgba(255,255,255);">
                               <b-card-title class="py-0 my-1 text-dark px-2">
@@ -197,7 +207,7 @@
                         </div>
                       </div>
                       <div class="hue-reversal text-white text-hue pl-1 pt-2">
-                        <div>
+                        <div v-if="game.beatmap">
                           <i v-for="index in Math.floor(game.beatmap.difficulty_rating)" :key="`sr-${game.id}-${index}`" class="fas fa-star" /><i v-if=" 0.75 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 < 1 " class="fas fa-star" /><i v-if=" 0.25 < game.beatmap.difficulty_rating % 1 && game.beatmap.difficulty_rating % 1 <= 0.75 " class="fas fa-star-half" />
                           {{ game.beatmap.difficulty_rating }}
                         </div>
@@ -264,13 +274,23 @@
 </template>
 
 <script>
+// import Vue from 'vue'
+import 'fullpage.js/dist/fullpage.css'
 import hero from '~/components/sb-layouts/hero'
 import MpScoreListItem from '~/components/stat-components/mp/MpScoreListItem'
+// import { FullPage } from 'vue-fullpage.js'
+let FullPage
+if (process.browser) {
+  import('fullpage.js/vendors/scrolloverflow.min')
+  const { FullPage: FP } = require('vue-fullpage.js')
+  FullPage = FP
+}
 export default {
   layout: 'hero',
   components: {
     hero,
-    MpScoreListItem
+    MpScoreListItem,
+    FullPage
   },
   async asyncData ({ params, $axios, $config: { baseURL }, store }) {
     const path = `/api/matches/${params.id}`
@@ -284,7 +304,9 @@ export default {
       hosts: [],
       games: [],
       inputTournamentStartsAt: 1,
+      inputTournamentEndsAt: 999,
       tournamentStartsAt: 0,
+      tournamentEndssAt: 999,
       gameResults: [],
       statistics: {
         mvpCount: new Map(),
@@ -317,10 +339,17 @@ export default {
       if (v < 1) { this.inputTournamentStartsAt = 1 }
       if (v > this.games.length) { this.inputTournamentStartsAt = this.games.length }
       this.inputTournamentStartsAt = v
+    },
+    inputTournamentEndsAt (newv, oldv) {
+      const v = parseInt(newv)
+      if (v < 1) { this.inputTournamentEndsAt = 1 }
+      if (v > this.games.length) { this.inputTournamentEndsAt = this.games.length }
+      this.inputTournamentEndsAt = v
     }
   },
   created () {
     this.init()
+    this.inputTournamentEndsAt = this.games.length
   },
   mounted () {
     this.initClientOnlyComp()
@@ -363,7 +392,11 @@ export default {
           totalScore,
           teamWinner: teamScore && teamScore.red > teamScore.blue ? teamScore.red === teamScore.blue ? 'draw' : 'red' : 'blue',
           mvp,
-          worst
+          worst,
+          maxScore,
+          minScore,
+          // scoreBarMaxScore: (totalScore > maxScore * 2) ? maxScore * 1.1 : totalScore
+          scoreBarMaxScore: maxScore
         }
       })
     },
@@ -377,6 +410,7 @@ export default {
     },
     resetStats () {
       this.tournamentStartsAt = this.inputTournamentStartsAt - 1
+      this.tournamentEndsAt = this.inputTournamentEndsAt - 1
       this.statistics = {
         mvpCount: new Map(),
         mvp: [],
@@ -403,7 +437,7 @@ export default {
       })
     },
     updateGameStatistics () {
-      this.gameResults.slice(this.tournamentStartsAt).reduce(({ mvpCount, userTotalScore, teamVS }, game) => {
+      this.gameResults.slice(this.tournamentStartsAt, this.tournamentEndsAt).reduce(({ mvpCount, userTotalScore, teamVS }, game) => {
         mvpCount.set(game.mvp.user, mvpCount.get(game.mvp.user) + 1)
         game.scores.forEach((score) => {
           userTotalScore.set(score.user, userTotalScore.get(score.user) + score.score)
@@ -479,7 +513,7 @@ export default {
 .hue-reversal {
   mix-blend-mode: exclusion;
   &.rounded {
-    border-radius: 0.25rem !important;
+    border-radius: 1rem !important;
   }
 }
 .backdrop-blur {
@@ -489,6 +523,6 @@ export default {
   filter: contrast(150%) brightness(150%);
 }
 .rounded-lg {
-  border-radius: 0.45rem;
+  border-radius: 1rem;
 }
 </style>
