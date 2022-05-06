@@ -9,6 +9,8 @@ class PpySbApiV2 extends BaseApiV2 {
   publicTokenHeader () {
     return null
   }
+
+  getUserActivity () { return [] }
 }
 
 const instance = new PpySbApiV2()
