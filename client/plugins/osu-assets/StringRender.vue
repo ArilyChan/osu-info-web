@@ -1,7 +1,16 @@
 <template>
   <component :is="tag" class="d-flex align-items-end">
     <template v-for="(char,index) of string.split('')">
-      <osu-assets :key="index" :skin="skin" :asset="assets.score[char]" class="h-100" />
+      <osu-assets
+        :key="index"
+        :skin="skin"
+        :asset="assets.score[char]"
+        class="h-100"
+        :style="{
+          'margin-left': overlap || undefined,
+          'margin-right': overlap || undefined,
+        }"
+      />
     </template>
   </component>
 </template>
@@ -19,6 +28,10 @@ export default {
     tag: {
       type: String,
       default: 'div'
+    },
+    overlap: {
+      type: String,
+      default: ''
     }
   },
   data () {

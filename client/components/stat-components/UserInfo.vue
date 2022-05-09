@@ -14,22 +14,46 @@
       >
         <div class="col-lg-3 order-1 order-lg-2">
           <div class="card-profile-image">
-            <nuxt-link :to="localePath(`/users/${user.username}`)">
-              <img v-lazy="avatarSrc" class="rounded-circle">
+            <nuxt-link
+              :to="localePath({
+                name: 'users-handle-mode',
+                params: {
+                  handle: user.id,
+                  mode
+                },
+                query: {
+                  server: $store.state.server
+                }
+              })"
+            >
+              <img ref="avatar" :src="avatarSrc" :class="autoRoundedImage()">
             </nuxt-link>
           </div>
         </div>
         <div
-          class="col-lg-4 order-2 order-lg-1 text-lg-right align-self-lg-center px-0 pl-md-4"
+          class="col-lg-4 order-2 order-lg-1 text-lg-right align-self-lg-center px-0"
         >
-          <div class="card-profile-stats d-flex justify-content-md-center">
+          <div class="card-profile-stats d-flex justify-content-md-around">
             <div class="mx-1">
-              <span class="heading text-large text-transform-clear text-nowrap">{{ $t(`mode.${mode}`) }}</span>
-              <span class="description text-little-larger">{{ $t('userInfo.mode') }}</span>
+              <template v-if="!mode.includes('RX') && !mode.includes('AP')">
+                <div class="heading text-large">
+                  <osu-assets
+                    :asset="`mode-${mode}-small`"
+                    class="mode"
+                  />
+                </div>
+                <span class="description">{{ $t(`mode.${mode}`) }}{{ $t('userInfo.mode') }}</span>
+              </template>
+              <template v-else>
+                <span class="heading text-large text-transform-clear text-nowrap">{{ $t(`mode.${mode}`) }}</span>
+                <span class="description text-little-larger">{{ $t('userInfo.mode') }}</span>
+              </template>
             </div>
             <div v-show="!disabled.includes('acc')" class="mx-1">
-              <span v-if="!disabled.includes('acc')" class="heading text-large">{{ acc }}</span>
-              <span class="description text-little-larger">{{ $t('userInfo.accuracy') }}</span>
+              <!-- <span v-if="!disabled.includes('acc')" class="heading text-large">{{ acc }}</span> -->
+              <osu-asset-string :string="acc || ''" class="heading-osu-asset justify-content-center" overlap="-0.2em" />
+              <!-- <span class="description text-little-larger">{{ $t('userInfo.accuracy') }}</span> -->
+              <osu-assets asset="ranking-accuracy" class="description crop-acc" />
             </div>
             <div v-show="!disabled.includes('level')">
               <span v-if="!disabled.includes('level')" class="heading text-large">{{ user.statistics.level.current + user.statistics.level.progress / 100 }}</span>
@@ -38,7 +62,7 @@
           </div>
         </div>
         <div class="col-lg-4 order-2 order-lg-3 px-0">
-          <div class="card-profile-stats d-flex justify-content-md-center">
+          <div class="card-profile-stats d-flex justify-content-md-around">
             <div v-show="!disabled.includes('pp')" class="mr-1">
               <span v-if="!disabled.includes('pp')" class="heading text-large">{{ user.statistics.pp }}</span>
               <span class="description text-little-larger">{{ $t('pp') }}</span>
@@ -78,26 +102,18 @@
           {{ user.username }}
         </h1>
         <div
-          v-if="user.previous_usernames && user.previous_usernames.length"
+          v-show="user.previous_usernames && user.previous_usernames.length"
           class="d-flex justify-content-center align-items-baseline"
         >
-          <h3 class="pr-1">
+          <h3 v-show="user.previous_usernames && user.previous_usernames.length" class="pr-1">
             {{ $t('userInfo.usernameAlias') }}
           </h3>
-          <p class="mb-0 text-large">
+          <p v-show="user.previous_usernames && user.previous_usernames.length" class="mb-0 text-large">
             {{ user.previous_usernames.join(", ") }}
           </p>
         </div>
         <slot name="body" />
-        <!-- <h5>{{ mode }} 模式</h5> -->
-        <!-- <h4 class="mb-0 pb-1">
-          注册于 {{ new Date(user.join_date).toLocaleDateString() }}
-          {{ new Date(user.join_date).toLocaleTimeString() }}
-        </h4> -->
       </div>
-      <!-- <div class="mt-5 py-5 border-top text-left">
-              <p class="px-5" v-html="convertBBCode(user.page.raw)" />
-            </div> -->
     </div>
     <b-card-footer class="py-1 profile-backdrop">
       <b-container fluid>
@@ -164,6 +180,9 @@ export default {
       default: true
     }
   },
+  // mounted () {
+  //   this.autoRoundedImage()
+  // },
   computed: {
     ...mapState({
       user: state => state.user.data,
@@ -182,6 +201,14 @@ export default {
     currentLocale () {
       return this.$i18n.locales.find(i => i.code === this.$i18n.locale)
     }
+  },
+  methods: {
+    autoRoundedImage () {
+      const img = this.$refs.avatar
+      if (img === undefined) { return [] }
+      if (!img.width || !img.height) { return [] }
+      if (img.width / img.height < 1.1 && img.width / img.height > 0.9) { return ['rounded-circle'] } else { return [] }
+    }
   }
 }
 </script>
@@ -191,10 +218,26 @@ export default {
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 @import '~/assets/argon/scss/custom/variables';
+.mode {
+  filter: drop-shadow(0 0 0.2em rgba(0,0,0,0.4));
+  padding-bottom: 0.3em;
+}
+.crop-acc {
+  transform: translateX(10%);
+}
+.heading-osu-asset {
+  height: 2.5em;
+}
 .card-profile-image {
   img {
-    min-width: 120px;
+    filter: drop-shadow(0 0 0.6rem rgba(0,0,0,0.2));
     max-width: 180px;
+    @include media-breakpoint-up(xs) {
+      min-width: 120px !important;
+    }
+    @include media-breakpoint-down(sm) {
+      max-width: 120px !important;
+    }
   }
 }
 .text-transform-clear {
@@ -205,6 +248,9 @@ export default {
 }
 .text-little-larger {
   font-size: 120% !important;
+}
+.text-110 {
+  font-size: 110% !important;
 }
 .text-little-larger * {
   font-size: clear;

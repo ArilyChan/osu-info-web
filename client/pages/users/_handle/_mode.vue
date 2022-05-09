@@ -22,7 +22,10 @@
             />
           </waterfall-item>
           <waterfall-item :class="$store.state.user.createdLayouts.includes('RankHistoryChart')?'wf-2':'wf-4'">
-            <number-statistics :historical-best="historicalBest" />
+            <number-statistics
+              :historical-best="historicalBest"
+              :variant="$store.state.user.createdLayouts.includes('RankHistoryChart')?'slim':'wide'"
+            />
           </waterfall-item>
           <waterfall-item
             v-if="recentActivity.length"

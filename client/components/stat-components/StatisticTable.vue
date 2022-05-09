@@ -1,13 +1,104 @@
 <template>
   <b-card no-body class="shadow border-0">
-    <apexchart
-      v-if="rankGradeCounts.max && ready"
-      height="300"
-      type="radialBar"
-      :options="ranks"
-      :series="rankGradeCounts.percentages"
-      class="ranks-chart"
-    />
+    <div v-if="variant === 'slim'">
+      <apexchart
+        v-if="rankGradeCounts.max && ready && ranks"
+        :height="300"
+        type="radialBar"
+        :options="ranks"
+        :series="rankGradeCounts.percentages"
+      />
+    </div>
+    <div v-else>
+      <b-progress :max="100" class="no-container mb-0 rounded-0" height="2em">
+        <template v-for="(label, index) in rankGradeCounts.labels">
+          <b-progress-bar v-if="rankGradeCounts.percentages[index]" :key="`label-${label}`" :label="label.toUpperCase()" :variant="rankGradeCounts.variants[index]" :value="rankGradeCounts.percentages[index]" />
+        </template>
+      </b-progress>
+      <div class="d-flex flex-wrap justify-content-around">
+        <div v-if="rankGradeCounts.values[0]" class="d-flex align-items-end">
+          <osu-assets
+            asset="ranking-X-small"
+          />
+          <osu-assets
+            asset="score-x"
+            height="40px"
+          />
+          <osu-asset-string
+            :string="rankGradeCounts.values[0].toString()"
+            class="justify-content-center"
+          />
+          <osu-assets
+            asset="score-comma"
+            height="50%"
+          />
+        </div>
+        <div v-if="rankGradeCounts.values[1]" class="d-flex align-items-end">
+          <osu-assets
+            asset="ranking-XH-small"
+          />
+          <osu-assets
+            asset="score-x"
+            height="40px"
+          />
+          <osu-asset-string
+            :string="rankGradeCounts.values[1].toString()"
+            class="justify-content-center"
+          />
+          <osu-assets
+            asset="score-comma"
+            height="50%"
+          />
+        </div>
+        <div v-if="rankGradeCounts.values[2]" class="d-flex align-items-end">
+          <osu-assets
+            asset="ranking-S-small"
+          />
+          <osu-assets
+            asset="score-x"
+            height="40px"
+          />
+          <osu-asset-string
+            :string="rankGradeCounts.values[2].toString()"
+            class="justify-content-center"
+          />
+          <osu-assets
+            asset="score-comma"
+            height="50%"
+          />
+        </div>
+        <div v-if="rankGradeCounts.values[3]" class="d-flex align-items-end">
+          <osu-assets
+            asset="ranking-SH-small"
+          />
+          <osu-assets
+            asset="score-x"
+            height="40px"
+          />
+          <osu-asset-string
+            :string="rankGradeCounts.values[3].toString()"
+            class="justify-content-center"
+          />
+          <osu-assets
+            asset="score-comma"
+            height="50%"
+          />
+        </div>
+        <div v-if="rankGradeCounts.values[4]" class="d-flex align-items-end">
+          <osu-assets
+            asset="ranking-A-small"
+          />
+          <osu-assets
+            asset="score-x"
+            height="40px"
+          />
+          <osu-asset-string
+            :string="rankGradeCounts.values[4].toString()"
+            class="justify-content-center"
+          />
+        </div>
+      </div>
+    </div>
     <kv-table :kv-stats="kvStats()" />
     <b-card-footer v-if="historicalBest" class="py-1 text-right small rounded-bottom">
       {{ $t('numericalStatistics.disclaimer') }}
@@ -33,6 +124,10 @@ export default {
     historicalBest: {
       type: [Object, null],
       default: () => {}
+    },
+    variant: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -53,7 +148,8 @@ export default {
         labels: Object.keys(counts),
         values,
         percentages: values.map(count => count / max * 100),
-        max
+        max,
+        variants: ['warning', 'light', 'yellow', 'light', 'success']
       }
     }
   },
@@ -188,5 +284,10 @@ export default {
 <style lang="scss" scoped>
 .ranks-chart {
   background-color: rgba(255, 255, 255, 0.6);
+}
+.progress.no-container {
+  box-shadow: 0 0 0 0;
+  background-color: initial;
+  opacity: 0.5;
 }
 </style>
