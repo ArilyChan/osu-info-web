@@ -15,7 +15,11 @@ class BanchoUserController {
       const userResult = await bancho.getUser(handle, mode)
       const user = new UserModel(userResult)
       if (!user.data.id) { throw new Error('not-found') }
-      const recentActivity = user.getActivity(10, 0)
+      const recentActivity = user.getActivity(30, 0).then(activities => activities.filter((activity) => {
+        if (!['rank', 'rankLost'].includes(activity.type)) { return true }
+        if (!mode) { return true }
+        return activity.mode === mode
+      })).then(activities => activities.slice(0, 10))
       const historicalBest = osuTrack.getUserHistoricalBest(user.data)
       osuTrack.updateUser(user.data).catch(() => {})
       let statisticsHistory
