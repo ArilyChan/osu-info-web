@@ -1,5 +1,5 @@
 {
-    "nuxt.isNuxtApp": true,
+    "nuxt.isNuxtApp": false,
     "i18n-ally.localesPaths": [
         "client/locales"
     ],

@@ -1,7 +1,8 @@
 import { resolve } from 'path'
-import packageJSON from './package.json'
+import { defineNuxtConfig } from '@nuxt/bridge'
+import * as packageJSON from './package.json'
 // eslint-disable-next-line nuxt/no-cjs-in-config
-export default {
+export default defineNuxtConfig({
   /*
   ** Nuxt target
   ** See https://nuxtjs.org/api/configuration-target
@@ -50,7 +51,8 @@ export default {
     '@fortawesome/fontawesome-free/css/all.css',
     // '~assets/argon/scss/argon.scss',
     // 'bootstrap-vue/dist/bootstrap-vue.css',
-    '~assets/transitions.css'
+    '~assets/transitions.css',
+    '~assets/global.scss'
   ],
 
   /*
@@ -153,18 +155,18 @@ export default {
   */
   build: {
     analyze: true,
-    extend (config, { isDev, isClient }) {
-      // Web Worker support
-      config.module.rules.push({
-        test: /\.worker\.js$/,
-        use: { loader: 'worker-loader' },
-        exclude: /(node_modules)/
-      })
-      config.node = {
-        fs: 'empty'
-      }
-      config.resolve.alias.vue = 'vue/dist/vue.common'
-    },
+    // extend (config, { isDev, isClient }) {
+    //   // Web Worker support
+    //   config.module.rules.push({
+    //     test: /\.worker\.js$/,
+    //     use: { loader: 'worker-loader' },
+    //     exclude: /(node_modules)/
+    //   })
+    //   config.node = {
+    //     fs: 'empty'
+    //   }
+    //   config.resolve.alias.vue = 'vue/dist/vue.common'
+    // },
     transpile: ['js-bbcode-parser']
   },
   srcDir: 'client/',
@@ -190,4 +192,4 @@ export default {
   router: {
     prefetchLinks: false
   }
-}
+})
