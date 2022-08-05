@@ -10,7 +10,7 @@
       />
     </div>
     <div v-else>
-      <b-progress :max="100" class="no-container mb-0 rounded-0" height="2em">
+      <b-progress v-if="rankGradeCounts.max" :max="100" class="no-container mb-0 rounded-0" height="2em">
         <template v-for="(label, index) in rankGradeCounts.labels">
           <b-progress-bar v-if="rankGradeCounts.percentages[index]" :key="`label-${label}`" :label="label.toUpperCase()" :variant="rankGradeCounts.variants[index]" :value="rankGradeCounts.percentages[index]" />
         </template>

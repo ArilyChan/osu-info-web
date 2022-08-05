@@ -35,7 +35,7 @@
         >
           <div class="card-profile-stats d-flex justify-content-md-around">
             <div class="mx-1">
-              <template v-if="!mode.includes('RX') && !mode.includes('AP')">
+              <!-- <template v-if="!mode.includes('RX') && !mode.includes('AP')">
                 <div class="heading text-large">
                   <osu-assets
                     :asset="`mode-${mode}-small`"
@@ -43,17 +43,17 @@
                   />
                 </div>
                 <span class="description">{{ $t(`mode.${mode}`) }}{{ $t('userInfo.mode') }}</span>
-              </template>
-              <template v-else>
-                <span class="heading text-large text-transform-clear text-nowrap">{{ $t(`mode.${mode}`) }}</span>
-                <span class="description text-little-larger">{{ $t('userInfo.mode') }}</span>
-              </template>
+              </template> -->
+              <!-- <template v-else> -->
+              <span class="heading text-large text-transform-clear text-nowrap">{{ $t(`mode.${mode}`) }}</span>
+              <span class="description text-little-larger">{{ $t('userInfo.mode') }}</span>
+              <!-- </template> -->
             </div>
             <div v-show="!disabled.includes('acc')" class="mx-1">
-              <!-- <span v-if="!disabled.includes('acc')" class="heading text-large">{{ acc }}</span> -->
-              <osu-asset-string :string="acc || ''" class="heading-osu-asset justify-content-center" overlap="-0.2em" />
-              <!-- <span class="description text-little-larger">{{ $t('userInfo.accuracy') }}</span> -->
-              <osu-assets asset="ranking-accuracy" class="description crop-acc" />
+              <span v-if="!disabled.includes('acc')" class="heading text-large">{{ acc }}</span>
+              <span class="description text-little-larger">{{ $t('userInfo.accuracy') }}</span>
+              <!-- <osu-asset-string :string="acc || ''" class="heading-osu-asset justify-content-center" overlap="-0.2em" /> -->
+              <!-- <osu-assets asset="ranking-accuracy" class="description crop-acc" /> -->
             </div>
             <div v-show="!disabled.includes('level')">
               <span v-if="!disabled.includes('level')" class="heading text-large">{{ user.statistics.level.current + user.statistics.level.progress / 100 }}</span>

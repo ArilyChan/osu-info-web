@@ -3,11 +3,11 @@
     <main class="flex-fill position-relative">
       <section-layout shaped :bg-variant="colorFromMode" :bubble-count="8">
         <nuxt />
-        <div class="d-flex">
+        <!-- <div class="d-flex">
           <div class="mx-auto info-footer">
             {{ $t(`server.${this.$store.state.server}`) }}
           </div>
-        </div>
+        </div> -->
       </section-layout>
     </main>
     <!-- <div class="d-flex position-relative info-footer-wrapper">

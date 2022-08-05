@@ -4,34 +4,58 @@
       <div class="b-overlay-wrap position-relative">
         <user-info :disabled="['pp', 'level']" />
       </div>
-      <no-ssr>
+      <client-only>
         <waterfall
           :options="{
             gutter: 0,
             itemSelector: '.Waterfall-item',
-            columnWidth: '.wf-1',
-            stagger: 30
+            columnWidth: '.grid-sizer',
+            horizontalOrder: false,
+            stagger: 50,
           }"
         >
-          <waterfall-item class="wf-2">
+          <!-- <waterfall-item class="wf-2">
             <level class="height-fix-level" />
-          </waterfall-item>
-          <waterfall-item class="wf-4">
-            <rank-info
-              :statistics-history="statisticsHistory"
-            />
-          </waterfall-item>
-          <waterfall-item :class="$store.state.user.createdLayouts.includes('RankHistoryChart')?'wf-2':'wf-4'">
+          </waterfall-item> -->
+          <waterfall-item
+            :class="
+              $store.state.user.createdLayouts.includes('RankHistoryChart')
+                ? 'wf-2'
+                : 'wf-4'
+            "
+          >
             <number-statistics
               :historical-best="historicalBest"
-              :variant="$store.state.user.createdLayouts.includes('RankHistoryChart')?'slim':'wide'"
+              :variant="
+                $store.state.user.createdLayouts.includes('RankHistoryChart')
+                  ? 'slim'
+                  : 'wide'
+              "
             />
           </waterfall-item>
-          <waterfall-item
-            v-if="recentActivity.length"
-            class="wf-4"
-          >
+          <waterfall-item v-if="recentActivity.length" class="wf-4">
             <activities />
+          </waterfall-item>
+          <waterfall-item class="wf-4">
+            <rank-info :statistics-history="statisticsHistory" />
+          </waterfall-item>
+          <waterfall-item class="wf-2">
+            <b-card v-if="$store.state.server === 'ripple'" class="shadow">
+              <b-card-img :src="require('~/assets/icons/ripple.svg')" />
+            </b-card>
+            <b-card
+              v-else-if="$store.state.server === 'akatsuki'"
+              class="shadow"
+              no-body
+            >
+              <b-card-img :src="require('~/assets/icons/akatsuki.png')" />
+            </b-card>
+            <b-card v-else-if="$store.state.server === 'bancho'" class="shadow">
+              <b-card-img :src="require('~/assets/icons/bancho.png')" />
+            </b-card>
+            <b-card v-else class="shadow">
+              {{ $t(`server.${this.$store.state.server}`) }}
+            </b-card>
           </waterfall-item>
           <waterfall-item
             v-for="badge of user.badges"
@@ -42,24 +66,9 @@
               <b-card-img :src="badge.image_url" />
             </b-card>
           </waterfall-item>
-          <waterfall-item v-show="false" class="wf-1" />
-          <!-- <waterfall-item class="wf-2">
-            <b-card class="shadow">
-              <b-card-img :src="require('~/assets/icons/ripple.svg')" />
-            </b-card>
-          </waterfall-item>
-          <waterfall-item class="wf-2" no-body>
-            <b-card class="shadow">
-              <b-card-img :src="require('~/assets/icons/akatsuki.png')" />
-            </b-card>
-          </waterfall-item>
-          <waterfall-item class="wf-2">
-            <b-card class="shadow">
-              <b-card-img :src="require('~/assets/icons/bancho.png')" />
-            </b-card>
-          </waterfall-item> -->
+          <waterfall-item class="grid-sizer" />
         </waterfall>
-      </no-ssr>
+      </client-only>
     </div>
     <div v-else class="card-profile container pt-5">
       <b-card
@@ -78,7 +87,7 @@ import UserInfo from '~/components/stat-components/UserInfo.vue'
 import RankInfo from '~/components/stat-components/RankInfo.vue'
 import NumberStatistics from '~/components/stat-components/StatisticTable.vue'
 import Activities from '~/components/stat-components/Activities.vue'
-import Level from '~/components/stat-components/Level.vue'
+// import Level from '~/components/stat-components/Level.vue'
 export default {
   layout: 'default',
   components: {
@@ -87,22 +96,28 @@ export default {
     UserInfo,
     RankInfo,
     NumberStatistics,
-    Activities,
-    Level
+    Activities
+    // Level
   },
   async asyncData ({ params, $axios, query, store, error }) {
-    let result = {
-    }
+    let result = {}
     const path = `/api/users/${encodeURIComponent(params.handle)}${
       params.mode ? `/${params.mode}` : ''
     }`
-    result = await $axios.get(path, { params: { server: query.server } }).then(res => res.data)
-    if (!result) { return error({ statusCode: 404, message: 'User not found' }) }
-    const mode = params.mode || (result.user ? result.user.playmode : undefined)
+    result = await $axios
+      .get(path, { params: { server: query.server } })
+      .then(res => res.data)
+    if (!result) {
+      return error({ statusCode: 404, message: 'User not found' })
+    }
+    const mode =
+      params.mode || (result.user ? result.user.playmode : undefined)
     store.commit('user/setMode', mode)
     store.commit('user/setUser', result.user)
     store.commit('user/setRecentActivity', result.recentActivity)
-    if (query.server) { store.commit('setServer', query.server) }
+    if (query.server) {
+      store.commit('setServer', query.server)
+    }
     return {
       // user: result.user,
       // recentActivity: result.recentActivity || [],
@@ -124,9 +139,20 @@ export default {
           hid: 'description',
           name: 'description',
           content: [
-              `Statistics of ${this.user.username}:`,
-              `${this.$t('userInfo.global')} Rank: #${this.user.statistics.rank.global || this.user.statistics.global_rank || ' - '}`,
-              `${this.user.country_code || (this.user.country && this.user.country.code)} Rank: #${this.user.statistics.rank.country || this.user.statistics.country_rank || ' - '}`
+            `Statistics of ${this.user.username}:`,
+            `${this.$t('userInfo.global')} Rank: #${
+              this.user.statistics.rank.global ||
+              this.user.statistics.global_rank ||
+              ' - '
+            }`,
+            `${
+              this.user.country_code ||
+              (this.user.country && this.user.country.code)
+            } Rank: #${
+              this.user.statistics.rank.country ||
+              this.user.statistics.country_rank ||
+              ' - '
+            }`
           ].join('\n')
         }
       ]
@@ -141,7 +167,7 @@ export default {
   width: calc(100% + 2 * var(--var-gap-base));
   left: calc(var(--var-gap-base) * -1);
   margin-top: var(--var-gap-base);
-  margin-bottom: var(--var-gap-base)
+  margin-bottom: var(--var-gap-base);
 }
 .Waterfall-item {
   & > * {
@@ -170,7 +196,8 @@ export default {
 @include media-breakpoint-down(md) {
   .Waterfall-item {
     --var-base: calc(100% / 4);
-    &.wf-1 {
+    &.wf-1,
+    &.grid-sizer {
       width: var(--var-base);
     }
     &.wf-1 {
@@ -187,7 +214,8 @@ export default {
 @include media-breakpoint-up(md) {
   .Waterfall-item {
     --var-base: calc(100% / 6);
-    &.wf-1 {
+    &.wf-1,
+    &.grid-sizer {
       width: var(--var-base);
     }
     &.wf-2 {
@@ -202,27 +230,27 @@ export default {
 @include media-breakpoint-only(xs) {
   .height-fix-level {
     --calc1: calc(450vw - 0.8rem);
-    height: 353.7vw / var(--calc1)
+    height: 353.7vw / var(--calc1);
   }
 }
 @include media-breakpoint-only(sm) {
   .height-fix-level {
-    height: 377.03px
+    height: 377.03px;
   }
 }
 @include media-breakpoint-only(md) {
   .height-fix-level {
-    height: 152.87px
+    height: 152.87px;
   }
 }
 @include media-breakpoint-only(lg) {
   .height-fix-level {
-    height: 219.53px
+    height: 219.53px;
   }
 }
 @include media-breakpoint-only(xl) {
   .height-fix-level {
-    height: 242.03px
+    height: 242.03px;
   }
 }
 </style>

@@ -105,3 +105,6 @@ dist
 
 .DS_Store
 app.yaml
+
+# https://v3.nuxtjs.org/bridge/overview
+.output
