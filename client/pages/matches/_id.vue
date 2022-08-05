@@ -277,7 +277,7 @@
 // import Vue from 'vue'
 import 'fullpage.js/dist/fullpage.css'
 import hero from '~/components/sb-layouts/hero'
-import MpScoreListItem from '~/components/stat-components/mp/MpScoreListItem'
+import MpScoreListItem from '~/components/osu/mp/MpScoreListItem'
 // import { FullPage } from 'vue-fullpage.js'
 let FullPage
 if (process.browser) {

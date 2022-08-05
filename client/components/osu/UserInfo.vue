@@ -142,7 +142,7 @@
             class="text-nowrap"
           >
             <i class="fas fa-tags" />
-            {{ $t('userInfo.playStyle', {styles: user.playstyle.join(", ") }) }}
+            {{ $t('userInfo.playsWith', { styles: user.playstyle.map((style) => $t(`userInfo.playStyle.${style}`)).join(", ") }) }}
           </b-col>
           <b-col v-if="user.discord" col lg="auto">
             <!-- <img src="~/assets/images/Discord-Logo-Color.png" height="20px"> -->

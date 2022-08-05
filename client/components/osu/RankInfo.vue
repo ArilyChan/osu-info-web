@@ -254,7 +254,7 @@ export default {
       }
     }
     if (this.history.length || (this.user.rankHistory && this.user.rankHistory.data.length)) {
-      this.$store.commit('user/addLayout', 'RankHistoryChart')
+      this.$store.commit('pages/users/addLayout', 'RankHistoryChart')
     }
   },
   methods: {

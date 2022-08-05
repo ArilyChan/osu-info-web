@@ -64,7 +64,7 @@ export default {
     user: state => state.user.data
   }),
   created () {
-    this.$store.commit('user/addLayout', 'LevelChart')
+    this.$store.commit('pages/users/addLayout', 'LevelChart')
   }
 }
 </script>

@@ -1,6 +1,6 @@
 require('module-alias/register')
 const fs = require('fs')
-const app = require('./base')
+const app = require('./base.cjs')
 // const isProd = process.env.NODE_ENV === 'production'
 const port = process.env.API_LISTEN || process.env.PORT || 3000
 

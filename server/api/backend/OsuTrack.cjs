@@ -1,5 +1,5 @@
 const axios = require('axios')
-const Translator = require('../../helpers/ModeTranslator')
+const Translator = require('../../helpers/ModeTranslator.cjs')
 const translator = new Translator().from('ppv2').to('numerical')
 class OsuTrack {
   constructor () {

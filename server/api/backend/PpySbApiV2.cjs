@@ -1,5 +1,5 @@
 // const axios = require('axios')
-const BaseApiV2 = require('./BaseApiV2')
+const BaseApiV2 = require('./BaseApiV2.cjs')
 
 class PpySbApiV2 extends BaseApiV2 {
   constructor () {

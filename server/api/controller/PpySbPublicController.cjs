@@ -1,8 +1,8 @@
-const bancho = require('../backend/BanchoApiV2')
+const sb = require('../backend/PpySbApiV2.cjs')
 
-class BanchoPublicController {
+class PpySbPublicController {
   static async getScore (mode, scoreId) {
-    const res = await bancho.getScore({ mode, scoreId })
+    const res = await sb.getScore({ mode, scoreId })
     if (!res) { return {} }
     const score = {
       ...res,
@@ -15,9 +15,9 @@ class BanchoPublicController {
     }
   }
 
-  static getMatchInfo (matchId) {
-    return bancho.getMatch(matchId)
-  }
+  // static getMatchInfo (matchId) {
+  //   return sb.getMatch(matchId)
+  // }
 }
 
-module.exports = BanchoPublicController
+module.exports = PpySbPublicController

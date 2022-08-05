@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const bancho = require('../backend/BanchoApiV2')
+const bancho = require('../backend/BanchoApiV2.cjs')
 const requestHandler = (req, res, next) => {
   const publicTokenHeader = bancho.publicTokenHeader()
   const apiv2Uri = req.url

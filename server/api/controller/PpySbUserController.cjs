@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const moment = require('moment')
-const api = require('../backend/PpySbApiV2')
-const UserModel = require('../model/PpySbUser.js')
+const api = require('../backend/PpySbApiV2.cjs')
+const UserModel = require('../model/PpySbUser.cjs')
 
 class PpySbUserController {
   static async getUserInfo (handle, mode) {

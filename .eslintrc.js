@@ -5,7 +5,8 @@ module.exports = {
     node: true
   },
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: '@babel/eslint-parser',
+    requireConfigFile: false
   },
   extends: [
     '@nuxtjs',
@@ -15,5 +16,11 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {},
-  ignorePatterns: ['client/components/argon/*', 'client/components/argon-components/*', 'client/components/argon-demo/*', 'client/components/argon-layout/*', 'client/components/**/waste']
+  ignorePatterns: [
+    'client/components/argon/*',
+    'client/components/argon-components/*',
+    'client/components/argon-demo/*',
+    'client/components/argon-layout/*',
+    'client/components/**/waste'
+  ]
 }

@@ -2,7 +2,7 @@
   <div class="col px-0 profile-page">
     <div v-if="user" class="card-profile container" style="margin-top: 5em">
       <div class="b-overlay-wrap position-relative">
-        <user-info :disabled="['pp', 'level']" />
+        <osu-user-info :disabled="['pp', 'level', 'server']" />
       </div>
       <client-only>
         <waterfall
@@ -19,43 +19,28 @@
           </waterfall-item> -->
           <waterfall-item
             :class="
-              $store.state.user.createdLayouts.includes('RankHistoryChart')
+              $store.state.pages.users.createdLayouts.includes('RankHistoryChart')
                 ? 'wf-2'
                 : 'wf-4'
             "
           >
-            <number-statistics
+            <osu-statistic-table
               :historical-best="historicalBest"
               :variant="
-                $store.state.user.createdLayouts.includes('RankHistoryChart')
+                $store.state.pages.users.createdLayouts.includes('RankHistoryChart')
                   ? 'slim'
                   : 'wide'
               "
             />
           </waterfall-item>
           <waterfall-item v-if="recentActivity.length" class="wf-4">
-            <activities />
+            <osu-activities />
           </waterfall-item>
           <waterfall-item class="wf-4">
-            <rank-info :statistics-history="statisticsHistory" />
+            <osu-rank-info :statistics-history="statisticsHistory" />
           </waterfall-item>
           <waterfall-item class="wf-2">
-            <b-card v-if="$store.state.server === 'ripple'" class="shadow">
-              <b-card-img :src="require('~/assets/icons/ripple.svg')" />
-            </b-card>
-            <b-card
-              v-else-if="$store.state.server === 'akatsuki'"
-              class="shadow"
-              no-body
-            >
-              <b-card-img :src="require('~/assets/icons/akatsuki.png')" />
-            </b-card>
-            <b-card v-else-if="$store.state.server === 'bancho'" class="shadow">
-              <b-card-img :src="require('~/assets/icons/bancho.png')" />
-            </b-card>
-            <b-card v-else class="shadow">
-              {{ $t(`server.${this.$store.state.server}`) }}
-            </b-card>
+            <osu-server />
           </waterfall-item>
           <waterfall-item
             v-for="badge of user.badges"
@@ -83,22 +68,14 @@
 <script>
 import { Waterfall, WaterfallItem } from 'vue2-waterfall'
 import { mapState } from 'vuex'
-import UserInfo from '~/components/stat-components/UserInfo.vue'
-import RankInfo from '~/components/stat-components/RankInfo.vue'
-import NumberStatistics from '~/components/stat-components/StatisticTable.vue'
-import Activities from '~/components/stat-components/Activities.vue'
-// import Level from '~/components/stat-components/Level.vue'
+// import Level from '~/components/osu/Level.vue'
 export default {
-  layout: 'default',
   components: {
     Waterfall,
-    WaterfallItem,
-    UserInfo,
-    RankInfo,
-    NumberStatistics,
-    Activities
+    WaterfallItem
     // Level
   },
+  layout: 'default',
   async asyncData ({ params, $axios, query, store, error }) {
     let result = {}
     const path = `/api/users/${encodeURIComponent(params.handle)}${
@@ -126,10 +103,6 @@ export default {
       mode
     }
   },
-  computed: mapState({
-    user: state => state.user.data,
-    recentActivity: state => state.user.recentActivity
-  }),
   head () {
     return {
       title: 'Statistics of ' + [this.user.username, this.mode].join(' | '),
@@ -157,7 +130,11 @@ export default {
         }
       ]
     }
-  }
+  },
+  computed: mapState({
+    user: state => state.user.data,
+    recentActivity: state => state.user.recentActivity
+  })
 }
 </script>
 

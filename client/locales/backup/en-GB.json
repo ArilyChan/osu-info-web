@@ -1,8 +1,8 @@
 {
   "CabbageHistory": {
     "disclaimer": "Historical data provided by Cabbage",
-    "ppDrop": "lost {ppDrop}pp in a week, you deranked??",
-    "ppGain": "gained {ppGain}pp in a week 🎉 !",
+    "ppDrop": "-{ppDrop}pp recently, you deranked??",
+    "ppGain": "+{ppGain}pp recently 🎉 !",
     "ppTodayAfter": " today",
     "ppTodayBefore": ""
   },
@@ -38,7 +38,7 @@
     "mode": "Mode",
     "offline": "offline",
     "online": "online",
-    "playStyle": "playing with {styles}",
+    "playsWith": "playing with {styles}",
     "registeredAt": "registered at {t}",
     "usernameAlias": "AKA"
   },

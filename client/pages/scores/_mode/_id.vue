@@ -2,7 +2,7 @@
   <div class="col px-0 profile-page">
     <div v-if="user" class="card-profile container" style="margin-top: 5em">
       <div class="b-overlay-wrap position-relative">
-        <user-info :disabled="['level', 'pp', 'rank', 'countryRank', 'acc']" />
+        <osu-user-info :disabled="['level', 'pp', 'rank', 'countryRank', 'acc']" />
       </div>
       <score-detail v-if="score" :score="score" class="mt-4" />
       <template v-else-if="messages.includes('no-recent')">
@@ -27,11 +27,9 @@
 <script>
 import { mapState } from 'vuex'
 import ScoreDetail from '~/components/sb-components/Scores/ScoreDetail'
-import UserInfo from '~/components/stat-components/UserInfo.vue'
 export default {
   layout: 'default',
   components: {
-    UserInfo,
     ScoreDetail
   },
   async asyncData ({ params, $axios, store, query }) {

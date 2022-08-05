@@ -54,7 +54,7 @@
     "mode": "模式",
     "offline": "离线",
     "online": "在线",
-    "playStyle": "用 {styles} 玩",
+    "playsWith": "用 {styles} 玩",
     "registeredAt": "注册于 {t}",
     "usernameAlias": "曾用名："
   }

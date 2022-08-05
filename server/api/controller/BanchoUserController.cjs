@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 const moment = require('moment')
-const MotherShip = require('../backend/MotherShip')
-const bancho = require('../backend/BanchoApiV2')
-const osuTrack = require('../backend/OsuTrack')
-const UserModel = require('../model/BanchoUser.js')
+const MotherShip = require('../backend/MotherShip.cjs')
+const bancho = require('../backend/BanchoApiV2.cjs')
+const osuTrack = require('../backend/OsuTrack.cjs')
+const UserModel = require('../model/BanchoUser.cjs')
 
 const mothership = new MotherShip()
 

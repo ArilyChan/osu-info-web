@@ -26,7 +26,7 @@
           <div>
             <slot name="content">
               <div v-if="user.username_aka && user.username_aka !== ''">
-                <span>{{ t('userInfo.usernameAlias') }}</span>
+                <span>{{ $t('userInfo.usernameAlias') }}</span>
                 <h6 class="text-nowrap">
                   {{ user.username_aka }}
                 </h6>
@@ -43,6 +43,7 @@
     </b-popover>
   </div>
 </template>
+
 <script>
 export default {
   props: {

@@ -1,11 +1,11 @@
 const axios = require('axios')
 const FormData = require('form-data')
 const MongoClient = require('mongodb').MongoClient
-const BaseApiV2 = require('./BaseApiV2')
+const BaseApiV2 = require('./BaseApiV2.cjs')
 
 class BanchoApi extends BaseApiV2 {
   constructor ({ clientId, clientSecret }) {
-    super({ apiBase: 'https://osu.ppy.sh/api/v2', OAuthBase: 'https://osu.ppy.sh/oauth', models: { User: require('../model/BanchoUser') } })
+    super({ apiBase: 'https://osu.ppy.sh/api/v2', OAuthBase: 'https://osu.ppy.sh/oauth', models: { User: require('../model/BanchoUser.cjs') } })
     this.clientId = clientId
     this.clientSecret = clientSecret
   }

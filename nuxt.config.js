@@ -1,8 +1,20 @@
+// import * as url from 'url'
 import { resolve } from 'path'
 import { defineNuxtConfig } from '@nuxt/bridge'
 import * as packageJSON from './package.json'
+// const __filename = url.fileURLToPath(import.meta.url)
+// const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
+
 // eslint-disable-next-line nuxt/no-cjs-in-config
 export default defineNuxtConfig({
+  bridge: {
+    // nitro: false,
+    // vite: true,
+    meta: true
+  },
+  vite: {
+
+  },
   /*
   ** Nuxt target
   ** See https://nuxtjs.org/api/configuration-target
@@ -42,7 +54,8 @@ export default defineNuxtConfig({
     mobileAppIOS: true,
     appleStatusBarStyle: '#172b4d'
   },
-  // serverMiddleware: [{ path: '/api', handler: '~/api/index.js' }],
+  // serverMiddleware: [{ path: '/api/**/*', handler: 'server/api-middleware.cjs' }],
+  serverMiddleware: [{ path: '/api/**', handler: 'client/middleware/proxy.cjs' }],
   /*
   ** Global CSS
   */
@@ -64,7 +77,7 @@ export default defineNuxtConfig({
     // { src: '~/plugins/fullpage-vue.js', mode: 'client' },
     '~/plugins/osu-assets/index.js',
     '~/plugins/osu-popup-user/index.js',
-    '~/plugins/vue-flag.js',
+    { src: '~/plugins/vue-flag.js', mode: 'client' },
     '~/plugins/light-timeline.js',
     '~/plugins/moment.js'
   ],
@@ -92,10 +105,8 @@ export default defineNuxtConfig({
         // onlyOnRoot: true // recommended
       }
     }],
-    '@nuxtjs/proxy',
+    // '@nuxtjs/proxy',
     // // Doc: https://axios.nuxtjs.org/usage
-    // '@nuxtjs/axios',
-    // Doc: https://github.com/nuxt/content
     // '@nuxt/content',
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
@@ -154,7 +165,7 @@ export default defineNuxtConfig({
   ** See https://nuxtjs.org/api/configuration-build/
   */
   build: {
-    analyze: true,
+    analyze: process.env.NODE_ENV === 'development',
     // extend (config, { isDev, isClient }) {
     //   // Web Worker support
     //   config.module.rules.push({
@@ -174,20 +185,21 @@ export default defineNuxtConfig({
   alias: {
     ...Object.entries(packageJSON?._moduleAliases ?? {}).reduce((acc, [k, v]) => { acc[k] = resolve(v); return acc }, {})
   },
-  proxy: {
-    // see Proxy section
-    '/api': process.env.API_SCHEME?.startsWith('unix')
-      ? {
-        changeOrigin: false,
-        target: { socketPath: process.env.API_LISTEN }
-      }
-      : {
-        changeOrigin: false,
-        target: `${process.env.API_SCHEME}${process.env.API_DOMAIN}:${process.env.API_LISTEN}`
-      }
-  },
+  // proxy: {
+  //   // see Proxy section
+  //   '/api': process.env.API_SCHEME?.startsWith('unix')
+  //     ? {
+  //         changeOrigin: false,
+  //         target: { socketPath: process.env.API_LISTEN }
+  //       }
+  //     : {
+  //         changeOrigin: false,
+  //         target: `${process.env.API_SCHEME}${process.env.API_DOMAIN}:${process.env.API_LISTEN}`
+  //       }
+  // },
   server: {
-    host: '0' // default: localhost
+    host: '0', // default: localhost,
+    port: parseInt(process.env.PORT) || 3000
   },
   router: {
     prefetchLinks: false

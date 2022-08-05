@@ -1,8 +1,8 @@
 {
   "CabbageHistory": {
     "disclaimer": "历史数据由白菜提供",
-    "ppDrop": "你比上周少了 {ppDrop}pp, 你是不是倒刷了？",
-    "ppGain": "你比上周刷多 {ppGain}pp, 真有你的",
+    "ppDrop": "最近 -{ppDrop}pp, 你是不是倒刷了？",
+    "ppGain": "最近 +{ppGain}pp, 真有你的！",
     "ppTodayAfter": "",
     "ppTodayBefore": "今天你"
   },
@@ -39,7 +39,7 @@
     "mode": "模式",
     "offline": "离线",
     "online": "在线",
-    "playStyle": "用 {styles} 玩",
+    "playsWith": "用 {styles} 玩",
     "registeredAt": "注册于 {t}",
     "usernameAlias": "曾用名："
   },

@@ -2,7 +2,7 @@
   <div class="col px-0 profile-page">
     <div v-if="user" class="card-profile container" style="margin-top: 5em">
       <div class="b-overlay-wrap position-relative">
-        <user-info :user="user" :mode="mode" :bg-cover="false">
+        <osu-user-info :user="user" :mode="mode" :bg-cover="false">
           <template #body>
             <b-card-body class="fix-a">
               <div class="border-top text-left">
@@ -10,7 +10,7 @@
               </div>
             </b-card-body>
           </template>
-        </user-info>
+        </osu-user-info>
       </div>
     </div>
     <div v-else class="card-profile container pt-5">
@@ -27,7 +27,6 @@
 import { mapState } from 'vuex'
 import bbCodeParser from 'js-bbcode-parser'
 import VRuntimeTemplate from 'v-runtime-template'
-import UserInfo from '~/components/stat-components/UserInfo.vue'
 const defaultCodes = [...bbCodeParser.codes]
 bbCodeParser.setCodes({
   '\\[center\\](.*?)\\[/center\\]': '<div class="text-center">$1</div>',
@@ -56,7 +55,6 @@ bbCodeParser.codes = [...newCodes, ...defaultCodes]
 export default {
   layout: 'default',
   components: {
-    UserInfo,
     VRuntimeTemplate
   },
   async asyncData ({ params, $axios, $config: { baseURL }, store }) {

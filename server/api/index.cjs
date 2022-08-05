@@ -2,11 +2,11 @@ const express = require('express')
 const moment = require('moment')
 const router = express.Router()
 
-const BanchoUser = require('./controller/BanchoUserController')
-const BanchoPublic = require('./controller/BanchoPublicController')
+const BanchoUser = require('./controller/BanchoUserController.cjs')
+const BanchoPublic = require('./controller/BanchoPublicController.cjs')
 
-const PpySbUser = require('./controller/PpySbUserController')
-const PpySbPublic = require('./controller/PpySbPublicController')
+const PpySbUser = require('./controller/PpySbUserController.cjs')
+const PpySbPublic = require('./controller/PpySbPublicController.cjs')
 // const UserModel = require('./model/User')
 const servers = {
   bancho: {
@@ -67,7 +67,7 @@ router.get('/clientOAuth/code', async (req, res, next) => {
   res.json(await BanchoUser.OAuthCode(code, scope))
 })
 
-router.use('/broker/osu-api-v2/public', require('./broker/osu-api-v2-public'))
+router.use('/broker/osu-api-v2/public', require('./broker/osu-api-v2-public.cjs'))
 router.use((err, req, res, next) => {
   res.status(500)
   res.json(err)

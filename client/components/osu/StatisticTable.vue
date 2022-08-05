@@ -252,13 +252,13 @@ export default {
         }
       ]
     }
-    this.$store.commit('user/addLayout', 'RankLevelChart')
+    this.$store.commit('pages/users/addLayout', 'RankLevelChart')
   },
   methods: {
     kvStats () {
       const currentLocale = this.$i18n.locales.find(i => i.code === this.$i18n.locale)
       const iso = currentLocale.iso ? currentLocale.iso.split('-').join('_') : this.$i18n.locale
-      const showPP = !this.$store.state.user.createdLayouts.includes('RankHistoryChart')
+      const showPP = !this.$store.state.pages.users.createdLayouts.includes('RankHistoryChart')
       const table = {
         [this.$t('pp')]: (showPP && this.user.statistics.pp.toLocaleString()) || undefined,
         [this.$t('numericalStatistics.score')]: this.user.statistics.total_score.toLocaleString() || undefined,
@@ -266,10 +266,12 @@ export default {
         [this.$t('numericalStatistics.playCount')]: this.user.statistics.play_count.toLocaleString() || undefined,
         [this.$t('numericalStatistics.playLength')]: humanizeDuration(this.user.statistics.play_time * 1000, { units: ['h', 'm', 's'], language: iso, fallbacks: ['en'], delimiter: ',<br>' }) || undefined,
         [this.$t('numericalStatistics.totalHits')]: this.user.statistics.total_hits.toLocaleString() || undefined,
-        ...this.historicalBest ? {
-          [this.$t('numericalStatistics.historicalBestRank')]: `#${this.historicalBest.best_global_rank}` || undefined,
-          [this.$t('numericalStatistics.historicalBestAccuracy')]: (this.historicalBest.best_accuracy / 100).toLocaleString('en-GB', { style: 'percent', maximumFractionDigits: 3, minimumFractionDigits: 2 }) || undefined
-        } : {}
+        ...this.historicalBest
+          ? {
+              [this.$t('numericalStatistics.historicalBestRank')]: `#${this.historicalBest.best_global_rank}` || undefined,
+              [this.$t('numericalStatistics.historicalBestAccuracy')]: (this.historicalBest.best_accuracy / 100).toLocaleString('en-GB', { style: 'percent', maximumFractionDigits: 3, minimumFractionDigits: 2 }) || undefined
+            }
+          : {}
       }
       for (const index in table) {
         const data = table[index]

@@ -25,7 +25,7 @@
     "max_friends": 250,
     "occupation": "student",
     "playmode": "osu",
-    "playstyle": [
+    "playsWith": [
         "keyboard",
         "tablet"
     ],

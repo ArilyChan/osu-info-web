@@ -2,7 +2,7 @@
   <div class="col px-0 profile-page">
     <div v-if="user" class="card-profile container" style="margin-top: 5em">
       <div class="b-overlay-wrap position-relative">
-        <user-info :user="user" :mode="mode" />
+        <osu-user-info :user="user" :mode="mode" />
       </div>
       <score-list-card :list="scores" class="pt-3" />
     </div>
@@ -19,11 +19,9 @@
 <script>
 import { mapState } from 'vuex'
 import ScoreListCard from '~/components/sb-components/Scores/ScoreListCard.vue'
-import UserInfo from '~/components/stat-components/UserInfo.vue'
 export default {
   layout: 'default',
   components: {
-    UserInfo,
     ScoreListCard
   },
   async asyncData ({ params, $axios, query, error, route, store }) {

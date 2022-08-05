@@ -10,14 +10,6 @@ export const mutations = {
     state.mode = mode
   },
 
-  addLayout (state, layout) {
-    state.createdLayouts.push(layout)
-  },
-
-  removeLayout (state, layout) {
-    state.createdLayouts.splice(state.createdLayouts.findIndex(l => l === layout), 1)
-  },
-
   setUser (state, user) {
     state.data = user
   },
