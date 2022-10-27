@@ -15,9 +15,12 @@ class MotherShip {
       timeout
     })
       .then(res => res.data)
+      .catch((error) => {
+        console.log(error)
+      })
     if (result.code === 0) {
       return result.data.filter(r => r !== null)
-    } else if (result.code === 3) {
+    } else {
       const dateStr = Object.values(result.data).join('-')
       return this.getUserHistory({ id }, new Date(dateStr))
     }

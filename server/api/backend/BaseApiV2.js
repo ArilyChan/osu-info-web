@@ -123,15 +123,15 @@ class BaseApiV2 {
   }
 
   getUserValidTokens ({ id: userId }, scope = 'public') {
-    return this.userTokenCollection.find({
+    return this.userTokenCollection?.find({
       userId,
       scope,
       expiresAt: { $gte: new Date() }
-    }).toArray()
+    }).toArray() || []
   }
 
   removeExpiredTokens () {
-    this.userTokenCollection.deleteMany({
+    this.userTokenCollection?.deleteMany({
       expiresAt: { $lt: new Date() }
     })
   }
@@ -144,7 +144,7 @@ class BaseApiV2 {
       userId,
       expiresAt: new Date(new Date().getTime() + token.expires_in * 1000)
     }
-    return this.userTokenCollection.updateOne({
+    return this.userTokenCollection?.updateOne({
       userId,
       scope
     }, { $set: record }, {

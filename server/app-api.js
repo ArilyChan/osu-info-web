@@ -14,13 +14,21 @@ function listen () {
   // eslint-disable-next-line no-console
   console.log(`Server listening on ${port}`)
 
-  function shutdown () {
+  function shutdown (event, origin) {
+    console.log(event, origin)
+    console.trace('Cause:')
     server.close()
     process.exit()
   }
   ['exit', 'SIGINT', 'SIGUSR1', 'SIGUSR2', 'SIGTERM'].forEach((eventType) => {
-    process.on(eventType, shutdown.bind(null, eventType))
+    process.on(eventType, (...args) => shutdown(eventType, args))
   })
+  const orig = process._fatalException
+
+  process._fatalException = (...args) => {
+    console.log(args)
+    return orig.bind(process, args)
+  }
 }
 
 // app.use(require('./errorHandler'))

@@ -39,14 +39,20 @@ class BanchoApi extends BaseApiV2 {
       return
     }
     if (!this.userTokenCollection) {
-      const client = await MongoClient.connect(process.env.DB_URI || 'mongodb://localhost:27017', { useUnifiedTopology: true })
-      const db = client.db(process.env.TOKEN_DATABASE || 'osu-info-web')
-      this.userTokenCollection = db.collection(process.env.TOKEN_COLLECTION || 'bancho-tokens')
+      try {
+        const client = await MongoClient.connect(process.env.DB_URI || 'mongodb://localhost:27017', { useUnifiedTopology: true })
+        const db = client.db(process.env.TOKEN_DATABASE || 'osu-info-web')
+        this.userTokenCollection = db.collection(process.env.TOKEN_COLLECTION || 'bancho-tokens')
+      } catch (err) {
+        console.trace('failed to connect mongodb')
+      }
     }
 
-    const tokens = await this.userTokenCollection.find({
+    const tokens = await this.userTokenCollection?.find({
       expiresAt: { $gte: new Date() }
     }).toArray()
+
+    if (!tokens) { return }
 
     Promise.all(tokens.map((token) => {
       return new Promise((resolve, reject) => {
