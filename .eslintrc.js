@@ -5,13 +5,14 @@ module.exports = {
     node: true
   },
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: '@babel/eslint-parser'
   },
   extends: [
     '@nuxtjs',
     'plugin:nuxt/recommended'
   ],
   plugins: [
+    'vue'
   ],
   // add your custom rules here
   rules: {},

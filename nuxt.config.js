@@ -176,14 +176,30 @@ export default {
     // see Proxy section
     '/api': process.env.API_SCHEME?.startsWith('unix')
       ? {
-        changeOrigin: false,
-        target: { socketPath: process.env.API_LISTEN }
-      }
+          changeOrigin: false,
+          target: { socketPath: process.env.API_LISTEN }
+        }
       : {
-        changeOrigin: false,
-        target: `${process.env.API_SCHEME}${process.env.API_DOMAIN}:${process.env.API_LISTEN}`
-      }
+          changeOrigin: false,
+          target: `${process.env.API_SCHEME}${process.env.API_DOMAIN}:${process.env.API_LISTEN}`
+        }
   },
+  // proxy for vue3
+  // proxy: {
+  //   options: [
+  //     process.env.API_SCHEME?.startsWith('unix')
+  //       ? {
+  //           changeOrigin: false,
+  //           target: { socketPath: process.env.API_LISTEN },
+  //           pathFilter: ['/api']
+  //         }
+  //       : {
+  //           changeOrigin: false,
+  //           target: `${process.env.API_SCHEME}${process.env.API_DOMAIN}:${process.env.API_LISTEN}`,
+  //           pathFilter: ['/api']
+  //         }
+  //   ]
+  // },
   server: {
     host: '0' // default: localhost
   },
